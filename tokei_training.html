@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>とけいのれんしゅう</title>
+<style>
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-color: #f0f9ff;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+  }
+  header {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    font-size: 2rem;
+  }
+  h1 {
+    color: #444;
+    margin-top: 60px;
+  }
+  button, select, input {
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 12px;
+    border: none;
+    background-color: #aee6ff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  button:hover {
+    background-color: #7fd8ff;
+  }
+  /* 無効化された要素のスタイル */
+  #quizSettings select:disabled, 
+  #quizSettings input:disabled {
+      background-color: #eee;
+      color: #777;
+      cursor: not-allowed;
+      border: 1px solid #ccc;
+  }
+  /* #clockContainer を縦並びの中央寄せに変更 */
+  #clockContainer {
+    margin: 30px auto; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+  }
+  #ampmDisplay { /* 午前/午後表示のスタイル */
+    font-size: 1.5rem;
+    color: #0066cc;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  #analogClock {
+    /* アナログ時計のキャンバス */
+    display: block; 
+    box-sizing: content-box; 
+    border: 5px solid #333;
+    border-radius: 50%;
+    background: white;
+    margin-bottom: 20px; 
+  }
+  .digital {
+    font-size: 2.5rem; 
+    margin: 0 auto; 
+    padding: 10px 20px;
+    border: 2px solid #00c4ff; 
+    border-radius: 8px; 
+    background-color: #222; 
+    color: #00ffc8; 
+    font-family: 'Consolas', 'Courier New', monospace; 
+    display: inline-block; 
+    letter-spacing: 2px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  }
+  #readCheckMode input[type="number"] { /* 読み方確認モードの入力スタイル */
+    font-size: 2rem;
+    width: 60px;
+    text-align: center;
+    border: 2px solid #00c4ff;
+    border-radius: 8px;
+    padding: 5px;
+    margin: 5px;
+  }
+  #controls {
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<header>🕒</header>
+
+<h1>とけいの れんしゅう</h1>
+
+<div id="setup">
+  <p>モードをえらんでください：</p>
+  <select id="mode" onchange="toggleQuizSettings()">
+    <option value="analog">アナログ</option>
+    <option value="digital">デジタル</option>
+    <option value="both">アナログ＋デジタル</option>
+    <option value="read_check">読み方確認</option>
+  </select>
+  
+  <div id="quizSettings">
+    <p>時間表示をえらんでください：</p>
+    <select id="timeFormat">
+      <option value="12">12時間表示 (午前/午後)</option>
+      <option value="24">24時間表示 (0時、13時、14時...)</option>
+    </select>
+  
+    <p>問題の数をえらんでください：</p>
+    <input type="number" id="questionCount" min="1" max="50" value="10" />
+  
+    <p>難易度をえらんでください：</p>
+    <select id="difficulty">
+      <option value="10">10分刻み</option>
+      <option value="5">5分刻み</option>
+      <option value="1">分刻み</option>
+    </select>
+  </div>
+  <br>
+  <button onclick="startPractice()">スタート！</button>
+</div>
+
+<div id="readCheckMode" style="display:none;">
+    <h2>🕒 読み方確認モード</h2>
+    <p>時刻を入力して、読み上げを確認してください。</p>
+    <div>
+        <input type="number" id="testHour" min="0" max="23" placeholder="時 (0-23)" value="8">
+        <span>：</span>
+        <input type="number" id="testMinute" min="0" max="59" placeholder="分 (0-59)" value="0">
+    </div>
+    <select id="testTimeFormat" style="margin-top: 20px;">
+        <option value="12">12時間表示で読み上げ</option>
+        <option value="24" selected>24時間表示で読み上げ</option>
+    </select>
+    <br>
+    <button onclick="startTestRead()">読み上げ</button>
+    <br>
+    <button onclick="restart()">設定画面に戻る</button>
+</div>
+
+<div id="quiz" style="display:none;">
+  <div id="clockContainer">
+    <span id="ampmDisplay" style="display:none;"></span> 
+    <canvas id="analogClock" width="200" height="200" style="display:none;"></canvas>
+    <div id="digitalClock" class="digital" style="display:none;"></div>
+  </div>
+  <div id="controls">
+    <p id="progress"></p>
+    <button onclick="speakAnswer()">こたえを きく</button>
+    <button onclick="nextQuestion()">つぎの もんだい</button>
+  </div>
+</div>
+
+<div id="result" style="display:none;">
+  <h2>おつかれさま！</h2>
+  <button onclick="restart()">もういちど</button>
+  <button onclick="endPractice()">おわり</button>
+</div>
+
+<script>
+let current = 0;
+let total = 10;
+let hour = 0; // 0-23 (24時間形式) または 1-12 (12時間形式)
+let minute = 0;
+let mode = 'analog';
+let difficulty = 10;
+let timeFormat = '12'; // '12' or '24'
+
+// 追加: クイズ設定の有効/無効を切り替える関数
+function toggleQuizSettings() {
+    const selectedMode = document.getElementById('mode').value;
+    const settingsDiv = document.getElementById('quizSettings');
+    const controls = settingsDiv.querySelectorAll('select, input');
+    
+    const isDisabled = (selectedMode === 'read_check');
+    
+    controls.forEach(control => {
+        control.disabled = isDisabled;
+    });
+}
+
+function startPractice() {
+  mode = document.getElementById('mode').value;
+  
+  if (mode === 'read_check') {
+    // 読み方確認モードに切り替え
+    document.getElementById('setup').style.display = 'none';
+    document.getElementById('readCheckMode').style.display = 'block';
+    return;
+  }
+  
+  // 通常のクイズモードの開始
+  total = parseInt(document.getElementById('questionCount').value);
+  difficulty = parseInt(document.getElementById('difficulty').value);
+  timeFormat = document.getElementById('timeFormat').value;
+
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  current = 0;
+  nextQuestion();
+}
+
+function randomTime() {
+  if (timeFormat === '24') {
+    hour = Math.floor(Math.random() * 24); // 0から23の範囲
+  } else {
+    hour = Math.floor(Math.random() * 12) + 1; // 1から12の範囲
+  }
+  minute = Math.floor(Math.random() * (60 / difficulty)) * difficulty;
+}
+
+function drawClock(ctx, hour, minute) {
+  // アナログ時計の描画 (ロジックは変更なし)
+  ctx.clearRect(0, 0, 200, 200);
+  ctx.save();
+  ctx.translate(100, 100);
+  ctx.beginPath();
+  ctx.arc(0, 0, 90, 0, Math.PI * 2);
+  ctx.fillStyle = "#fff";
+  ctx.fill();
+  ctx.strokeStyle = "#333";
+  ctx.lineWidth = 4;
+  ctx.stroke();
+
+  // 🔹目盛り描画（分単位）
+  for (let i = 0; i < 60; i++) {
+    ctx.beginPath();
+    let angle = (Math.PI * 2 / 60) * i;
+    let inner = i % 5 === 0 ? 75 : 83;
+    ctx.moveTo(Math.cos(angle) * inner, Math.sin(angle) * inner);
+    ctx.lineTo(Math.cos(angle) * 88, Math.sin(angle) * 88);
+    ctx.strokeStyle = i % 5 === 0 ? "#333" : "#999";
+    ctx.lineWidth = i % 5 === 0 ? 2 : 1;
+    ctx.stroke();
+  }
+
+  // 🔹数字描画（1〜12）
+  ctx.font = "bold 16px sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  for (let i = 1; i <= 12; i++) {
+    let angle = (Math.PI * 2 / 12) * i - Math.PI / 2;
+    let x = Math.cos(angle) * 65;
+    let y = Math.sin(angle) * 65;
+    ctx.fillStyle = "#333";
+    ctx.fillText(i.toString(), x, y);
+  }
+
+  // 12時間表示用の時 (hour=0, 12 => 12時。hour=13 => 1時。)
+  let displayHour12 = (hour % 12 === 0) ? 12 : hour % 12;
+  // 0時 (00:00) の場合は 12時の位置
+  if (timeFormat === '24' && hour === 0) {
+    displayHour12 = 12;
+  }
+
+  // 🔹時針
+  let hourAngle = (displayHour12 + minute / 60) * (Math.PI * 2 / 12) - Math.PI / 2;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(Math.cos(hourAngle) * 45, Math.sin(hourAngle) * 45);
+  ctx.strokeStyle = "#333";
+  ctx.lineWidth = 5;
+  ctx.stroke();
+
+  // 🔹分針（見やすい青）
+  let minuteAngle = minute * (Math.PI * 2 / 60) - Math.PI / 2;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(Math.cos(minuteAngle) * 65, Math.sin(minuteAngle) * 65);
+  ctx.strokeStyle = "#0066cc";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // 🔹中心
+  ctx.beginPath();
+  ctx.arc(0, 0, 4, 0, Math.PI * 2);
+  ctx.fillStyle = "#333";
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function updateClockDisplay() {
+  const canvas = document.getElementById('analogClock');
+  const ctx = canvas.getContext('2d');
+  const ampmDisplay = document.getElementById('ampmDisplay');
+  
+  if (mode === 'analog' || mode === 'both') {
+    document.getElementById('analogClock').style.display = 'block';
+    drawClock(ctx, hour, minute); 
+    
+    if (timeFormat === '24') {
+        ampmDisplay.style.display = 'block';
+        if (hour >= 0 && hour < 12) {
+            ampmDisplay.innerText = '午前';
+        } else {
+            ampmDisplay.innerText = '午後';
+        }
+    } else {
+        ampmDisplay.style.display = 'none';
+    }
+    
+  } else {
+    document.getElementById('analogClock').style.display = 'none';
+    ampmDisplay.style.display = 'none';
+  }
+  
+  if (mode === 'digital' || mode === 'both') {
+    document.getElementById('digitalClock').style.display = 'block';
+    document.getElementById('digitalClock').innerText =
+      `${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}`;
+  } else {
+    document.getElementById('digitalClock').style.display = 'none';
+  }
+}
+
+function timeToJapanese(h, m, format) {
+  // 12時間表示の読み方（1時〜12時）
+  // 読み上げを区切りやすくするため、各時間にスペースを挿入
+  const hours12 = ['れい じ', 'いち じ', 'に じ', 'さん じ', 'よ じ', 'ご じ', 'ろく じ', 'しち じ', 'はち じ', 'く じ', 'じゅう じ', 'じゅう いち じ', 'じゅう に じ'];
+  // 24時間表示の読み方（13時以降）
+  // 読み上げを区切りやすくするため、各時間にスペースを挿入
+  const hours24 = ['じゅう さん じ', 'じゅう よ じ', 'じゅう ご じ', 'じゅう ろく じ', 'じゅう しち じ', 'じゅう はち じ', 'じゅう く じ', 'にじゅう じ', 'にじゅう いち じ', 'にじゅう に じ', 'にじゅう さん じ'];
+
+  let hourReading = '';
+  
+  if (format === '24') {
+      if (h === 0) {
+          hourReading = hours12[0]; // 'れい じ'
+      } else if (h >= 13) {
+          hourReading = hours24[h - 13]; 
+      } else {
+          // 1時〜12時
+          hourReading = hours12[h];
+      }
+  } else {
+      // 12時間モード (hは1〜12)
+      hourReading = hours12[h];
+  }
+  
+  let result = hourReading;
+
+  if (m === 0) return result;
+  if (m === 30) return result + ' はん';
+
+  // 🔽 分の読み分け
+  let minReading = '';
+
+  const irregular = {
+    1: 'いっぷん',
+    2: 'にふん',
+    3: 'さんぷん',
+    4: 'よんぷん',
+    5: 'ごふん',
+    6: 'ろっぷん',
+    7: 'ななふん',
+    8: 'はっぷん',
+    9: 'きゅうふん',
+    10: 'じゅっぷん',
+    20: 'にじゅっぷん',
+    40: 'よんじゅっぷん',
+    50: 'ごじゅっぷん'
+  };
+
+  if (irregular[m]) {
+    minReading = irregular[m];
+  } else {
+    // その他の分
+    const tens = Math.floor(m / 10);
+    const ones = m % 10;
+    let tensPart = '';
+    if (tens > 0) {
+      const tensRead = ['じゅう', 'にじゅう', 'さんじゅう', 'よんじゅう', 'ごじゅう'];
+      tensPart = tensRead[tens - 1] + ' ';
+    }
+    if (ones > 0) {
+      const onesRead = ['いっぷん','にふん','さんぷん','よんぷん','ごふん','ろっぷん','ななふん','はっぷん','きゅうふん'];
+      minReading = tensPart + onesRead[ones - 1];
+    } else {
+      minReading = tensPart + 'ぷん';
+      minReading = minReading.trim();
+    }
+  }
+
+  // 時と分をスペースで区切って返す
+  return result + ' ' + minReading;
+}
+
+function speakAnswer() {
+  const msg = new SpeechSynthesisUtterance(timeToJapanese(hour, minute, timeFormat));
+  msg.lang = 'ja-JP';
+  window.speechSynthesis.speak(msg);
+}
+
+// 読み方確認モードでの読み上げ関数 (startTestRead)
+function startTestRead() {
+    const testHourInput = document.getElementById('testHour');
+    const testMinuteInput = document.getElementById('testMinute');
+    const testFormat = document.getElementById('testTimeFormat').value;
+
+    let testH = parseInt(testHourInput.value);
+    let testM = parseInt(testMinuteInput.value);
+    
+    // バリデーション
+    if (isNaN(testH) || testH < 0 || testH > 23) {
+        alert("時の値は 0 から 23 の間で入力してください。");
+        return;
+    }
+    if (isNaN(testM) || testM < 0 || testM > 59) {
+        alert("分の値は 0 から 59 の間で入力してください。");
+        return;
+    }
+    
+    // timeToJapaneseに渡すhourの値を決定
+    let readH = testH; 
+    if (testFormat === '12') {
+        // 12時間表示での読み上げの場合、hを1〜12に変換
+        readH = (testH % 12 === 0) ? 12 : testH % 12;
+        if (testH === 0) readH = 12;
+    }
+    
+    const timeText = timeToJapanese(readH, testM, testFormat);
+    const msg = new SpeechSynthesisUtterance(timeText);
+    msg.lang = 'ja-JP';
+    window.speechSynthesis.speak(msg);
+}
+
+
+function nextQuestion() {
+  if (current >= total) {
+    document.getElementById('quiz').style.display = 'none';
+    document.getElementById('result').style.display = 'block';
+    return;
+  }
+  randomTime();
+  updateClockDisplay();
+  current++;
+  document.getElementById('progress').innerText = `${current}/${total}もん`; 
+}
+
+function restart() {
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('quiz').style.display = 'none'; 
+  document.getElementById('readCheckMode').style.display = 'none'; 
+  document.getElementById('setup').style.display = 'block';
+  // 設定画面に戻ったときに、初期状態に合わせてクイズ設定を有効にする
+  toggleQuizSettings(); 
+}
+
+function endPractice() {
+    window.close(); 
+    // ※ ブラウザのセキュリティ設定により、この関数は
+    //    ユーザーが直接開いたタブでは動作しない場合があります。
+    //    その場合は、手動でタブを閉じてください。
+}
+
+// ページロード時に一度実行し、初期状態を反映
+document.addEventListener('DOMContentLoaded', toggleQuizSettings);
+</script>
+</body>
+</html>

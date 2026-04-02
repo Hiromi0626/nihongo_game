@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本語学習：国旗めくり対戦ゲーム</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --success-color: #2ecc71;
+            --matched-color: #bdc3c7;
+            --active-player-color: #e74c3c;
+        }
+
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background-color: #f4f7f6; padding: 20px; color: #333; }
+        
+        /* 設定画面 */
+        .setup-area { background: white; padding: 30px; border-radius: 15px; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .input-group { margin-bottom: 15px; font-size: 1.1em; }
+        input[type="number"] { padding: 8px; width: 60px; border-radius: 5px; border: 1px solid #ccc; font-size: 1em; }
+        
+        /* ゲームボード */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 110px);
+            gap: 15px;
+            justify-content: center;
+            margin: 20px auto;
+            max-width: 900px;
+        }
+
+        /* カードの基本デザイン */
+        .card {
+            width: 110px; height: 140px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: bold; cursor: pointer;
+            border-radius: 10px; user-select: none;
+            transition: transform 0.2s, background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card:hover { transform: translateY(-5px); background-color: #2980b9; }
+
+        /* めくった時のデザイン */
+        .card.flipped { background-color: white; color: #333; border: 2px solid var(--primary-color); cursor: default; transform: none; }
+        
+        /* 正解した時のデザイン（消えずに残る） */
+        .card.matched {
+            background-color: var(--matched-color);
+            color: #7f8c8d;
+            border: 2px solid #95a5a6;
+            cursor: default;
+            opacity: 0.8;
+            transform: none;
+        }
+        .card img { width: 85%; height: auto; border-radius: 4px; pointer-events: none; }
+
+        /* スコア表示 */
+        .score-board { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
+        .player-info { padding: 15px 25px; border: 2px solid #ddd; border-radius: 10px; background: #fff; transition: all 0.3s; }
+        .player-info.active { border-color: var(--active-player-color); background: #fff5f5; box-shadow: 0 0 15px rgba(231, 76, 60, 0.3); transform: scale(1.05); }
+        .player-score { font-size: 1.5em; display: block; font-weight: bold; }
+
+        .message { font-size: 1.5em; font-weight: bold; color: var(--success-color); margin: 20px 0; min-height: 1.6em; }
+        .hidden { display: none; }
+        button { padding: 12px 30px; font-size: 1em; cursor: pointer; background: var(--success-color); color: white; border: none; border-radius: 5px; transition: opacity 0.2s; }
+        button:hover { opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+    <h1>🌎 日本語・国旗めくりゲーム</h1>
+
+    <div id="setup" class="setup-area">
+        <div class="input-group">
+            👥 プレイヤー人数: <input type="number" id="player-count" value="2" min="1" max="10"> 人
+        </div>
+        <div class="input-group">
+            🚩 問題数（ペア）: <input type="number" id="pair-count" value="4" min="1" max="50"> 組
+        </div>
+        <p style="font-size: 0.9em; color: #666;">※画像ファイルが足りない場合はエラーになります</p>
+        <button onclick="startGame()">ゲーム開始！</button>
+    </div>
+
+    <div id="game-area" class="hidden">
+        <div id="turn-display" style="font-size: 1.2em; margin-bottom: 10px; font-weight: bold;"></div>
+        <div class="score-board" id="score-board"></div>
+        <div id="message" class="message"></div>
+        <div class="grid" id="game-board"></div>
+        <button onclick="backToSetup()" style="background: #95a5a6;">設定にもどる</button>
+    </div>
+
+    <script>
+        // 1. 国データリスト（画像ファイル名と日本語名をペアにする）
+        const masterList = [
+			{ id: 1, image: '写真/国旗/アイスランド国旗.jpg', name: 'アイスランド' },
+			{ id: 2, image: '写真/国旗/アイルランド国旗.jpg', name: 'アイルランド' },
+			{ id: 3, image: '写真/国旗/アゼルバイジャン国旗.jpg', name: 'アゼルバイジャン' },
+			{ id: 4, image: '写真/国旗/アメリカ国旗.jpg', name: 'アメリカ' },
+			{ id: 5, image: '写真/国旗/アラブ首長国連邦国旗.jpg', name: 'アラブ首長国連邦' },
+			{ id: 6, image: '写真/国旗/アルジェリア国旗.jpg', name: 'アルジェリア' },
+			{ id: 7, image: '写真/国旗/アルゼンチン国旗.jpg', name: 'アルゼンチン' },
+			{ id: 8, image: '写真/国旗/アルバニア国旗.jpg', name: 'アルバニア' },
+			{ id: 9, image: '写真/国旗/アルメニア国旗.jpg', name: 'アルメニア' },
+			{ id: 10, image: '写真/国旗/アンゴラ国旗.jpg', name: 'アンゴラ' },
+			{ id: 11, image: '写真/国旗/イエメン国旗.jpg', name: 'イエメン' },
+			{ id: 12, image: '写真/国旗/イギリス国旗.jpg', name: 'イギリス' },
+			{ id: 13, image: '写真/国旗/イスラエル国旗.jpg', name: 'イスラエル' },
+			{ id: 14, image: '写真/国旗/イタリア国旗.jpg', name: 'イタリア' },
+			{ id: 15, image: '写真/国旗/イラク国旗.jpg', name: 'イラク' },
+			{ id: 16, image: '写真/国旗/イラン国旗.jpg', name: 'イラン' },
+			{ id: 17, image: '写真/国旗/インドネシア国旗.jpg', name: 'インドネシア' },
+			{ id: 18, image: '写真/国旗/インド国旗.jpg', name: 'インド' },
+			{ id: 19, image: '写真/国旗/ウクライナ国旗.jpg', name: 'ウクライナ' },
+			{ id: 20, image: '写真/国旗/ウズベキスタン国旗.jpg', name: 'ウズベキスタン' },
+			{ id: 21, image: '写真/国旗/エジプト国旗.jpg', name: 'エジプト' },
+			{ id: 22, image: '写真/国旗/エチオピア国旗.jpg', name: 'エチオピア' },
+			{ id: 23, image: '写真/国旗/オランダ国旗.jpg', name: 'オランダ' },
+			{ id: 24, image: '写真/国旗/オーストラリア国旗.jpg', name: 'オーストラリア' },
+			{ id: 25, image: '写真/国旗/オーストリア国旗.jpg', name: 'オーストリア' },
+			{ id: 26, image: '写真/国旗/オランダ国旗.jpg', name: 'オランダ' },
+			{ id: 27, image: '写真/国旗/ガーナ国旗.jpg', name: 'ガーナ' },
+			{ id: 28, image: '写真/国旗/ガイアナ国旗.jpg', name: 'ガイアナ' },
+			{ id: 29, image: '写真/国旗/カタール国旗.jpg', name: 'カタール' },
+			{ id: 30, image: '写真/国旗/カナダ国旗.jpg', name: 'カナダ' },
+			{ id: 31, image: '写真/国旗/カメルーン国旗.jpg', name: 'カメルーン' },
+			{ id: 32, image: '写真/国旗/カンボジア国旗.jpg', name: 'カンボジア' },
+			{ id: 33, image: '写真/国旗/ギニア国旗.jpg', name: 'ギニア' },
+			{ id: 34, image: '写真/国旗/キプロス国旗.jpg', name: 'キプロス' },
+			{ id: 35, image: '写真/国旗/キューバ国旗.jpg', name: 'キューバ' },
+			{ id: 36, image: '写真/国旗/ギリシャ国旗.jpg', name: 'ギリシャ' },
+			{ id: 37, image: '写真/国旗/クウェート国旗.jpg', name: 'クウェート' },
+			{ id: 38, image: '写真/国旗/ケニア国旗.jpg', name: 'ケニア' },
+			{ id: 39, image: '写真/国旗/コートジボワール国旗.jpg', name: 'コートジボワール' },
+			{ id: 40, image: '写真/国旗/コスタリカ国旗.jpg', name: 'コスタリカ' },
+			{ id: 41, image: '写真/国旗/コロンビア国旗.jpg', name: 'コロンビア' },
+			{ id: 42, image: '写真/国旗/サウジアラビア国旗.jpg', name: 'サウジアラビア' },
+			{ id: 43, image: '写真/国旗/サモア国旗.jpg', name: 'サモア' },
+			{ id: 44, image: '写真/国旗/シエラレオネ国旗.jpg', name: 'シエラレオネ' },
+			{ id: 45, image: '写真/国旗/ジャマイカ国旗.jpg', name: 'ジャマイカ' },
+			{ id: 46, image: '写真/国旗/ジョージア国旗.jpg', name: 'ジョージア' },
+			{ id: 47, image: '写真/国旗/シリア国旗.jpg', name: 'シリア' },
+			{ id: 48, image: '写真/国旗/シンガポール国旗.jpg', name: 'シンガポール' },
+			{ id: 49, image: '写真/国旗/ジンバブエ国旗.jpg', name: 'ジンバブエ' },
+			{ id: 50, image: '写真/国旗/スイス国旗.jpg', name: 'スイス' },
+			{ id: 51, image: '写真/国旗/スウェーデン国旗.jpg', name: 'スウェーデン' },
+			{ id: 52, image: '写真/国旗/スーダン国旗.jpg', name: 'スーダン' },
+			{ id: 53, image: '写真/国旗/スペイン国旗.jpg', name: 'スペイン' },
+			{ id: 54, image: '写真/国旗/スリナム国旗.jpg', name: 'スリナム' },
+			{ id: 55, image: '写真/国旗/スリランカ国旗.jpg', name: 'スリランカ' },
+			{ id: 56, image: '写真/国旗/スロバキア国旗.jpg', name: 'スロバキア' },
+			{ id: 57, image: '写真/国旗/スロベニア国旗.jpg', name: 'スロベニア' },
+			{ id: 58, image: '写真/国旗/セーシェル国旗.jpg', name: 'セーシェル' },
+			{ id: 59, image: '写真/国旗/セネガル国旗.jpg', name: 'セネガル' },
+			{ id: 60, image: '写真/国旗/ソマリア国旗.jpg', name: 'ソマリア' },
+			{ id: 61, image: '写真/国旗/ソロモン諸島国旗.jpg', name: 'ソロモン諸島' },
+			{ id: 62, image: '写真/国旗/タイ国旗.jpg', name: 'タイ' },
+			{ id: 63, image: '写真/国旗/タンザニア国旗.jpg', name: 'タンザニア' },
+			{ id: 64, image: '写真/国旗/チェコ国旗.jpg', name: 'チェコ' },
+			{ id: 65, image: '写真/国旗/チュニジア国旗.jpg', name: 'チュニジア' },
+			{ id: 66, image: '写真/国旗/チリ国旗.jpg', name: 'チリ' },
+			{ id: 67, image: '写真/国旗/デンマーク国旗.jpg', name: 'デンマーク' },
+			{ id: 68, image: '写真/国旗/ドイツ国旗.jpg', name: 'ドイツ' },
+			{ id: 69, image: '写真/国旗/ドミニカ国国旗.jpg', name: 'ドミニカ国' },
+			{ id: 70, image: '写真/国旗/トリニダードトバゴ国旗.jpg', name: 'トリニダードトバゴ' },
+			{ id: 71, image: '写真/国旗/トルコ国旗.jpg', name: 'トルコ' },
+			{ id: 72, image: '写真/国旗/トンガ国旗.jpg', name: 'トンガ' },
+			{ id: 73, image: '写真/国旗/ナイジェリア国旗.jpg', name: 'ナイジェリア' },
+			{ id: 74, image: '写真/国旗/ニュージーランド国旗.jpg', name: 'ニュージーランド' },
+			{ id: 75, image: '写真/国旗/ネパール国旗.jpg', name: 'ネパール' },
+			{ id: 76, image: '写真/国旗/ノルウェー国旗.jpg', name: 'ノルウェー' },
+			{ id: 77, image: '写真/国旗/バーレーン国旗.jpg', name: 'バーレーン' },
+			{ id: 78, image: '写真/国旗/パキスタン国旗.jpg', name: 'パキスタン' },
+			{ id: 79, image: '写真/国旗/パナマ国旗.jpg', name: 'パナマ' },
+			{ id: 80, image: '写真/国旗/バハマ国旗.jpg', name: 'バハマ' },
+			{ id: 81, image: '写真/国旗/パプアニューギニア国旗.jpg', name: 'パプアニューギニア' },
+			{ id: 82, image: '写真/国旗/パラオ国旗.jpg', name: 'パラオ' },
+			{ id: 83, image: '写真/国旗/パレスチナ国旗.jpg', name: 'パレスチナ' },
+			{ id: 84, image: '写真/国旗/ハンガリー国旗.jpg', name: 'ハンガリー' },
+			{ id: 85, image: '写真/国旗/バングラディッシュ国旗.jpg', name: 'バングラディッシュ' },
+			{ id: 86, image: '写真/国旗/フィリピン国旗.jpg', name: 'フィリピン' },
+			{ id: 87, image: '写真/国旗/フィンランド国旗.jpg', name: 'フィンランド' },
+			{ id: 88, image: '写真/国旗/ブラジル国旗.jpg', name: 'ブラジル' },
+			{ id: 89, image: '写真/国旗/フランス国旗.jpg', name: 'フランス' },
+			{ id: 90, image: '写真/国旗/ブルガリア国旗.jpg', name: 'ブルガリア' },
+			{ id: 91, image: '写真/国旗/ブルキナファソ国旗.jpg', name: 'ブルキナファソ' },
+			{ id: 92, image: '写真/国旗/ベトナム国旗.jpg', name: 'ベトナム' },
+			{ id: 93, image: '写真/国旗/ベナン国旗.jpg', name: 'ベナン' },
+			{ id: 94, image: '写真/国旗/ベネズエラ国旗.jpg', name: 'ベネズエラ' },
+			{ id: 95, image: '写真/国旗/ベラルーシ国旗.jpg', name: 'ベラルーシ' },
+			{ id: 96, image: '写真/国旗/ペルー国旗.jpg', name: 'ペルー' },
+			{ id: 97, image: '写真/国旗/ベルギー国旗.jpg', name: 'ベルギー' },
+			{ id: 98, image: '写真/国旗/ポーランド国旗.jpg', name: 'ポーランド' },
+			{ id: 99, image: '写真/国旗/ボスニアヘルツェゴビナ国旗.jpg', name: 'ボスニアヘルツェゴビナ' },
+			{ id: 100, image: '写真/国旗/ボリビア国旗.jpg', name: 'ボリビア' },
+			{ id: 101, image: '写真/国旗/ホンジュラス国旗.jpg', name: 'ホンジュラス' },
+			{ id: 102, image: '写真/国旗/マーシャル諸島国旗.jpg', name: 'マーシャル諸島' },
+			{ id: 103, image: '写真/国旗/マダガスカル国旗.jpg', name: 'マダガスカル' },
+			{ id: 104, image: '写真/国旗/マレーシア国旗.jpg', name: 'マレーシア' },
+			{ id: 105, image: '写真/国旗/ミクロネシア連邦国旗.jpg', name: 'ミクロネシア連邦' },
+			{ id: 106, image: '写真/国旗/ミャンマー国旗.jpg', name: 'ミャンマー' },
+			{ id: 107, image: '写真/国旗/メキシコ国旗.jpg', name: 'メキシコ' },
+			{ id: 108, image: '写真/国旗/モナコ国旗.jpg', name: 'モナコ' },
+			{ id: 109, image: '写真/国旗/モルディブ国旗.jpg', name: 'モルディブ' },
+			{ id: 110, image: '写真/国旗/モロッコ国旗.jpg', name: 'モロッコ' },
+			{ id: 111, image: '写真/国旗/モンゴル国旗.jpg', name: 'モンゴル' },
+			{ id: 112, image: '写真/国旗/ヨルダン国旗.jpg', name: 'ヨルダン' },
+			{ id: 113, image: '写真/国旗/ラオス国旗.jpg', name: 'ラオス' },
+			{ id: 114, image: '写真/国旗/リビア国旗.jpg', name: 'リビア' },
+			{ id: 115, image: '写真/国旗/ルーマニア国旗.jpg', name: 'ルーマニア' },
+			{ id: 116, image: '写真/国旗/ルクセンブルク国旗.jpg', name: 'ルクセンブルク' },
+			{ id: 117, image: '写真/国旗/ルワンダ国旗.jpg', name: 'ルワンダ' },
+			{ id: 118, image: '写真/国旗/レバノン国旗.jpg', name: 'レバノン' },
+			{ id: 119, image: '写真/国旗/ロシア国旗.jpg', name: 'ロシア' },
+			{ id: 120, image: '写真/国旗/韓国国旗.jpg', name: '韓国' },
+			{ id: 121, image: '写真/国旗/中国国旗.jpg', name: '中国' },
+			{ id: 122, image: '写真/国旗/東ティモール国旗.jpg', name: '東ティモール' },
+			{ id: 123, image: '写真/国旗/南アフリカ国旗.jpg', name: '南アフリカ' },
+			{ id: 124, image: '写真/国旗/南スーダン国旗.jpg', name: '南スーダン' },
+			{ id: 125, image: '写真/国旗/日本国旗.jpg', name: '日本' },
+			{ id: 126, image: '写真/国旗/北マケドニア国旗.jpg', name: '北マケドニア' },
+			{ id: 127, image: '写真/国旗/北朝鮮国旗.jpg', name: '北朝鮮' },
+            // ここにデータを増やせば、選べる問題数が増えます
+        ];
+
+        let players = [];
+        let currentPlayerIndex = 0;
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let totalPairs = 0;
+        let isProcessing = false; // アニメーション中のクリック防止用
+
+        function startGame() {
+            const pCount = parseInt(document.getElementById('player-count').value) || 1;
+            totalPairs = parseInt(document.getElementById('pair-count').value) || 1;
+
+            // 登録データ以上の問題数は指定できないように制限
+            const maxAvailable = masterList.length;
+            if (totalPairs > maxAvailable) {
+                alert(`データが足りません。現在は最大 ${maxAvailable} 組までです。`);
+                return;
+            }
+
+            // 初期化
+            players = Array.from({ length: pCount }, (_, i) => ({ id: i + 1, score: 0 }));
+            currentPlayerIndex = 0;
+            matchedPairs = 0;
+            flippedCards = [];
+            isProcessing = false;
+
+            // データの準備
+            const selected = [...masterList].sort(() => Math.random() - 0.5).slice(0, totalPairs);
+            let gameData = [];
+            selected.forEach(c => {
+                gameData.push({ id: c.id, content: c.image, type: 'image' });
+                gameData.push({ id: c.id, content: c.name, type: 'text' });
+            });
+            gameData.sort(() => Math.random() - 0.5);
+
+            // UI切り替え
+            document.getElementById('setup').classList.add('hidden');
+            document.getElementById('game-area').classList.remove('hidden');
+            document.getElementById('message').innerText = '';
+            
+            updateScoreBoard();
+            updateTurnDisplay();
+            renderBoard(gameData);
+        }
+
+        function renderBoard(data) {
+            const board = document.getElementById('game-board');
+            board.innerHTML = '';
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.id = item.id;
+                card.dataset.type = item.type;
+                card.dataset.content = item.content;
+                card.innerText = '?';
+                card.onclick = () => flipCard(card);
+                board.appendChild(card);
+            });
+        }
+
+        function flipCard(card) {
+            // クリック防止条件：2枚めくり中、すでにめくられている、すでに正解している
+            if (isProcessing || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+            // カードの中身を表示
+            if (card.dataset.type === 'image') {
+                card.innerText = '';
+                const img = document.createElement('img');
+                img.src = "images/" + card.dataset.content;
+                card.appendChild(img);
+            } else {
+                card.innerText = card.dataset.content;
+            }
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                isProcessing = true;
+                setTimeout(checkMatch, 800);
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            
+            if (card1.dataset.id === card2.dataset.id) {
+                // 【正解】
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                
+                players[currentPlayerIndex].score++;
+                matchedPairs++;
+                
+                if (matchedPairs === totalPairs) {
+                    showFinalResult();
+                } else {
+                    document.getElementById('message').innerText = '正解！もう一度めくれます。';
+                }
+            } else {
+                // 【不正解】
+                card1.innerText = '?';
+                card2.innerText = '?';
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                
+                document.getElementById('message').innerText = '残念！交代です。';
+                currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+            }
+
+            flippedCards = [];
+            isProcessing = false;
+            updateScoreBoard();
+            updateTurnDisplay();
+        }
+
+        function updateScoreBoard() {
+            const board = document.getElementById('score-board');
+            board.innerHTML = '';
+            players.forEach((p, index) => {
+                const div = document.createElement('div');
+                div.className = `player-info ${index === currentPlayerIndex ? 'active' : ''}`;
+                div.innerHTML = `プレイヤー ${p.id}<span class="player-score">${p.score}点</span>`;
+                board.appendChild(div);
+            });
+        }
+
+        function updateTurnDisplay() {
+            if (matchedPairs < totalPairs) {
+                document.getElementById('turn-display').innerText = `今は プレイヤー ${players[currentPlayerIndex].id} の番です`;
+            } else {
+                document.getElementById('turn-display').innerText = 'ゲーム終了！';
+            }
+        }
+
+        function showFinalResult() {
+            const maxScore = Math.max(...players.map(p => p.score));
+            const winners = players.filter(p => p.score === maxScore).map(p => p.id);
+            document.getElementById('message').innerText = `終了！ プレイヤー ${winners.join(' & ')} の勝ちです！`;
+        }
+
+        function backToSetup() {
+            document.getElementById('setup').classList.remove('hidden');
+            document.getElementById('game-area').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
