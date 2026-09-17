@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#667eea">
+<title>漢字Quest</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{height:100%;}
+body{margin:0;padding:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans JP','Yu Gothic',sans-serif;background:#f4f6fb;color:#333;overscroll-behavior:none;}
+.app{width:100%;max-width:600px;min-height:100vh;margin:0 auto;background:#fff;position:relative;}
+.header{position:sticky;top:0;z-index:100;background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:14px 16px;padding-top:max(14px,env(safe-area-inset-top));box-shadow:0 2px 8px rgba(0,0,0,.12);}
+.headerInner{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.headerTitle{font-size:20px;font-weight:800;}
+.headerXP{font-size:13px;font-weight:bold;background:rgba(255,255,255,.18);padding:5px 9px;border-radius:20px;white-space:nowrap;}
+.screen{display:none;padding:18px 15px 35px;}
+.screen.active{display:block;}
+.card{background:white;border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 3px 14px rgba(0,0,0,.07);}
+.hero{text-align:center;padding:25px 15px;background:linear-gradient(145deg,#f3f4ff,#ffffff);}
+.heroIcon{font-size:55px;line-height:1.1;margin-bottom:8px;}
+.heroTitle{font-size:26px;font-weight:800;margin:5px 0;}
+.heroText{font-size:14px;color:#666;margin:6px 0;}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;}
+.stat{text-align:center;background:#f6f7fb;border-radius:13px;padding:10px 4px;}
+.stat strong{display:block;font-size:20px;line-height:1.2;}
+.stat span{font-size:10px;color:#777;}
+.btn{display:block;width:100%;min-height:52px;border:0;border-radius:15px;padding:13px 14px;margin:8px 0;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation;background:#667eea;color:white;}
+.btn:active{transform:scale(.98);opacity:.9;}
+.btn.secondary{background:#eef0f6;color:#444;}
+.btn.green{background:#45a968;}
+.selectBox{margin-bottom:16px;}
+.selectBox label{display:block;font-size:14px;font-weight:700;margin-bottom:6px;}
+select{width:100%;height:50px;border:1px solid #ddd;border-radius:12px;padding:0 12px;font-size:16px;background:#fff;}
+.quizTop{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#777;margin-bottom:6px;}
+.quizTags{display:flex;gap:5px;flex-wrap:wrap;}
+.tag{display:inline-block;padding:4px 8px;background:#eef0ff;color:#5c65c5;border-radius:15px;font-size:11px;font-weight:700;}
+.progress{height:7px;background:#e9e9ef;border-radius:10px;overflow:hidden;margin:5px 0 16px;}
+.progressBar{height:100%;width:0%;background:#667eea;border-radius:10px;transition:width .3s ease;}
+.questionCard{padding:18px 12px 20px;text-align:center;}
+.sentence{font-size:clamp(23px,7vw,32px);font-weight:800;line-height:1.8;word-break:break-word;margin:8px 0 12px;}
+.blank{display:inline-block;min-width:70px;height:48px;line-height:42px;margin:0 3px;padding:0 7px;border-bottom:4px solid #667eea;color:#667eea;vertical-align:middle;}
+.readingHint{display:inline-block;background:#fff5dc;border-radius:20px;padding:7px 14px;font-size:16px;color:#6d5a28;margin-bottom:8px;}
+.questionText{font-size:14px;font-weight:700;color:#555;margin:8px 0 12px;}
+.choices{display:flex;flex-direction:column;gap:10px;}
+.choice{width:100%;min-height:68px;border:2px solid #e0e2e9;border-radius:16px;background:#fff;font-size:32px;font-weight:800;color:#333;cursor:pointer;touch-action:manipulation;box-shadow:0 2px 5px rgba(0,0,0,.04);transition:transform .1s,background .2s,border .2s;}
+.choice:active{transform:scale(.97);}
+.choice:disabled{cursor:default;}
+.choice.correct{background:#e8f8ee;border-color:#45a968;color:#257840;}
+.choice.wrong{background:#fff0f0;border-color:#e25c5c;color:#b53d3d;}
+.feedback{display:none;border-radius:16px;padding:15px 10px;margin-top:12px;text-align:center;font-weight:700;font-size:15px;}
+.feedback.correct{display:block;background:#e8f8ee;color:#267842;}
+.feedback.wrong{display:block;background:#fff0f0;color:#b63d3d;}
+.feedbackKanji{display:block;font-size:42px;line-height:1.2;margin:5px 0;}
+.resultIcon{font-size:60px;text-align:center;margin:8px;}
+.resultScore{text-align:center;font-size:42px;font-weight:800;color:#667eea;margin:8px 0;}
+.kanjiGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.kanjiCard{background:#f5f6fa;border-radius:12px;padding:10px 3px;text-align:center;}
+.kanjiCard .k{font-size:30px;font-weight:800;}
+.kanjiCard .r{font-size:11px;color:#777;white-space:nowrap;overflow:hidden;}
+.empty{text-align:center;color:#888;padding:30px 10px;font-size:14px;}
+@media(max-width:380px){
+.screen{padding-left:11px;padding-right:11px;}
+.sentence{font-size:22px;}
+.choice{min-height:62px;font-size:29px;}
+.stats{gap:5px;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="header">
+<div class="headerInner">
+<div class="headerTitle">&#x1F3AF; 漢字Quest</div>
+<div class="headerXP">&#x2B50; <span id="headerXP">0</span> XP</div>
+</div>
+</header>
+<section id="home" class="screen active">
+<div class="card hero">
+<div class="heroIcon">&#x1F331;</div>
+<div class="heroTitle">漢字Quest</div>
+<div class="heroText">文章を読んで、正しい漢字を選ぼう！</div>
+</div>
+<div class="stats">
+<div class="stat"><strong id="homeLearned">0</strong><span>覚えた漢字</span></div>
+<div class="stat"><strong id="homeBest">0</strong><span>&#x1F525; 最高連続</span></div>
+<div class="stat"><strong id="homeXP">0</strong><span>&#x2B50; XP</span></div>
+</div>
+<button class="btn" onclick="showScreen('setup')">&#x1F680; ミッションを始める</button>
+<button class="btn secondary" onclick="showCollection()">&#x1F4DA; 漢字コレクション</button>
+<button class="btn secondary" onclick="showMistakes()">&#x1F4AA; リベンジ問題</button>
+</section>
+<section id="setup" class="screen">
+<div class="card">
+<h2>&#x1F4CB; ミッション設定</h2>
+<div class="selectBox">
+<label>&#x1F4D6; レベル</label>
+<select id="levelSelect">
+<option value="ALL" selected>すべて</option>
+<option value="N5">N5</option>
+<option value="N4">N4</option>
+<option value="N3">N3</option>
+<option value="N2">N2</option>
+<option value="N1">N1</option>
+</select>
+</div>
+<div class="selectBox">
+<label>&#x1F3AF; テーマ</label>
+<select id="themeSelect">
+<option value="ALL" selected>すべて</option>
+</select>
+</div>
+<div class="selectBox">
+<label>&#x1F522; 問題数</label>
+<select id="countSelect">
+<option value="10">10問</option>
+<option value="20">20問</option>
+<option value="ALL">全部</option>
+</select>
+</div>
+<button class="btn" onclick="startQuiz()">&#x25B6;&#xFE0F; スタート</button>
+<button class="btn secondary" onclick="showScreen('home')">&#x2B05;&#xFE0F; 戻る</button>
+</div>
+</section>
+<section id="quiz" class="screen">
+<div class="quizTop">
+<span id="questionNo">問題 1 / 10</span>
+<span>&#x1F525; <span id="quizStreak">0</span>連続</span>
+</div>
+<div class="progress"><div class="progressBar" id="progressBar"></div></div>
+<div class="card questionCard">
+<div class="quizTags"><span class="tag" id="quizLevel"></span><span class="tag" id="quizTheme"></span></div>
+<div class="sentence" id="sentence"></div>
+<div class="readingHint" id="readingHint"></div>
+<div class="questionText">&#x1F4A1; この読みの漢字はどれですか？</div>
+<div class="choices" id="choices"></div>
+<div id="feedback" class="feedback"></div>
+<button id="nextBtn" class="btn" style="display:none;margin-top:14px;" onclick="nextQuestion()">&#x27A1;&#xFE0F; 次の問題</button>
+</div>
+<div class="stats">
+<div class="stat"><strong id="quizXP">0</strong><span>&#x2B50; XP</span></div>
+<div class="stat"><strong id="quizCorrect">0</strong><span>&#x2705; 正解</span></div>
+<div class="stat"><strong id="quizTotal">0</strong><span>問題</span></div>
+</div>
+</section>
+<section id="result" class="screen">
+<div class="card">
+<div class="resultIcon">&#x1F389;</div>
+<h2 style="text-align:center;">ミッション終了！</h2>
+<div class="resultScore" id="resultScore">0 / 0</div>
+<p style="text-align:center;" id="resultMessage"></p>
+<div class="stats">
+<div class="stat"><strong id="resultXP">0</strong><span>&#x2B50; 獲得XP</span></div>
+<div class="stat"><strong id="resultStreak">0</strong><span>&#x1F525; 連続</span></div>
+<div class="stat"><strong id="resultLearned">0</strong><span>&#x1F4DA; 漢字</span></div>
+</div>
+<button class="btn" onclick="startQuiz()">&#x1F501; もう一度</button>
+<button class="btn secondary" onclick="showScreen('home')">&#x1F3E0; ホームへ</button>
+</div>
+</section>
+<section id="collection" class="screen">
+<div class="card">
+<h2>&#x1F4DA; 漢字コレクション</h2>
+<p style="font-size:14px;color:#666;">正解した漢字がここに集まります。</p>
+<div class="kanjiGrid" id="collectionGrid"></div>
+<button class="btn secondary" onclick="showScreen('home')">&#x2B05;&#xFE0F; 戻る</button>
+</div>
+</section>
+<section id="mistakes" class="screen">
+<div class="card">
+<h2>&#x1F4AA; リベンジ問題</h2>
+<p style="font-size:14px;color:#666;">まちがえた漢字をもう一度練習しましょう。</p>
+<div id="mistakeList"></div>
+<button id="revengeBtn" class="btn green" onclick="startMistakeQuiz()">&#x1F501; リベンジする</button>
+<button class="btn secondary" onclick="showScreen('home')">&#x2B05;&#xFE0F; 戻る</button>
+</div>
+</section>
+<script>
+const questions=[{"sentence":"富士山は日本で一番高いです。","kanji":"山","reading":"さん","level":"N5","theme":""},{"sentence":"あれは火山です。","kanji":"山","reading":"ざん","level":"N5","theme":""},{"sentence":"エベレストは世界で一番高い山です。","kanji":"山","reading":"やま","level":"N5","theme":""},{"sentence":"きれいな川でおよぎました。","kanji":"川","reading":"かわ","level":"N5","theme":""},{"sentence":"ナイル川はエジプトにあります。","kanji":"川","reading":"がわ","level":"N5","theme":""},{"sentence":"あの人はだれですか。","kanji":"人","reading":"ひと","level":"N5","theme":""},{"sentence":"私は日本人じゃありません。","kanji":"人","reading":"じん","level":"N5","theme":""},{"sentence":"このクラスの学生は何人ですか。","kanji":"人","reading":"にん","level":"N5","theme":""},{"sentence":"アンナさんは目が大きいです。","kanji":"目","reading":"め","level":"N3","theme":""},{"sentence":"ひとつ目の駅へ行きます。","kanji":"目","reading":"め","level":"N3","theme":""},{"sentence":"今日は旅行の二日目です。","kanji":"目","reading":"め","level":"N3","theme":""},{"sentence":"ダニエルさんは口が大きいです。","kanji":"口","reading":"くち","level":"N5","theme":""},{"sentence":"入り口はここです。","kanji":"口","reading":"ぐち","level":"N5","theme":""},{"sentence":"出口はあそこです。","kanji":"口","reading":"ぐち","level":"N5","theme":""},{"sentence":"日本の人口は何人ですか。","kanji":"口","reading":"こう","level":"N5","theme":""},{"sentence":"田植えの手伝いをしました。","kanji":"田","reading":"た","level":"N5","theme":""},{"sentence":"山田さんは親切です。","kanji":"田","reading":"だ","level":"N5","theme":""},{"sentence":"この土は少し赤いです。","kanji":"土","reading":"つち","level":"N5","theme":""},{"sentence":"明日は土曜日です。","kanji":"土","reading":"ど","level":"N5","theme":""},{"sentence":"テストの日","kanji":"日","reading":"ひ","level":"N5","theme":""},{"sentence":"日曜日にスーバーへ行きます。","kanji":"日","reading":"にち","level":"N5","theme":""},{"sentence":"月曜日に学校へ行きます。","kanji":"日","reading":"び","level":"N5","theme":""},{"sentence":"休日","kanji":"日","reading":"じつ","level":"N5","theme":""},{"sentence":"今日は一月三日です。","kanji":"三日","reading":"みっか","level":"N5","theme":""},{"sentence":"私は日本語を勉強しています。","kanji":"日本語","reading":"にほんご","level":"N5","theme":""},{"sentence":"月がきれいです","kanji":"月","reading":"つき","level":"N5","theme":""},{"sentence":"火はあぶないです。","kanji":"火","reading":"ひ","level":"N5","theme":""},{"sentence":"花火はきれいです。","kanji":"花火","reading":"はなび","level":"N5","theme":""},{"sentence":"火曜日に海へ行きます。","kanji":"火","reading":"か","level":"N5","theme":""},{"sentence":"水を飲みます。","kanji":"水","reading":"みず","level":"N5","theme":""},{"sentence":"テストは水曜日です。","kanji":"水","reading":"すい","level":"N5","theme":""},{"sentence":"この木は大きいです。","kanji":"木","reading":"き","level":"N5","theme":""},{"sentence":"木曜日に買い物をします。","kanji":"木","reading":"もく","level":"N5","theme":""},{"sentence":"お金がありません。","kanji":"金","reading":"かね","level":"N5","theme":""},{"sentence":"金曜日にビールを飲みます。","kanji":"金","reading":"きん","level":"N5","theme":""},{"sentence":"りんごを一つください。","kanji":"一","reading":"ひと","level":"N5","theme":""},{"sentence":"一人で旅行しました。","kanji":"一人","reading":"ひとり","level":"N5","theme":""},{"sentence":"事務室は一階です。","kanji":"一階","reading":"いっかい","level":"N5","theme":""},{"sentence":"一月は寒いです。","kanji":"一月","reading":"いちがつ","level":"N5","theme":""},{"sentence":"五月一日は何曜日ですか。","kanji":"一日","reading":"ついたち","level":"N5","theme":""},{"sentence":"一日中働きました。","kanji":"一日中","reading":"いちにちじゅう","level":"N5","theme":""},{"sentence":"コーヒーを二つください。","kanji":"二","reading":"ふた","level":"N5","theme":""},{"sentence":"休んだ生徒が二人いました。","kanji":"二人","reading":"ふたり","level":"N5","theme":""},{"sentence":"トイレは二階です。","kanji":"二","reading":"に","level":"N5","theme":""},{"sentence":"二月十四日はバレンタインデーです。","kanji":"二月","reading":"にがつ","level":"N5","theme":""},{"sentence":"お酒を飲みすぎて二日酔いになりました。","kanji":"二日","reading":"ふつか","level":"N5","theme":""},{"sentence":"みかんを三つ食べました。","kanji":"三つ","reading":"みっつ","level":"N5","theme":""},{"sentence":"三人でカラオケに行きました。","kanji":"三人","reading":"さんにん","level":"N5","theme":""},{"sentence":"三月三日","kanji":"三月","reading":"さんがつ","level":"N5","theme":""},{"sentence":"三月三日","kanji":"三日","reading":"みっか","level":"N5","theme":""},{"sentence":"ケーキを四つください。","kanji":"四つ","reading":"よっつ","level":"N5","theme":""},{"sentence":"授業は四時四十五分に終わります。","kanji":"四時","reading":"よじ","level":"N5","theme":""},{"sentence":"四月一日はエイプリールフールです。","kanji":"四月","reading":"しがつ","level":"N5","theme":""},{"sentence":"熱が出て、四日間学校を休みました。","kanji":"四日","reading":"よっか","level":"N5","theme":""},{"sentence":"えんぴつが四本あります。","kanji":"四本","reading":"よんほん","level":"N5","theme":""},{"sentence":"五月五日はこどもの日です。","kanji":"五月","reading":"ごがつ","level":"N5","theme":""},{"sentence":"五月五日はこどもの日 です。","kanji":"五日","reading":"いつか","level":"N5","theme":""},{"sentence":"ケーキを五つください。","kanji":"五つ","reading":"いつつ","level":"N5","theme":""},{"sentence":"ケーキを六つください","kanji":"六つ","reading":"むっつ","level":"N5","theme":""},{"sentence":"六月六日","kanji":"六月","reading":"ろくがつ","level":"N5","theme":""},{"sentence":"六月六日","kanji":"六日","reading":"むいか","level":"N5","theme":""},{"sentence":"ケーキを七つください。","kanji":"七つ","reading":"ななつ","level":"N5","theme":""},{"sentence":"七月七日は「たなばた」です。","kanji":"七月","reading":"しちがつ","level":"N5","theme":""},{"sentence":"七月七日は「たなばた」です。","kanji":"七日","reading":"なのか","level":"N5","theme":""},{"sentence":"ケーキを八つください。","kanji":"八つ","reading":"やっつ","level":"N5","theme":""},{"sentence":"八月八日","kanji":"八月","reading":"はちがつ","level":"N5","theme":""},{"sentence":"八月八日","kanji":"八日","reading":"ようか","level":"N5","theme":""},{"sentence":"りんごを九つください。","kanji":"九つ","reading":"ここのつ","level":"N5","theme":""},{"sentence":"九人でレストランに行きました。","kanji":"九人","reading":"きゅうにん","level":"N5","theme":""},{"sentence":"九月九日","kanji":"九月","reading":"くがつ","level":"N5","theme":""},{"sentence":"九月九日","kanji":"九日","reading":"ここのか","level":"N5","theme":""},{"sentence":"十月十日","kanji":"十月","reading":"じゅうがつ","level":"N5","theme":""},{"sentence":"十月十日","kanji":"十日","reading":"とおか","level":"N5","theme":""},{"sentence":"今、五時三十分です。","kanji":"三十分","reading":"さんじゅっぷん","level":"N5","theme":""},{"sentence":"百円ショップに行きました。","kanji":"百円","reading":"ひゃくえん","level":"N5","theme":""},{"sentence":"このペンは三百円です。","kanji":"百","reading":"びゃく","level":"N5","theme":""},{"sentence":"カレーライスは八百円です。","kanji":"百","reading":"ぴゃく","level":"N5","theme":""},{"sentence":"漢字を百個書きました。","kanji":"百個","reading":"ひゃっこ","level":"N5","theme":""},{"sentence":"この本は千円です。","kanji":"千","reading":"せん","level":"N5","theme":""},{"sentence":"この時計は三千円です。","kanji":"千","reading":"ぜん","level":"N5","theme":""},{"sentence":"私の学校は千葉にあります。","kanji":"千葉","reading":"ちば","level":"N5","theme":""},{"sentence":"このカメラは一万円です。","kanji":"万","reading":"まん","level":"N5","theme":""},{"sentence":"上を見ます。","kanji":"上","reading":"うえ","level":"N5","theme":""},{"sentence":"寒いので、上着を着ます。","kanji":"上着","reading":"うわぎ","level":"N5","theme":""},{"sentence":"階段を上がります。","kanji":"上","reading":"あ","level":"N5","theme":""},{"sentence":"上り電車で東京へ行きます。","kanji":"上","reading":"のぼ","level":"N5","theme":""},{"sentence":"アンナさんは歌が上手です。","kanji":"上手","reading":"じょうず","level":"N5","theme":""},{"sentence":"かばんの中に本があります。","kanji":"中","reading":"なか","level":"N5","theme":""},{"sentence":"弟は中学生です。","kanji":"中","reading":"ちゅう","level":"N5","theme":""},{"sentence":"今日は一日中勉強します。","kanji":"中","reading":"じゅう","level":"N5","theme":""},{"sentence":"下を見ます。","kanji":"下","reading":"した","level":"N5","theme":""},{"sentence":"薬を飲んだので、熱が下がりました。","kanji":"下","reading":"さ","level":"N5","theme":""},{"sentence":"下りの電車で千葉に帰ります。","kanji":"下","reading":"くだ","level":"N5","theme":""},{"sentence":"地下鉄に乗りました。","kanji":"地下鉄","reading":"ちかてつ","level":"N5","theme":""},{"sentence":"私のかばんは大きいです。","kanji":"大","reading":"おお","level":"N5","theme":""},{"sentence":"私はチョコレートが大好きです。","kanji":"大","reading":"だい","level":"N5","theme":""},{"sentence":"水は大切に使いましょう。","kanji":"大切","reading":"たいせつ","level":"N5","theme":""},{"sentence":"大人になりました。","kanji":"大人","reading":"おとな","level":"N5","theme":""},{"sentence":"妹は小学生です。","kanji":"小","reading":"しょう","level":"N5","theme":""},{"sentence":"木の上に小鳥がいます。","kanji":"小","reading":"こ","level":"N5","theme":""},{"sentence":"家の近くに小川があります。","kanji":"小川","reading":"おがわ","level":"N5","theme":""},{"sentence":"マリヤムさんは口が小さいです。","kanji":"小","reading":"ちい","level":"N5","theme":""},{"sentence":"机の上に本があります。","kanji":"本","reading":"ほん","level":"N5","theme":""},{"sentence":"傘を一本買いました。","kanji":"一本","reading":"いっぽん","level":"N5","theme":""},{"sentence":"ボールペンを二本買いました。","kanji":"二本","reading":"にほん","level":"N5","theme":""},{"sentence":"えんぴつを三本持っています。","kanji":"三本","reading":"さんぼん","level":"N5","theme":""},{"sentence":"日本語を勉強しています。","kanji":"日本語","reading":"にほんご","level":"N5","theme":""},{"sentence":"五時半に家に帰ります。","kanji":"半","reading":"はん","level":"N5","theme":""},{"sentence":"ジュースを半分飲みました。","kanji":"半","reading":"はん","level":"N5","theme":""},{"sentence":"山田さんは力が強いです。","kanji":"力","reading":"ちから","level":"N3","theme":""},{"sentence":"コンロの火力が弱いです。","kanji":"力","reading":"りょく","level":"N3","theme":""},{"sentence":"子どもが三人遊んでいます。","kanji":"子","reading":"こ","level":"N5","theme":""},{"sentence":"ここは男子トイレです。","kanji":"男子","reading":"だんし","level":"N5","theme":""},{"sentence":"女子トイレはあちらです。","kanji":"女子","reading":"じょし","level":"N5","theme":""},{"sentence":"あの女の人はだれですか。","kanji":"女","reading":"おんな","level":"N5","theme":""},{"sentence":"あの男の人は私の先輩です。","kanji":"男","reading":"おとこ","level":"N5","theme":""},{"sentence":"兄は長男です。","kanji":"長男","reading":"ちょうなん","level":"N5","theme":""},{"sentence":"私は次男です。","kanji":"次男","reading":"じなん","level":"N5","theme":""},{"sentence":"うさぎは耳が長いです。","kanji":"耳","reading":"みみ","level":"N5","theme":""},{"sentence":"耳鼻科へ行きました。","kanji":"耳","reading":"じ","level":"N5","theme":""},{"sentence":"父は手が大きいです。","kanji":"手","reading":"て","level":"N2","theme":""},{"sentence":"家族に手紙を書きます。","kanji":"手紙","reading":"てがみ","level":"N2","theme":""},{"sentence":"切手を買います。","kanji":"切手","reading":"きって","level":"N2","theme":""},{"sentence":"バスの運転手になりたいです。","kanji":"手","reading":"しゅ","level":"N2","theme":""},{"sentence":"アンナさんは足が長いです。","kanji":"足","reading":"あし","level":"N3","theme":""},{"sentence":"足し算が得意です。","kanji":"足","reading":"た","level":"N3","theme":""},{"sentence":"くつを二足買いました。","kanji":"二足","reading":"にそく","level":"N3","theme":""},{"sentence":"心から感謝します。","kanji":"心","reading":"こころ","level":"N3","theme":""},{"sentence":"母は弟を心配しています。","kanji":"心配","reading":"しんぱい","level":"N3","theme":""},{"sentence":"母が元気で安心しました。","kanji":"安心","reading":"あんしん","level":"N3","theme":""},{"sentence":"石につまづきました。","kanji":"石","reading":"いし","level":"N3","theme":""},{"sentence":"宝石のついた指輪が欲しいです。","kanji":"石","reading":"せき","level":"N3","theme":""},{"sentence":"石けんで手を洗います。","kanji":"石","reading":"せっ","level":"N3","theme":""},{"sentence":"明日は大雨です。","kanji":"雨","reading":"あめ","level":"N5","theme":""},{"sentence":"今日は風雨が強いです。","kanji":"雨","reading":"う","level":"N5","theme":""},{"sentence":"パンダは竹の葉を食べます。","kanji":"竹","reading":"たけ","level":"N4","theme":""},{"sentence":"日本人は米を食べます。","kanji":"米","reading":"こめ","level":"N5","theme":""},{"sentence":"アメリカのことを米国といいます。","kanji":"米","reading":"べい","level":"N5","theme":""},{"sentence":"海で貝がらをひろいました。","kanji":"貝","reading":"かい","level":"N4","theme":""},{"sentence":"私は巻貝が好きです。","kanji":"貝","reading":"がい","level":"N4","theme":""},{"sentence":"毛糸のセーターを買いました。","kanji":"糸","reading":"いと","level":"N2","theme":""},{"sentence":"車で旅行に行きました。","kanji":"車","reading":"くるま","level":"N5","theme":""},{"sentence":"電車で東京に行きます。","kanji":"車","reading":"しゃ","level":"N5","theme":""},{"sentence":"自転車で学校に行きます。","kanji":"車","reading":"しゃ","level":"N5","theme":""},{"sentence":"門を閉めます。","kanji":"門","reading":"もん","level":"N5","theme":""},{"sentence":"私の専門はコンピューターです。","kanji":"門","reading":"もん","level":"N3","theme":""},{"sentence":"カトマンズにはお寺がたくさんあります。","kanji":"寺","reading":"てら","level":"N3","theme":""},{"sentence":"京都の清水寺に行きました。","kanji":"寺","reading":"でら","level":"N3","theme":""},{"sentence":"奈良の法隆寺に行きました。","kanji":"寺","reading":"じ","level":"N3","theme":""},{"sentence":"教室の前に立って発表します。","kanji":"立","reading":"た","level":"N5","theme":""},{"sentence":"東京大学は国立大学です。","kanji":"立","reading":"りつ","level":"N5","theme":""},{"sentence":"毎日、お風呂に入ります。","kanji":"入","reading":"はい","level":"N5","theme":""},{"sentence":"かばんに本を入れます。","kanji":"入","reading":"い","level":"N5","theme":""},{"sentence":"入り口はここです。","kanji":"入","reading":"い","level":"N5","theme":""},{"sentence":"入国審査","kanji":"入","reading":"にゅう","level":"N5","theme":""},{"sentence":"８時にうちを出ます。","kanji":"出","reading":"で","level":"N5","theme":""},{"sentence":"かばんからペンを出します。","kanji":"出","reading":"だ","level":"N5","theme":""},{"sentence":"出口はどこですか。","kanji":"出口","reading":"でぐち","level":"N5","theme":""},{"sentence":"出国前にご飯を食べました。","kanji":"出国","reading":"しゅっこく","level":"N5","theme":""},{"sentence":"毎日学校へ行きます。","kanji":"行","reading":"い","level":"N5","theme":""},{"sentence":"しゅみは旅行です。","kanji":"旅行","reading":"りょこう","level":"N5","theme":""},{"sentence":"銀行でお金をおろします。","kanji":"行","reading":"こう","level":"N5","theme":""},{"sentence":"一行目を読みました。","kanji":"一行","reading":"いちぎょう","level":"N3","theme":""},{"sentence":"明日、友だちが日本へ来ます。","kanji":"来","reading":"き","level":"N5","theme":""},{"sentence":"うちに来る前に電話してください。","kanji":"来","reading":"く","level":"N5","theme":""},{"sentence":"学校に来ないときは電話してください。","kanji":"来","reading":"こ","level":"N5","theme":""},{"sentence":"来月、テストがあります。","kanji":"来","reading":"らい","level":"N5","theme":""},{"sentence":"毎朝、パンを食べます。","kanji":"食","reading":"た","level":"N5","theme":""},{"sentence":"レストランで食事しました。","kanji":"食","reading":"しょく","level":"N5","theme":""},{"sentence":"朝食にパンを食べました。","kanji":"食","reading":"しょく","level":"N5","theme":""},{"sentence":"Youtubeを見ます。","kanji":"見","reading":"み","level":"N5","theme":""},{"sentence":"ビール工場を見学しました。","kanji":"見","reading":"けん","level":"N5","theme":""},{"sentence":"音楽を聞きます。","kanji":"聞","reading":"き","level":"N5","theme":""},{"sentence":"鳥の声が聞こえます。","kanji":"聞","reading":"き","level":"N5","theme":""},{"sentence":"新聞を読みます。","kanji":"新聞","reading":"しんぶん","level":"N5","theme":""},{"sentence":"友だちに「おはよう」と言いました。","kanji":"言","reading":"い","level":"N5","theme":""},{"sentence":"この言葉の意味がわかりません","kanji":"言葉","reading":"ことば","level":"N5","theme":""},{"sentence":"「おおきに」は大阪の方言です。","kanji":"言","reading":"げん","level":"N5","theme":""},{"sentence":"アンナさんに伝言をお願いします。","kanji":"言","reading":"ごん","level":"N5","theme":""},{"sentence":"八百屋は野菜を売っているお店です。","kanji":"売","reading":"う","level":"N5","theme":""},{"sentence":"おかし売り場はどこですか。","kanji":"売","reading":"う","level":"N5","theme":""},{"sentence":"駅の売店でコーヒーを買いました。","kanji":"売","reading":"ばい","level":"N4","theme":""},{"sentence":"左手でフォークを持ちます。","kanji":"左","reading":"ひだり","level":"N5","theme":""},{"sentence":"あの交差点を左折してください。","kanji":"左","reading":"さ","level":"N5","theme":""},{"sentence":"右手でナイフを持ちます。","kanji":"右","reading":"みぎ","level":"N5","theme":""},{"sentence":"あの交差点を右折してください。","kanji":"右","reading":"う","level":"N5","theme":""},{"sentence":"左右をよく見てください。","kanji":"左右","reading":"さゆう","level":"N5","theme":""},{"sentence":"家の前にスーパーがあります。","kanji":"前","reading":"まえ","level":"N5","theme":""},{"sentence":"名前を書いてください。","kanji":"名前","reading":"なまえ","level":"N5","theme":""},{"sentence":"午前10時に家をでます。","kanji":"午前","reading":"ごぜん","level":"N5","theme":""},{"sentence":"家の後ろにコンビニがあります。","kanji":"後","reading":"うし","level":"N5","theme":""},{"sentence":"午後1時25分に授業が始まります。","kanji":"午後","reading":"ごご","level":"N5","theme":""},{"sentence":"授業の前後にあいさつをします。","kanji":"前後","reading":"ぜんご","level":"N5","theme":""},{"sentence":"アルバイトの後でご飯をたべます。","kanji":"後","reading":"あと","level":"N5","theme":""},{"sentence":"７月から12月は一年の後半です。","kanji":"後","reading":"こう","level":"N5","theme":""},{"sentence":"太陽は東から出ます。","kanji":"東","reading":"ひがし","level":"N5","theme":""},{"sentence":"東京は人が多いです。","kanji":"東京","reading":"とうきょう","level":"N5","theme":""},{"sentence":"新宿駅の西口はにぎやかです。","kanji":"西","reading":"にし","level":"N5","theme":""},{"sentence":"大阪は関西にあります。","kanji":"西","reading":"さい","level":"N5","theme":""},{"sentence":"ヨハネスブルグは南アフリカの首都です。","kanji":"南","reading":"みなみ","level":"N5","theme":""},{"sentence":"ハワイは南国です。","kanji":"南","reading":"なん","level":"N5","theme":""},{"sentence":"カナダはアメリカの北にあります。","kanji":"北","reading":"きた","level":"N5","theme":""},{"sentence":"旅行で北海道に行きました。","kanji":"北海道","reading":"ほっかいどう","level":"N5","theme":""},{"sentence":"窓から外を見ます。","kanji":"外","reading":"そと","level":"N5","theme":""},{"sentence":"外国に行くとき、パスポートが必要です。","kanji":"外国","reading":"がいこく","level":"N5","theme":""},{"sentence":"けがをしたときは、外科に行きます。","kanji":"外","reading":"げ","level":"N5","theme":""},{"sentence":"コートの内ポケットに財布を入れます。","kanji":"内","reading":"うち","level":"N3","theme":""},{"sentence":"海外旅行より国内旅行が好きです。","kanji":"内","reading":"ない","level":"N3","theme":""},{"sentence":"風邪をひいたときは、内科に行きます。","kanji":"内","reading":"ない","level":"N3","theme":""},{"sentence":"今、何時ですか。","kanji":"今","reading":"いま","level":"N5","theme":""},{"sentence":"今週、テストがあります。","kanji":"今","reading":"こん","level":"N5","theme":""},{"sentence":"今年の４月に日本へ来ました。","kanji":"今年","reading":"ことし","level":"N5","theme":""},{"sentence":"今日は暑いですね。","kanji":"今日","reading":"きょう","level":"N5","theme":""},{"sentence":"今朝は６時に起きました。","kanji":"今朝","reading":"けさ","level":"N5","theme":""},{"sentence":"今、何時ですか。","kanji":"時","reading":"じ","level":"N5","theme":""},{"sentence":"忙しくて遊ぶ時間がありません。","kanji":"時間","reading":"じかん","level":"N5","theme":""},{"sentence":"父から時計をもらいました。","kanji":"時計","reading":"とけい","level":"N4","theme":""},{"sentence":"子どもの時、野菜が嫌いでした","kanji":"時","reading":"とき","level":"N4","theme":""},{"sentence":"学校は本屋とコンビニの間にあります。","kanji":"間","reading":"あいだ","level":"N4","theme":""},{"sentence":"一時間は60分です。","kanji":"間","reading":"かん","level":"N4","theme":""},{"sentence":"一週間は七日です。","kanji":"間","reading":"かん","level":"N4","theme":""},{"sentence":"私は人間です。","kanji":"人間","reading":"にんげん","level":"N4","theme":""},{"sentence":"毎日、お風呂に入ります。","kanji":"毎日","reading":"まいにち","level":"N5","theme":""},{"sentence":"ケーキを４つに分けます。","kanji":"分","reading":"わ","level":"N3","theme":""},{"sentence":"私の気もちが分かりますか。","kanji":"分","reading":"わ","level":"N3","theme":""},{"sentence":"一分は60秒です。","kanji":"一分","reading":"いっぷん","level":"N5","theme":""},{"sentence":"五分前に教室に着きました。","kanji":"分","reading":"ふん","level":"N5","theme":""},{"sentence":"二分の一（1/2）","kanji":"分","reading":"ぶん","level":"N5","theme":""},{"sentence":"あの方はどなたですか。","kanji":"方","reading":"かた","level":"N5","theme":""},{"sentence":"この漢字の読み方を教えてください。","kanji":"方","reading":"かた","level":"N5","theme":""},{"sentence":"ダイエットのいい方法がありますか。","kanji":"方法","reading":"ほうほう","level":"N5","theme":""},{"sentence":"夕方、家に帰ります。","kanji":"夕方","reading":"ゆうがた","level":"N4","theme":""},{"sentence":"夕日が沈みます。","kanji":"夕日","reading":"ゆうひ","level":"N4","theme":""},{"sentence":"夕食を作ります。","kanji":"夕食","reading":"ゆうしょく","level":"N4","theme":""},{"sentence":"お年寄りに席をゆずります。","kanji":"年","reading":"とし","level":"N5","theme":""},{"sentence":"一年は12カ月です。","kanji":"一年","reading":"いちねん","level":"N5","theme":""},{"sentence":"来年、国へ帰ります。","kanji":"来年","reading":"らいねん","level":"N5","theme":""},{"sentence":"今年は2026年です。","kanji":"今年","reading":"ことし","level":"N5","theme":""},{"sentence":"レバーを回すとおつりが出ます。","kanji":"回","reading":"まわ","level":"N5","theme":""},{"sentence":"何回も練習しました。","kanji":"回","reading":"かい","level":"N5","theme":""},{"sentence":"風邪で学校を休みました。","kanji":"休","reading":"やす","level":"N5","theme":""},{"sentence":"休日は何をしますか。","kanji":"休日","reading":"きゅうじつ","level":"N5","theme":""},{"sentence":"家の近くに林があります。","kanji":"林","reading":"はやし","level":"N4","theme":""},{"sentence":"森の中を散歩しました。","kanji":"森","reading":"もり","level":"N4","theme":""},{"sentence":"森林","kanji":"森林","reading":"しんりん","level":"N4","theme":""},{"sentence":"この店は品物が多いです。","kanji":"品","reading":"しな","level":"N4","theme":""},{"sentence":"パソコンの部品を買います。","kanji":"品","reading":"ひん","level":"N4","theme":""},{"sentence":"あの山は岩山です。","kanji":"岩","reading":"いわ","level":"N3","theme":""},{"sentence":"大きい音が聞こえました。","kanji":"音","reading":"おと","level":"N4","theme":""},{"sentence":"音楽を聞きます。","kanji":"音","reading":"おん","level":"N4","theme":""},{"sentence":"日本語の発音を練習します。","kanji":"音","reading":"おん","level":"N4","theme":""},{"sentence":"ピアノの音色が聞こえます。","kanji":"音","reading":"ね","level":"N4","theme":""},{"sentence":"家の前に畑があります。","kanji":"畑","reading":"はたけ","level":"N4","theme":""},{"sentence":"日本は田畑が多いです。","kanji":"田畑","reading":"たはた","level":"N4","theme":""},{"sentence":"キャベツ畑","kanji":"畑","reading":"ばたけ","level":"N4","theme":""},{"sentence":"かばんを持ちます。","kanji":"持","reading":"も","level":"N4","theme":""},{"sentence":"お酒を飲みすぎて、気持ちが悪いです。","kanji":"持","reading":"も","level":"N4","theme":""},{"sentence":"お弁当を持参してください。","kanji":"持","reading":"じ","level":"N4","theme":""},{"sentence":"好きな食べ物はなんですか。","kanji":"好","reading":"す","level":"N4","theme":""},{"sentence":"私の大好物はリンゴです。","kanji":"好","reading":"こう","level":"N4","theme":""},{"sentence":"この部屋は明るいです。","kanji":"明","reading":"あか","level":"N4","theme":""},{"sentence":"明日は日曜日です。","kanji":"明日","reading":"あした","level":"N4","theme":""},{"sentence":"映画館の中は暗いです。","kanji":"暗","reading":"くら","level":"N3","theme":""},{"sentence":"教科書の会話を暗記します。","kanji":"暗記","reading":"あんき","level":"N3","theme":""},{"sentence":"このクラスは女の人が多いです。","kanji":"多","reading":"おお","level":"N5","theme":""},{"sentence":"どこへ行くか、多数決で決めましょう。","kanji":"多","reading":"た","level":"N5","theme":""},{"sentence":"この町はみどりが少ないです。","kanji":"少","reading":"すく","level":"N5","theme":""},{"sentence":"もう少し、ゆっくり話してください。","kanji":"少","reading":"すこ","level":"N5","theme":""},{"sentence":"少年野球","kanji":"少年","reading":"しょうねん","level":"N5","theme":""},{"sentence":"東京は高いビルが多いです。","kanji":"高","reading":"たか","level":"N5","theme":""},{"sentence":"妹は高校生です。","kanji":"高","reading":"こう","level":"N5","theme":""},{"sentence":"あのスーパーは安いです。","kanji":"安","reading":"やす","level":"N5","theme":""},{"sentence":"母が元気で安心しました。","kanji":"安心","reading":"あんしん","level":"N5","theme":""},{"sentence":"安全運転をしましょう。","kanji":"安全","reading":"あんぜん","level":"N5","theme":""},{"sentence":"このビルは低いです。","kanji":"低","reading":"ひく","level":"N4","theme":""},{"sentence":"今日の最低気温は－５℃です。","kanji":"低","reading":"てい","level":"N4","theme":""},{"sentence":"朝、早く起きました。","kanji":"早","reading":"はや","level":"N4","theme":""},{"sentence":"森さんは早口です。","kanji":"早口","reading":"はやくち","level":"N4","theme":""},{"sentence":"早朝","kanji":"早朝","reading":"そうちょう","level":"N4","theme":""},{"sentence":"広い部屋に住みたいです。","kanji":"広","reading":"ひろ","level":"N4","theme":""},{"sentence":"駅の前に広場があります。","kanji":"広","reading":"ひろ","level":"N4","theme":""},{"sentence":"スーパーの広告を見ました。","kanji":"広","reading":"こう","level":"N4","theme":""},{"sentence":"正しい答えは何ですか。","kanji":"正","reading":"ただ","level":"N4","theme":""},{"sentence":"この時計は正確です。","kanji":"正","reading":"せい","level":"N4","theme":""},{"sentence":"日本人は正月に神社へ行きます。","kanji":"正月","reading":"しょうがつ","level":"N4","theme":""},{"sentence":"あの人は元サッカー選手です。","kanji":"元","reading":"もと","level":"N4","theme":""},{"sentence":"元気になりました。","kanji":"元気","reading":"げんき","level":"N4","theme":""},{"sentence":"一月一日は元日です。","kanji":"元日","reading":"がんじつ","level":"N4","theme":""},{"sentence":"温泉は気持ちがいいです。","kanji":"気","reading":"き","level":"N5","theme":""},{"sentence":"今日はいい天気です。","kanji":"天気","reading":"てんき","level":"N5","theme":""},{"sentence":"気分がいいです。","kanji":"気分","reading":"きぶん","level":"N5","theme":""},{"sentence":"風邪をひいて、寒気がします。","kanji":"気","reading":"け","level":"N5","theme":""},{"sentence":"信号が赤です。","kanji":"赤","reading":"あか","level":"N4","theme":""},{"sentence":"リンゴは赤いです。","kanji":"赤","reading":"あか","level":"N4","theme":""},{"sentence":"赤ちゃんはかわいいです。","kanji":"赤","reading":"あか","level":"N4","theme":""},{"sentence":"真っ赤なバラをもらいました。","kanji":"赤","reading":"か","level":"N4","theme":""},{"sentence":"赤道","kanji":"赤","reading":"せき","level":"N4","theme":""},{"sentence":"青い空","kanji":"青","reading":"あお","level":"N4","theme":""},{"sentence":"好きな色は青です。","kanji":"青","reading":"あお","level":"N4","theme":""},{"sentence":"真っ青","kanji":"青","reading":"さお","level":"N4","theme":""},{"sentence":"親切な青年","kanji":"青年","reading":"せいねん","level":"N4","theme":""},{"sentence":"好きな色は白です。","kanji":"白","reading":"しろ","level":"N5","theme":""},{"sentence":"白い靴","kanji":"白","reading":"しろ","level":"N5","theme":""},{"sentence":"白鳥","kanji":"白","reading":"はく","level":"N5","theme":""},{"sentence":"黒いペン","kanji":"黒","reading":"くろ","level":"N5","theme":""},{"sentence":"好きな色は黒です。","kanji":"黒","reading":"くろ","level":"N5","theme":""},{"sentence":"真っ黒","kanji":"黒","reading":"くろ","level":"N5","theme":""},{"sentence":"黒板に答えを書いてください。","kanji":"黒","reading":"こく","level":"N4","theme":""},{"sentence":"何色が好きですか。","kanji":"色","reading":"いろ","level":"N5","theme":""},{"sentence":"四色ボールペン","kanji":"色","reading":"しょく","level":"N5","theme":""},{"sentence":"丸い形","kanji":"形","reading":"かたち","level":"N3","theme":""},{"sentence":"辞書形","kanji":"形","reading":"けい","level":"N3","theme":""},{"sentence":"丸い形","kanji":"丸","reading":"まる","level":"N2","theme":""},{"sentence":"丸顔","kanji":"丸","reading":"まる","level":"N2","theme":""},{"sentence":"紙を丸めてすてます。","kanji":"丸","reading":"まる","level":"N2","theme":""},{"sentence":"象は足が太いです。","kanji":"太","reading":"ふと","level":"N4","theme":""},{"sentence":"太りました。","kanji":"太","reading":"ふと","level":"N4","theme":""},{"sentence":"太陽","kanji":"太","reading":"たい","level":"N4","theme":""},{"sentence":"キリンは足が細いです。","kanji":"細","reading":"ほそ","level":"N5","theme":""},{"sentence":"タマネギを細かく切ります。","kanji":"細","reading":"こま","level":"N3","theme":""},{"sentence":"給料の明細書","kanji":"細","reading":"さい","level":"N3","theme":""},{"sentence":"牛は草を食べます。","kanji":"草","reading":"くさ","level":"N3","theme":""},{"sentence":"海草","kanji":"草","reading":"そう","level":"N3","theme":""},{"sentence":"バラの花","kanji":"花","reading":"はな","level":"N5","theme":""},{"sentence":"草花","kanji":"花","reading":"ばな","level":"N5","theme":""},{"sentence":"花びん","kanji":"花","reading":"か","level":"N5","theme":""},{"sentence":"漢字","kanji":"字","reading":"じ","level":"N4","theme":""},{"sentence":"今は自宅にいます。","kanji":"宅","reading":"たく","level":"N3","theme":""},{"sentence":"教室で勉強します。","kanji":"室","reading":"しつ","level":"N4","theme":""},{"sentence":"毎朝、８時に家を出ます。","kanji":"家","reading":"いえ","level":"N4","theme":""},{"sentence":"大家","kanji":"大家","reading":"おおや","level":"N4","theme":""},{"sentence":"作曲家","kanji":"家","reading":"か","level":"N4","theme":""},{"sentence":"電話","kanji":"電話","reading":"でんわ","level":"N5","theme":""},{"sentence":"電車","kanji":"電車","reading":"でんしゃ","level":"N5","theme":""},{"sentence":"雪がふりました。","kanji":"雪","reading":"ゆき","level":"N3","theme":""},{"sentence":"空がきれいだと思いました。","kanji":"思","reading":"おも","level":"N4","theme":""},{"sentence":"思い出","kanji":"思","reading":"おも","level":"N4","theme":""},{"sentence":"この言葉の意味がわかりません。","kanji":"意","reading":"い","level":"N4","theme":""},{"sentence":"あなたの意見を言ってください。","kanji":"意見","reading":"いけん","level":"N4","theme":""},{"sentence":"私は犬が好きです。","kanji":"犬","reading":"いぬ","level":"N5","theme":""},{"sentence":"盲導犬","kanji":"犬","reading":"けん","level":"N5","theme":""},{"sentence":"牛は草を食べます。","kanji":"牛","reading":"うし","level":"N5","theme":""},{"sentence":"牛乳","kanji":"牛","reading":"ぎゅう","level":"N4","theme":""},{"sentence":"馬に乗りました。","kanji":"馬","reading":"うま","level":"N5","theme":""},{"sentence":"しゅみは乗馬です。","kanji":"馬","reading":"ば","level":"N5","theme":""},{"sentence":"羊の毛","kanji":"羊","reading":"ひつじ","level":"N3","theme":""},{"sentence":"羊毛","kanji":"羊","reading":"よう","level":"N3","theme":""},{"sentence":"魚釣り","kanji":"魚","reading":"さかな","level":"N5","theme":""},{"sentence":"黒い鳥","kanji":"鳥","reading":"とり","level":"N4","theme":""},{"sentence":"白鳥","kanji":"鳥","reading":"ちょう","level":"N4","theme":""},{"sentence":"虫がきらいです。","kanji":"虫","reading":"むし","level":"N4","theme":""},{"sentence":"虫歯になりました。","kanji":"虫","reading":"むし","level":"N4","theme":""},{"sentence":"ハチやトンボは昆虫です。","kanji":"虫","reading":"ちゅう","level":"N4","theme":""},{"sentence":"髪の毛","kanji":"毛","reading":"け","level":"N4","theme":""},{"sentence":"羽田空港","kanji":"羽田","reading":"はねだ","level":"N2","theme":""},{"sentence":"虫の羽音","kanji":"羽","reading":"は","level":"N2","theme":""},{"sentence":"羽毛の布団","kanji":"羽","reading":"う","level":"N2","theme":""},{"sentence":"動く","kanji":"動","reading":"うご","level":"N4","theme":""},{"sentence":"動物園へ行きました。","kanji":"動","reading":"どう","level":"N4","theme":""},{"sentence":"運動は体にいいです。","kanji":"動","reading":"どう","level":"N4","theme":""},{"sentence":"スーバーで買い物をします。","kanji":"物","reading":"もの","level":"N4","theme":""},{"sentence":"重い荷物","kanji":"物","reading":"もつ","level":"N4","theme":""},{"sentence":"物価が高い","kanji":"物価","reading":"ぶっか","level":"N4","theme":""},{"sentence":"動物園へ行きました。","kanji":"物","reading":"ぶつ","level":"N4","theme":""},{"sentence":"公園の池に亀がいます。","kanji":"池","reading":"いけ","level":"N4","theme":""},{"sentence":"電池","kanji":"池","reading":"ち","level":"N4","theme":""},{"sentence":"海で泳ぎました。","kanji":"海","reading":"うみ","level":"N4","theme":""},{"sentence":"趣味は海外旅行です。","kanji":"海","reading":"かい","level":"N4","theme":""},{"sentence":"洋服を着ます。","kanji":"洋","reading":"よう","level":"N4","theme":""},{"sentence":"大学で化学の勉強をしています。","kanji":"化","reading":"か","level":"N4","theme":""},{"sentence":"お化粧をします。","kanji":"化","reading":"け","level":"N4","theme":""},{"sentence":"遊園地でお化け屋敷にいきました。","kanji":"化","reading":"ば","level":"N4","theme":""},{"sentence":"何を食べますか","kanji":"何","reading":"なに","level":"N5","theme":""},{"sentence":"それは何ですか。","kanji":"何","reading":"なん","level":"N5","theme":""},{"sentence":"日本語","kanji":"語","reading":"ご","level":"N4","theme":""},{"sentence":"有名な物語","kanji":"物語","reading":"ものがたり","level":"N4","theme":""},{"sentence":"友だちと朝まで語りました。","kanji":"語","reading":"かた","level":"N4","theme":""},{"sentence":"本を読みます。","kanji":"読","reading":"よ","level":"N5","theme":""},{"sentence":"しゅみは読書です。","kanji":"読","reading":"どく","level":"N5","theme":""},{"sentence":"昨日、Aさんと話しました。","kanji":"話","reading":"はな","level":"N5","theme":""},{"sentence":"昔話","kanji":"話","reading":"ばなし","level":"N5","theme":""},{"sentence":"会話の練習をします。","kanji":"話","reading":"わ","level":"N5","theme":""},{"sentence":"携帯電話","kanji":"話","reading":"わ","level":"N5","theme":""},{"sentence":"教室のドアを開けます。","kanji":"開","reading":"あ","level":"N4","theme":""},{"sentence":"教科書の10ページを開いてください。","kanji":"開","reading":"ひら","level":"N4","theme":""},{"sentence":"新しいパン屋が開店しました。","kanji":"開","reading":"かい","level":"N4","theme":""},{"sentence":"教室のドアを閉めます。","kanji":"閉","reading":"し","level":"N4","theme":""},{"sentence":"教科書を閉じてください。","kanji":"閉","reading":"と","level":"N4","theme":""},{"sentence":"あの店は午後８時に閉店します。","kanji":"閉","reading":"へい","level":"N4","theme":""},{"sentence":"ネパールには王様がいます。","kanji":"王","reading":"おう","level":"N3","theme":""},{"sentence":"十円玉","kanji":"玉","reading":"だま","level":"N2","theme":""},{"sentence":"お国はどちらですか。","kanji":"国","reading":"くに","level":"N5","theme":""},{"sentence":"あれは外国の車です。","kanji":"国","reading":"こく","level":"N5","theme":""},{"sentence":"中国人の友だちがいます。","kanji":"国","reading":"ごく","level":"N5","theme":""},{"sentence":"さむらいは刀を持っていました。","kanji":"刀","reading":"かたな","level":"N1","theme":""},{"sentence":"木刀","kanji":"刀","reading":"とう","level":"N1","theme":""},{"sentence":"ここに弓があります。","kanji":"弓","reading":"ゆみ","level":"N1","theme":""},{"sentence":"弓道は日本の武道です。","kanji":"弓","reading":"きゅう","level":"N1","theme":""},{"sentence":"矢印の方に歩いてください。","kanji":"矢","reading":"や","level":"N1","theme":""},{"sentence":"スポーツが好きです。特にサッカーが好きです。","kanji":"特","reading":"とく","level":"N4","theme":""},{"sentence":"今日は特別な日です。","kanji":"特別","reading":"とくべつ","level":"N4","theme":""},{"sentence":"友だちと駅で別れました。","kanji":"別","reading":"わか","level":"N4","theme":""},{"sentence":"名前を書いてください。","kanji":"名","reading":"な","level":"N5","theme":""},{"sentence":"ここに住所と氏名を書いてください。","kanji":"名","reading":"めい","level":"N5","theme":""},{"sentence":"名字は田中です。","kanji":"名","reading":"みょう","level":"N5","theme":""},{"sentence":"このトイレは有料です。","kanji":"有","reading":"ゆう","level":"N4","theme":""},{"sentence":"毎日、電車を利用しています。","kanji":"利","reading":"り","level":"N4","theme":""},{"sentence":"コンビニは便利です。","kanji":"便","reading":"べん","level":"N3","theme":""},{"sentence":"郵便局","kanji":"便","reading":"びん","level":"N3","theme":""},{"sentence":"アンナさんは髪が長いです。","kanji":"長","reading":"なが","level":"N5","theme":""},{"sentence":"校長先生は女の人です。","kanji":"長","reading":"ちょう","level":"N5","theme":""},{"sentence":"パクさんは髪が短いです。","kanji":"短","reading":"みじか","level":"N4","theme":""},{"sentence":"短大で二年間勉強します。","kanji":"短","reading":"たん","level":"N4","theme":""},{"sentence":"新しいスマホを買いました。","kanji":"新","reading":"あたら","level":"N5","theme":""},{"sentence":"毎朝、新聞を読みます。","kanji":"新","reading":"しん","level":"N5","theme":""},{"sentence":"私のパソコンは古いです。","kanji":"古","reading":"ふる","level":"N5","theme":""},{"sentence":"古本屋で本を買いました。","kanji":"古","reading":"ふる","level":"N5","theme":""},{"sentence":"中古車を買いました。","kanji":"古","reading":"こ","level":"N5","theme":""},{"sentence":"クラスで一番若いのは誰ですか。","kanji":"若","reading":"わか","level":"N3","theme":""},{"sentence":"この歌は若者に人気があります。","kanji":"若","reading":"わか","level":"N3","theme":""},{"sentence":"このかばんは重いです。","kanji":"重","reading":"おも","level":"N4","theme":""},{"sentence":"体重をはかりました。","kanji":"体重","reading":"たいじゅう","level":"N4","theme":""},{"sentence":"貴重品をロッカーに入れました。","kanji":"重","reading":"ちょう","level":"N4","theme":""},{"sentence":"このかばんは軽いです。","kanji":"軽","reading":"かる","level":"N4","theme":""},{"sentence":"気軽に話してください。","kanji":"軽","reading":"がる","level":"N4","theme":""},{"sentence":"メニューは軽食だけです。","kanji":"軽食","reading":"けいしょく","level":"N4","theme":""},{"sentence":"家から学校まで歩きます。","kanji":"歩","reading":"ある","level":"N4","theme":""},{"sentence":"歩道に自転車を止めないでください。","kanji":"歩","reading":"ほ","level":"N4","theme":""},{"sentence":"公園を散歩します。","kanji":"歩","reading":"ぽ","level":"N4","theme":""},{"sentence":"駅まで走りました。","kanji":"走","reading":"はし","level":"N4","theme":""},{"sentence":"運動会でパン食い競走をしました。","kanji":"走","reading":"そう","level":"N4","theme":""},{"sentence":"ここに自転車を止めないでください。","kanji":"止","reading":"と","level":"N4","theme":""},{"sentence":"立入禁止","kanji":"止","reading":"し","level":"N4","theme":""},{"sentence":"このレバーを引いてください。","kanji":"引","reading":"ひ","level":"N4","theme":""},{"sentence":"引き出しにノートを入れます。","kanji":"引","reading":"ひ","level":"N4","theme":""},{"sentence":"来月、引っ越しします。","kanji":"引","reading":"ひ","level":"N4","theme":""},{"sentence":"国へ荷物を送ります。","kanji":"送","reading":"おく","level":"N4","theme":""},{"sentence":"荷物の送料はいくらですか。","kanji":"送","reading":"そう","level":"N4","theme":""},{"sentence":"はしを使うことができます。","kanji":"使","reading":"つか","level":"N4","theme":""},{"sentence":"このパソコンは使用できません。","kanji":"使","reading":"し","level":"N4","theme":""},{"sentence":"授業は９時に始まります。","kanji":"始","reading":"はじ","level":"N4","theme":""},{"sentence":"テストを開始します。","kanji":"開始","reading":"かいし","level":"N4","theme":""},{"sentence":"アルバイトは５時に終わります。","kanji":"終","reading":"お","level":"N4","theme":""},{"sentence":"申し込みは終了しました。","kanji":"終","reading":"しゅう","level":"N4","theme":""},{"sentence":"ナイフでパンを切ります。","kanji":"切","reading":"き","level":"N4","theme":""},{"sentence":"手紙に切手をはります。","kanji":"切手","reading":"きって","level":"N4","theme":""},{"sentence":"ワンさんは親切な人です。","kanji":"切","reading":"せつ","level":"N4","theme":""},{"sentence":"私は留学生です。","kanji":"学","reading":"がく","level":"N5","theme":""},{"sentence":"毎日、学校で勉強します。","kanji":"学校","reading":"がっこう","level":"N5","theme":""},{"sentence":"アルバイトでいろいろなことを学びました。","kanji":"学","reading":"まな","level":"N5","theme":""},{"sentence":"昨日、赤ちゃんが生まれました。","kanji":"生","reading":"う","level":"N5","theme":""},{"sentence":"彼は100才まで生きました。","kanji":"生","reading":"い","level":"N5","theme":""},{"sentence":"さしみは生ざかなです。","kanji":"生","reading":"なま","level":"N5","theme":""},{"sentence":"生年月日を書いてください。","kanji":"生","reading":"せい","level":"N5","theme":""},{"sentence":"一生忘れません。","kanji":"生","reading":"しょう","level":"N5","theme":""},{"sentence":"去年、日本に来ました。","kanji":"去年","reading":"きょねん","level":"N4","theme":""},{"sentence":"台風はもう去りましたか。","kanji":"去","reading":"さ","level":"N4","theme":""},{"sentence":"「食べる」の過去形は「食べました」です。","kanji":"去","reading":"こ","level":"N4","theme":""},{"sentence":"一週間に一回、買い物に行きます。","kanji":"一週間","reading":"いっしゅうかん","level":"N5","theme":""},{"sentence":"今週は学校が休みです。","kanji":"今週","reading":"こんしゅう","level":"N5","theme":""},{"sentence":"土曜日はアルバイトがあります。","kanji":"土曜日","reading":"どようび","level":"N4","theme":""},{"sentence":"用事があるから、先に帰ります。","kanji":"先","reading":"さき","level":"N5","theme":""},{"sentence":"先週の木曜日、学校を休みました。","kanji":"先週","reading":"せんしゅう","level":"N5","theme":""},{"sentence":"昨日、先生と話しました。","kanji":"先生","reading":"せんせい","level":"N5","theme":""},{"sentence":"明日の朝、６時に起きます。","kanji":"朝","reading":"あさ","level":"N4","theme":""},{"sentence":"午前４時は早朝ですか。","kanji":"朝","reading":"ちょう","level":"N4","theme":""},{"sentence":"今朝は８時に起きました。","kanji":"今朝","reading":"けさ","level":"N4","theme":""},{"sentence":"昼ご飯にラーメンを食べました。","kanji":"昼","reading":"ひる","level":"N4","theme":""},{"sentence":"昼食にラーメンを食べました。","kanji":"昼食","reading":"ちゅうしょく","level":"N4","theme":""},{"sentence":"夜ごはんにカレーライスを食べました。","kanji":"夜","reading":"よる","level":"N4","theme":""},{"sentence":"夜明け前に出発しましょう","kanji":"夜","reading":"よ","level":"N4","theme":""},{"sentence":"今夜、友だちが家に来ます。","kanji":"今夜","reading":"こんや","level":"N4","theme":""},{"sentence":"今日の晩ご飯は何がいいですか。","kanji":"晩","reading":"ばん","level":"N4","theme":""},{"sentence":"春・夏・秋・冬を四季と言います。","kanji":"季","reading":"き","level":"N2","theme":""},{"sentence":"どの季節が好きですか。","kanji":"季節","reading":"きせつ","level":"N2","theme":""},{"sentence":"節水","kanji":"節水","reading":"せっすい","level":"N2","theme":""},{"sentence":"鏡に顔を映します。","kanji":"映","reading":"うつ","level":"N4","theme":""},{"sentence":"ホラー映画が好きです。","kanji":"映画","reading":"えいが","level":"N4","theme":""},{"sentence":"友だちのノートを写します。","kanji":"写","reading":"うつ","level":"N4","theme":""},{"sentence":"京都できれいな写真をたくさんとりました。","kanji":"写真","reading":"しゃしん","level":"N4","theme":""},{"sentence":"教室の真ん中","kanji":"真ん中","reading":"まんなか","level":"N4","theme":""},{"sentence":"真っ赤なバラの花","kanji":"真っ赤","reading":"まっか","level":"N4","theme":""},{"sentence":"一人旅が好きです。","kanji":"一人旅","reading":"ひとりたび","level":"N4","theme":""},{"sentence":"世界で一番高い山はエベレストです。","kanji":"世界","reading":"せかい","level":"N4","theme":""},{"sentence":"今は21世紀です。","kanji":"世","reading":"せい","level":"N4","theme":""},{"sentence":"世の中","kanji":"世","reading":"よ","level":"N4","theme":""},{"sentence":"日本の歌を教えてください。","kanji":"歌","reading":"うた","level":"N4","theme":""},{"sentence":"カラオケで歌います。","kanji":"歌","reading":"うた","level":"N4","theme":""},{"sentence":"好きな歌手はいますか。","kanji":"歌手","reading":"かしゅ","level":"N4","theme":""},{"sentence":"同じクラス","kanji":"同","reading":"おな","level":"N4","theme":""},{"sentence":"二人が同時に手をあげました。","kanji":"同時","reading":"どうじ","level":"N4","theme":""},{"sentence":"２クラス合同で授業をします。","kanji":"同","reading":"どう","level":"N4","theme":""},{"sentence":"友だちといっしょに映画を見ました。","kanji":"友","reading":"とも","level":"N5","theme":""},{"sentence":"親友はいますか。","kanji":"友","reading":"ゆう","level":"N5","theme":""},{"sentence":"昨日、私の父が日本にきました。","kanji":"父","reading":"ちち","level":"N5","theme":""},{"sentence":"お父さん","kanji":"父","reading":"とう","level":"N5","theme":""},{"sentence":"祖父は80才です。","kanji":"父","reading":"ふ","level":"N5","theme":""},{"sentence":"母は料理が上手です。","kanji":"母","reading":"はは","level":"N5","theme":""},{"sentence":"お母さん","kanji":"母","reading":"かあ","level":"N5","theme":""},{"sentence":"祖母は90才です。","kanji":"母","reading":"ぼ","level":"N5","theme":""},{"sentence":"兄は大学生です。","kanji":"兄","reading":"あに","level":"N5","theme":""},{"sentence":"友だちのお兄さん","kanji":"兄","reading":"にい","level":"N5","theme":""},{"sentence":"弟は中学生です。","kanji":"弟","reading":"おとうと","level":"N5","theme":""},{"sentence":"兄弟はいますか。","kanji":"兄弟","reading":"きょうだい","level":"N5","theme":""},{"sentence":"姉は大学生です。","kanji":"姉","reading":"あね","level":"N5","theme":""},{"sentence":"友だちのお姉さん","kanji":"姉","reading":"ねえ","level":"N5","theme":""},{"sentence":"妹がいます。","kanji":"妹","reading":"いもうと","level":"N5","theme":""},{"sentence":"姉妹","kanji":"姉妹","reading":"しまい","level":"N5","theme":""},{"sentence":"ご主人の趣味は何ですか。","kanji":"主人","reading":"しゅじん","level":"N4","theme":""},{"sentence":"財布の持ち主","kanji":"主","reading":"ぬし","level":"N4","theme":""},{"sentence":"家族で旅行に行きました。","kanji":"家","reading":"か","level":"N4","theme":""},{"sentence":"自分","kanji":"自分","reading":"じぶん","level":"N4","theme":""},{"sentence":"私は留学生です。","kanji":"私","reading":"わたし","level":"N4","theme":""},{"sentence":"私立学校","kanji":"私","reading":"し","level":"N4","theme":""},{"sentence":"空は青いです。","kanji":"空","reading":"そら","level":"N5","theme":""},{"sentence":"この箱は空です。","kanji":"空","reading":"から","level":"N5","theme":""},{"sentence":"席が空きました。","kanji":"空","reading":"あ","level":"N5","theme":""},{"sentence":"成田空港","kanji":"空","reading":"くう","level":"N5","theme":""},{"sentence":"太陽の光","kanji":"光","reading":"ひかり","level":"N4","theme":""},{"sentence":"ダイヤモンドが光っています。","kanji":"光","reading":"ひか","level":"N4","theme":""},{"sentence":"観光旅行","kanji":"光","reading":"こう","level":"N4","theme":""},{"sentence":"星を見るのが好きです。","kanji":"星","reading":"ほし","level":"N4","theme":""},{"sentence":"火星","kanji":"星","reading":"せい","level":"N4","theme":""},{"sentence":"今日は風が強いです。","kanji":"風","reading":"かぜ","level":"N4","theme":""},{"sentence":"風邪をひきました。","kanji":"風邪","reading":"かぜ","level":"N4","theme":""},{"sentence":"台風で電車が止まりました。","kanji":"台風","reading":"たいふう","level":"N4","theme":""},{"sentence":"毎日お風呂に入ります。","kanji":"風","reading":"ふ","level":"N4","theme":""},{"sentence":"車を２台、持っています。","kanji":"台","reading":"だい","level":"N4","theme":""},{"sentence":"自然を大切にしましょう","kanji":"自然","reading":"しぜん","level":"N2","theme":""},{"sentence":"天然ガス","kanji":"天然","reading":"てんねん","level":"N2","theme":""},{"sentence":"ふる里","kanji":"里","reading":"さと","level":"N2","theme":""},{"sentence":"テレビで野球を見ました。","kanji":"野球","reading":"やきゅう","level":"N4","theme":""},{"sentence":"野山で虫を取ります。","kanji":"野山","reading":"のやま","level":"N4","theme":""},{"sentence":"野原にいろいろな花がさいています。","kanji":"野原","reading":"のはら","level":"N4","theme":""},{"sentence":"事故の原因を調べています。","kanji":"原","reading":"げん","level":"N3","theme":""},{"sentence":"山と山の間に谷があります。","kanji":"谷","reading":"たに","level":"N2","theme":""},{"sentence":"グランドキャニオンは有名な渓谷です。","kanji":"谷","reading":"こく","level":"N2","theme":""}];
+let quizQuestions=[];
+let currentIndex=0;
+let currentQuestion=null;
+let quizXP=0;
+let streak=0;
+let correctCount=0;
+let answered=false;
+let mistakeMode=false;
+let learned=JSON.parse(localStorage.getItem('kanjiQuestLearned')||'{}');
+let mistakes=JSON.parse(localStorage.getItem('kanjiQuestMistakes')||'{}');
+let totalXP=Number(localStorage.getItem('kanjiQuestXP')||0);
+let bestStreak=Number(localStorage.getItem('kanjiQuestBestStreak')||0);
+function showScreen(id){
+document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+window.scrollTo({top:0,behavior:'instant'});
+updateHomeStats();
+}
+function esc(s){
+return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function removeRuby(s){
+return String(s).replace(/<rt[^>]*>.*?<\/rt>/gi,'').replace(/<rp[^>]*>.*?<\/rp>/gi,'').replace(/<ruby[^>]*>/gi,'').replace(/<\/ruby>/gi,'');
+}
+function makeQuestionSentence(q){
+let s=removeRuby(q.sentence);
+let target=q.kanji;
+if(s.indexOf(target)>=0){
+s=esc(s);
+s=s.split(esc(target)).join('<span class="blank">【　　】</span>');
+}else{
+s=esc(s);
+}
+return s;
+}
+function setupThemes(){
+const themes=[...new Set(questions.map(q=>q.theme).filter(x=>x))].sort();
+const select=document.getElementById('themeSelect');
+themes.forEach(t=>{
+let o=document.createElement('option');
+o.value=t;
+o.textContent=t;
+select.appendChild(o);
+});
+}
+function shuffle(arr){
+for(let i=arr.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1));
+[arr[i],arr[j]]=[arr[j],arr[i]];
+}
+return arr;
+}
+function startQuiz(){
+mistakeMode=false;
+currentIndex=0;
+quizXP=0;
+streak=0;
+correctCount=0;
+const level=document.getElementById('levelSelect').value;
+const theme=document.getElementById('themeSelect').value;
+const count=document.getElementById('countSelect').value;
+quizQuestions=questions.filter(q=>(level==='ALL'||q.level===level)&&(theme==='ALL'||q.theme===theme));
+quizQuestions=shuffle([...quizQuestions]);
+if(count!=='ALL')quizQuestions=quizQuestions.slice(0,Number(count));
+if(quizQuestions.length===0){
+alert('この条件の問題がありません。');
+return;
+}
+showScreen('quiz');
+showQuestion();
+}
+function makeChoices(q){
+let candidates=[];
+let sameLevel=questions.filter(x=>x.level===q.level&&x.kanji!==q.kanji);
+let others=questions.filter(x=>x.kanji!==q.kanji);
+shuffle(sameLevel);
+shuffle(others);
+for(const x of sameLevel){
+if(!candidates.some(c=>c.kanji===x.kanji))candidates.push(x);
+if(candidates.length>=3)break;
+}
+for(const x of others){
+if(!candidates.some(c=>c.kanji===x.kanji))candidates.push(x);
+if(candidates.length>=3)break;
+}
+candidates.push(q);
+return shuffle(candidates);
+}
+function showQuestion(){
+answered=false;
+currentQuestion=quizQuestions[currentIndex];
+const q=currentQuestion;
+document.getElementById('questionNo').textContent='問題 '+(currentIndex+1)+' / '+quizQuestions.length;
+document.getElementById('progressBar').style.width=((currentIndex/quizQuestions.length)*100)+'%';
+document.getElementById('quizLevel').textContent=q.level||'';
+document.getElementById('quizTheme').textContent=q.theme||'';
+document.getElementById('sentence').innerHTML=makeQuestionSentence(q);
+document.getElementById('readingHint').innerHTML='&#x1F4A1; 読み：<strong>'+esc(q.reading)+'</strong>';
+document.getElementById('quizTotal').textContent=quizQuestions.length;
+const choices=document.getElementById('choices');
+choices.innerHTML='';
+const feedback=document.getElementById('feedback');
+feedback.className='feedback';
+feedback.innerHTML='';
+document.getElementById('nextBtn').style.display='none';
+const options=makeChoices(q);
+options.forEach(o=>{
+const btn=document.createElement('button');
+btn.className='choice';
+btn.textContent=o.kanji;
+btn.onclick=()=>answerQuestion(o,btn);
+choices.appendChild(btn);
+});
+updateQuizStats();
+}
+function answerQuestion(selected,button){
+if(answered)return;
+answered=true;
+const q=currentQuestion;
+document.querySelectorAll('.choice').forEach(b=>b.disabled=true);
+const correct=selected.kanji===q.kanji;
+if(correct){
+button.classList.add('correct');
+streak++;
+correctCount++;
+let gained=10;
+if(streak>=5)gained+=5;
+quizXP+=gained;
+totalXP+=gained;
+learned[q.kanji]={kanji:q.kanji,reading:q.reading};
+delete mistakes[q.kanji];
+if(streak>bestStreak)bestStreak=streak;
+saveData();
+showFeedback(true,q,gained);
+}else{
+button.classList.add('wrong');
+streak=0;
+mistakes[q.kanji]=q;
+saveData();
+document.querySelectorAll('.choice').forEach(b=>{
+if(b.textContent===q.kanji)b.classList.add('correct');
+});
+showFeedback(false,q,0);
+}
+updateQuizStats();
+document.getElementById('nextBtn').style.display='block';
+}
+function showFeedback(correct,q,gained){
+const f=document.getElementById('feedback');
+if(correct){
+f.className='feedback correct';
+f.innerHTML='&#x1F389; 正解！'+'<span class="feedbackKanji">'+esc(q.kanji)+'</span>'+'「'+esc(q.reading)+'」です。<br>+'+gained+' XP';
+}else{
+f.className='feedback wrong';
+f.innerHTML='&#x1F4A1; もう一度覚えましょう！'+'<span class="feedbackKanji">'+esc(q.kanji)+'</span>'+'「'+esc(q.reading)+'」です。';
+}
+}
+function nextQuestion(){
+currentIndex++;
+if(currentIndex>=quizQuestions.length){
+finishQuiz();
+}else{
+showQuestion();
+window.scrollTo({top:0,behavior:'smooth'});
+}
+}
+function updateQuizStats(){
+document.getElementById('quizXP').textContent=quizXP;
+document.getElementById('quizStreak').textContent=streak;
+document.getElementById('quizCorrect').textContent=correctCount;
+document.getElementById('headerXP').textContent=totalXP;
+}
+function finishQuiz(){
+document.getElementById('resultScore').textContent=correctCount+' / '+quizQuestions.length;
+document.getElementById('resultXP').textContent=quizXP;
+document.getElementById('resultStreak').textContent=streak;
+document.getElementById('resultLearned').textContent=Object.keys(learned).length;
+let rate=correctCount/quizQuestions.length;
+let msg='';
+if(rate===1){msg='&#x1F451; パーフェクト！';}else if(rate>=.8){msg='&#x1F31F; すばらしいです！';}else if(rate>=.5){msg='&#x1F4AA; よくがんばりました！';}else{msg='&#x1F4DA; まちがえた漢字を復習しましょう！';}
+document.getElementById('resultMessage').innerHTML=msg;
+showScreen('result');
+}
+function saveData(){
+localStorage.setItem('kanjiQuestLearned',JSON.stringify(learned));
+localStorage.setItem('kanjiQuestMistakes',JSON.stringify(mistakes));
+localStorage.setItem('kanjiQuestXP',totalXP);
+localStorage.setItem('kanjiQuestBestStreak',bestStreak);
+}
+function updateHomeStats(){
+document.getElementById('homeXP').textContent=totalXP;
+document.getElementById('homeLearned').textContent=Object.keys(learned).length;
+document.getElementById('homeBest').textContent=bestStreak;
+document.getElementById('headerXP').textContent=totalXP;
+}
+function showCollection(){
+const grid=document.getElementById('collectionGrid');
+grid.innerHTML='';
+const list=Object.values(learned);
+if(list.length===0){
+grid.innerHTML='<div class="empty" style="grid-column:1/-1;">'+'&#x1F331;<br>まだ覚えた漢字がありません。<br>'+'ミッションに挑戦しましょう！</div>';
+}else{
+list.sort((a,b)=>a.kanji.localeCompare(b.kanji));
+list.forEach(x=>{
+const div=document.createElement('div');
+div.className='kanjiCard';
+div.innerHTML='<div class="k">'+esc(x.kanji)+'</div>'+'<div class="r">'+esc(x.reading)+'</div>';
+grid.appendChild(div);
+});
+}
+showScreen('collection');
+}
+function showMistakes(){
+const list=document.getElementById('mistakeList');
+list.innerHTML='';
+const arr=Object.values(mistakes);
+const btn=document.getElementById('revengeBtn');
+if(arr.length===0){
+list.innerHTML='<div class="empty">&#x1F389;<br>'+'現在、リベンジする問題はありません！</div>';
+btn.style.display='none';
+}else{
+btn.style.display='block';
+arr.forEach(x=>{
+const div=document.createElement('div');
+div.className='card';
+div.style.padding='13px';
+div.innerHTML='<strong style="font-size:28px;">'+esc(x.kanji)+'</strong>'+'　'+esc(x.reading)+'<br>'+'<span style="font-size:13px;color:#777;">'+esc(removeRuby(x.sentence))+'</span>';
+list.appendChild(div);
+});
+}
+showScreen('mistakes');
+}
+function startMistakeQuiz(){
+const arr=Object.values(mistakes);
+if(arr.length===0)return;
+mistakeMode=true;
+currentIndex=0;
+quizXP=0;
+streak=0;
+correctCount=0;
+quizQuestions=shuffle([...arr]);
+showScreen('quiz');
+showQuestion();
+}
+setupThemes();
+updateHomeStats();
+</script>
+</div>
+</body>
+</html>
