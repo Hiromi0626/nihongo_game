@@ -3,101 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="format-detection" content="telephone=no">
+<title>漢字読み練習</title>
 <style>
 * {
   box-sizing: border-box;
 }
-html, body {
-  margin: 0;
-  padding: 0;
-  background: #f5f5f5;
-  color: #222;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
-}
 body {
-  min-height: 100vh;
+  margin: 0;
+  padding: 20px 12px 40px;
+  background: #f5f5f5;
+  color: #333;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
+  font-size: 16px;
 }
 .container {
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
-  padding: 20px 16px 40px 16px;
 }
 h1 {
-  font-size: 24px;
   text-align: center;
-  margin: 10px 0 25px 0;
+  font-size: 28px;
+  margin: 10px 0 25px;
 }
 .card {
   background: white;
   border-radius: 14px;
   padding: 20px;
-  margin-bottom: 16px;
+  margin-bottom: 15px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
-.label {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 7px;
-}
-select, input {
-  width: 100%;
-  min-height: 52px;
-  border: 1px solid #bbb;
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 18px;
-  background: white;
-}
-input {
-  font-size: 22px;
+.question-number {
   text-align: center;
-}
-button {
-  width: 100%;
-  min-height: 52px;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 12px;
-}
-.startButton {
-  background: #333;
-  color: white;
-}
-.nextButton {
-  background: #333;
-  color: white;
-}
-.retryButton {
-  background: #555;
-  color: white;
-}
-.reviewButton {
-  background: #777;
-  color: white;
-}
-.questionNumber {
-  text-align: center;
-  font-size: 16px;
+  font-size: 15px;
   color: #666;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
 }
 .sentence {
-  font-size: 25px;
+  font-size: 26px;
   line-height: 2.2;
   text-align: center;
-  margin: 15px 0 25px 0;
-  overflow-wrap: break-word;
+  margin: 10px 0 25px;
+  word-break: break-word;
 }
 .target {
   font-weight: bold;
   text-decoration: underline;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 3px;
   text-underline-offset: 4px;
 }
 ruby {
@@ -106,57 +58,85 @@ ruby {
 rt {
   font-size: 0.45em;
   line-height: 1;
-  color: #444;
+}
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+select, input {
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 14px;
+  font-size: 18px;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  background: white;
+  margin-bottom: 18px;
+}
+button {
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 16px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 10px;
+  background: #333;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:active {
+  transform: scale(0.98);
+}
+.secondary {
+  background: #777;
+}
+.answer-area {
+  margin-top: 20px;
 }
 .feedback {
   text-align: center;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: bold;
-  margin: 15px 0;
+  margin: 18px 0;
 }
 .correct {
-  color: #008000;
+  color: #198754;
 }
 .incorrect {
-  color: #cc0000;
+  color: #dc3545;
 }
-.answerText {
+.result {
   text-align: center;
-  font-size: 20px;
-  margin: 10px 0;
+  font-size: 22px;
+  line-height: 1.8;
 }
-.resultNumber {
-  text-align: center;
-  font-size: 42px;
+.score {
+  font-size: 40px;
   font-weight: bold;
   margin: 20px 0;
-}
-.resultDetail {
-  text-align: center;
-  font-size: 20px;
-  line-height: 1.8;
 }
 .hidden {
   display: none;
 }
+.button-group {
+  margin-top: 20px;
+}
 @media (max-width: 480px) {
-  .container {
-    padding: 15px 12px 30px 12px;
+  body {
+    padding: 12px 8px 30px;
   }
   h1 {
-    font-size: 22px;
-    margin-bottom: 20px;
+    font-size: 24px;
   }
   .card {
     padding: 16px;
-    border-radius: 12px;
   }
   .sentence {
-    font-size: 23px;
-    line-height: 2.25;
-  }
-  rt {
-    font-size: 0.43em;
+    font-size: 24px;
+    line-height: 2.2;
   }
 }
 </style>
@@ -164,3950 +144,5155 @@ rt {
 <body>
 <div class="container">
 <h1>漢字読み練習</h1>
-<div id="setupScreen">
-<div class="card">
-<div class="label">レベル</div>
-<select id="levelSelect">
+<div id="startScreen" class="card">
+<label for="lessonSelect">「みどり」の課</label>
+<select id="lessonSelect">
 <option value="random" selected>ランダム</option>
-<option value="N5">N5</option>
-<option value="N4">N4</option>
-<option value="N3">N3</option>
-<option value="N2">N2</option>
-<option value="N1">N1</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+<option value="32">32</option>
+<option value="33">33</option>
+<option value="34">34</option>
+<option value="35">35</option>
 </select>
-<div class="label" style="margin-top:18px;">問題数</div>
-<select id="countSelect">
-<option value="10">10問</option>
+<label for="questionCount">問題数</label>
+<select id="questionCount">
+<option value="10" selected>10問</option>
 <option value="20">20問</option>
-<option value="all">すべて</option>
+<option value="all">全問</option>
 </select>
-<button class="startButton" onclick="startQuiz()">スタート</button>
-</div>
+<button onclick="startQuiz()">スタート</button>
 </div>
 <div id="quizScreen" class="hidden">
 <div class="card">
-<div id="questionNumber" class="questionNumber"></div>
+<div id="questionNumber" class="question-number"></div>
 <div id="sentence" class="sentence"></div>
-<input id="answerInput" type="text" inputmode="hiragana" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="読みをひらがなで入力" onkeydown="if(event.key==='Enter'){checkAnswer();}">
-<button id="checkButton" class="nextButton" onclick="checkAnswer()">答え合わせ</button>
+<div class="answer-area">
+<label for="answerInput">読み方をひらがなで入力してください</label>
+<input type="text" id="answerInput" inputmode="hiragana" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="ひらがなで入力" >
+<button id="checkButton" onclick="checkAnswer()">答え合わせ</button>
 <div id="feedback" class="feedback"></div>
-<div id="correctAnswer" class="answerText"></div>
-<button id="nextButton" class="nextButton hidden" onclick="nextQuestion()">次の問題</button>
+<button id="nextButton" class="hidden" onclick="nextQuestion()">次の問題</button>
+</div>
 </div>
 </div>
 <div id="resultScreen" class="hidden">
-<div class="card">
-<h2 style="text-align:center;">結果</h2>
-<div id="resultNumber" class="resultNumber"></div>
-<div id="resultDetail" class="resultDetail"></div>
-<button class="reviewButton" onclick="reviewWrong()">間違えた問題を復習</button>
-<button class="retryButton" onclick="retryAll()">もう一度すべて解く</button>
-<button class="retryButton" onclick="backToSetup()">設定画面に戻る</button>
+<div class="card result">
+<h2>結果</h2>
+<div id="score" class="score"></div>
+<div id="resultDetail"></div>
+<div class="button-group">
+<button onclick="reviewWrong()">間違えた問題を復習</button>
+<button class="secondary" onclick="repeatAll()">もう一度すべて解く</button>
+<button class="secondary" onclick="backToStart()">スタート画面に戻る</button>
+</div>
+</div>
 </div>
 </div>
 <script>
-const allQuestions = [
+const questions = [
 {
-sentence: "<ruby>富士<rt>ふじ</rt></ruby><span class=\"target\">山</span>は<ruby>日本<rt>にほん</rt></ruby>で<ruby>一番<rt>いちばん</rt></ruby><ruby>高<rt>たか</rt></ruby>いです。",
+sentence: "<ruby>富士<rt>ふじ</rt></ruby>山は<ruby>日本<rt>にほん</rt></ruby>で<ruby>一番<rt>いちばん</rt></ruby><ruby>高<rt>たか</rt></ruby>いです。",
 target: "山",
 answer: "さん",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "あれは火<span class=\"target\">山</span>です。",
+sentence: "あれは火山です。",
 target: "山",
 answer: "ざん",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "エベレストは<ruby>世界<rt>せかい</rt></ruby>で<ruby>一番<rt>いちばん</rt></ruby><ruby>高<rt>たか</rt></ruby>い<span class=\"target\">山</span>です。",
+sentence: "エベレストは<ruby>世界<rt>せかい</rt></ruby>で<ruby>一番<rt>いちばん</rt></ruby><ruby>高<rt>たか</rt></ruby>い山です。",
 target: "山",
 answer: "やま",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "きれいな<span class=\"target\">川</span>でおよぎました。",
+sentence: "きれいな川でおよぎました。",
 target: "川",
 answer: "かわ",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "ナイル<span class=\"target\">川</span>はエジプトにあります。",
+sentence: "ナイル川はエジプトにあります。",
 target: "川",
 answer: "がわ",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "あの<span class=\"target\">人</span>はだれですか。",
+sentence: "あの人はだれですか。",
 target: "人",
 answer: "ひと",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>は日本<span class=\"target\">人</span>じゃありません。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>は日本人じゃありません。",
 target: "人",
 answer: "じん",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "このクラスの<ruby>学生<rt>がくせい</rt></ruby>は何<span class=\"target\">人</span>ですか。",
+sentence: "このクラスの<ruby>学生<rt>がくせい</rt></ruby>は何人ですか。",
 target: "人",
 answer: "にん",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "アンナさんは<span class=\"target\">目</span>が<ruby>大<rt>おお</rt></ruby>きいです。",
+sentence: "アンナさんは目が<ruby>大<rt>おお</rt></ruby>きいです。",
 target: "目",
 answer: "め",
-level: "N3",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "ひとつ<span class=\"target\">目</span>の<ruby>駅<rt>えき</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。",
+sentence: "ひとつ目の<ruby>駅<rt>えき</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。",
 target: "目",
 answer: "め",
-level: "N3",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<ruby>今日<rt>きょう</rt></ruby>は<ruby>旅行<rt>りょこう</rt></ruby>の二日<span class=\"target\">目</span>です。",
+sentence: "<ruby>今日<rt>きょう</rt></ruby>は<ruby>旅行<rt>りょこう</rt></ruby>の二日目です。",
 target: "目",
 answer: "め",
-level: "N3",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "ダニエルさんは<span class=\"target\">口</span>が<ruby>大<rt>おお</rt></ruby>きいです。",
+sentence: "ダニエルさんは口が<ruby>大<rt>おお</rt></ruby>きいです。",
 target: "口",
 answer: "くち",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<ruby>入<rt>い</rt></ruby>り<span class=\"target\">口</span>はここです。",
+sentence: "<ruby>入<rt>い</rt></ruby>り口はここです。",
 target: "口",
 answer: "ぐち",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "出<span class=\"target\">口</span>はあそこです。",
+sentence: "出口はあそこです。",
 target: "口",
 answer: "ぐち",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<ruby>日本<rt>にほん</rt></ruby>の人<span class=\"target\">口</span>は<ruby>何人<rt>なんにん</rt></ruby>ですか。",
+sentence: "<ruby>日本<rt>にほん</rt></ruby>の人口は<ruby>何人<rt>なんにん</rt></ruby>ですか。",
 target: "口",
 answer: "こう",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<span class=\"target\">田</span>植えの<ruby>手伝<rt>てつだ</rt></ruby>いをしました。",
+sentence: "田<ruby>植<rt>　　う</rt></ruby>えの<ruby>手伝<rt>てつだ</rt></ruby>いをしました。",
 target: "田",
 answer: "た",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "山<span class=\"target\">田</span>さんは<ruby>親切<rt>しんせつ</rt></ruby>です。",
+sentence: "山田さんは<ruby>親切<rt>しんせつ</rt></ruby>です。",
 target: "田",
 answer: "だ",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "この<span class=\"target\">土</span>は<ruby>少<rt>すこ</rt></ruby>し<ruby>赤<rt>あか</rt></ruby>いです。",
+sentence: "この土は<ruby>少<rt>すこ</rt></ruby>し<ruby>赤<rt>あか</rt></ruby>いです。",
 target: "土",
 answer: "つち",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<ruby>明日<rt>あした</rt></ruby>は<span class=\"target\">土</span>曜日です。",
+sentence: "<ruby>明日<rt>あした</rt></ruby>は土<ruby>曜日<rt>　　ようび</rt></ruby>です。",
 target: "土",
 answer: "ど",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "テストの<span class=\"target\">日</span>",
+sentence: "テストの日",
 target: "日",
 answer: "ひ",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<span class=\"target\">日</span>曜日にスーバーへ<ruby>行<rt>い</rt></ruby>きます。",
+sentence: "日<ruby>曜日<rt>　　ようび</rt></ruby>にスーバーへ<ruby>行<rt>い</rt></ruby>きます。",
 target: "日",
 answer: "にち",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "月曜<span class=\"target\">日</span>に<ruby>学校<rt>がっこう</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。",
+sentence: "月曜日に<ruby>学校<rt>がっこう</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。",
 target: "日",
 answer: "び",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "休<span class=\"target\">日</span>",
+sentence: "休日",
 target: "日",
 answer: "じつ",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<ruby>今日<rt>きょう</rt></ruby>は<ruby>一月<rt>いちがつ</rt></ruby><span class=\"target\">三日</span>です。",
+sentence: "<ruby>今日<rt>きょう</rt></ruby>は<ruby>一月<rt>いちがつ</rt></ruby>三日です。",
 target: "三日",
 answer: "みっか",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>は<span class=\"target\">日本語</span>を<ruby>勉強<rt>べんきょう</rt></ruby>しています。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>は日本語を<ruby>勉強<rt>べんきょう</rt></ruby>しています。",
 target: "日本語",
 answer: "にほんご",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<span class=\"target\">月</span>がきれいです",
+sentence: "月がきれいです",
 target: "月",
 answer: "つき",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<span class=\"target\">火</span>はあぶないです。",
+sentence: "火はあぶないです。",
 target: "火",
 answer: "ひ",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<span class=\"target\">花火</span>はきれいです。",
+sentence: "花火はきれいです。",
 target: "花火",
 answer: "はなび",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<span class=\"target\">火</span>曜日に<ruby>海<rt>うみ</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。",
+sentence: "火<ruby>曜日<rt>　　ようび</rt></ruby>に<ruby>海<rt>うみ</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。",
 target: "火",
 answer: "か",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<span class=\"target\">水</span>を<ruby>飲<rt>の</rt></ruby>みます。",
+sentence: "水を<ruby>飲<rt>の</rt></ruby>みます。",
 target: "水",
 answer: "みず",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "テストは<span class=\"target\">水</span>曜日です。",
+sentence: "テストは水<ruby>曜日<rt>　　ようび</rt></ruby>です。",
 target: "水",
 answer: "すい",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "この<span class=\"target\">木</span>は<ruby>大<rt>おお</rt></ruby>きいです。",
+sentence: "この木は<ruby>大<rt>おお</rt></ruby>きいです。",
 target: "木",
 answer: "き",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<span class=\"target\">木</span>曜日に<ruby>買<rt>か</rt></ruby>い<ruby>物<rt>もの</rt></ruby>をします。",
+sentence: "木<ruby>曜日<rt>　　ようび</rt></ruby>に<ruby>買<rt>か</rt></ruby>い<ruby>物<rt>もの</rt></ruby>をします。",
 target: "木",
 answer: "もく",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "お<span class=\"target\">金</span>がありません。",
+sentence: "お金がありません。",
 target: "金",
 answer: "かね",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "<span class=\"target\">金</span>曜日にビールを<ruby>飲<rt>の</rt></ruby>みます。",
+sentence: "金<ruby>曜日<rt>　　ようび</rt></ruby>にビールを<ruby>飲<rt>の</rt></ruby>みます。",
 target: "金",
 answer: "きん",
-level: "N5",
-theme: ""
+lesson: "1"
 },
 {
-sentence: "りんごを<span class=\"target\">一</span>つください。",
+sentence: "りんごを一つください。",
 target: "一",
 answer: "ひと",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">一人</span>で<ruby>旅行<rt>りょこう</rt></ruby>しました。",
+sentence: "一人で<ruby>旅行<rt>りょこう</rt></ruby>しました。",
 target: "一人",
 answer: "ひとり",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>事務<rt>じむ</rt></ruby><ruby>室<rt>しつ</rt></ruby>は<span class=\"target\">一階</span>です。",
+sentence: "<ruby>事務<rt>じむ</rt></ruby><ruby>室<rt>しつ</rt></ruby>は一階です。",
 target: "一階",
 answer: "いっかい",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">一月</span>は<ruby>寒<rt>さむ</rt></ruby>いです。",
+sentence: "一月は<ruby>寒<rt>さむ</rt></ruby>いです。",
 target: "一月",
 answer: "いちがつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>五月<rt>ごがつ</rt></ruby><span class=\"target\">一日</span>は<ruby>何曜日<rt>なんようび</rt></ruby>ですか。",
+sentence: "<ruby>五月<rt>ごがつ</rt></ruby>一日は<ruby>何曜日<rt>なんようび</rt></ruby>ですか。",
 target: "一日",
 answer: "ついたち",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">一日中</span><ruby>働<rt>はたら</rt></ruby>きました。",
+sentence: "一日中<ruby>働<rt>はたら</rt></ruby>きました。",
 target: "一日中",
 answer: "いちにちじゅう",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "コーヒーを<span class=\"target\">二</span>つください。",
+sentence: "コーヒーを二つください。",
 target: "二",
 answer: "ふた",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>休<rt>やす</rt></ruby>んだ<ruby>生徒<rt>せいと</rt></ruby>が<span class=\"target\">二人</span>いました。",
+sentence: "<ruby>休<rt>やす</rt></ruby>んだ<ruby>生徒<rt>せいと</rt></ruby>が二人いました。",
 target: "二人",
 answer: "ふたり",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "トイレは<span class=\"target\">二</span>階です。",
+sentence: "トイレは二<ruby>階<rt>　　かい</rt></ruby>です。",
 target: "二",
 answer: "に",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">二月</span><ruby>十四日<rt>じゅうよっか</rt></ruby>はバレンタインデーです。",
+sentence: "二月<ruby>十四日<rt>じゅうよっか</rt></ruby>はバレンタインデーです。",
 target: "二月",
 answer: "にがつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "お<ruby>酒<rt>さけ</rt></ruby>を<ruby>飲<rt>の</rt></ruby>みすぎて<span class=\"target\">二日</span>酔いになりました。",
+sentence: "お<ruby>酒<rt>さけ</rt></ruby>を<ruby>飲<rt>の</rt></ruby>みすぎて二日<ruby>酔<rt>　　　　よ</rt></ruby>いになりました。",
 target: "二日",
 answer: "ふつか",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "みかんを<span class=\"target\">三つ</span><ruby>食<rt>た</rt></ruby>べました。",
+sentence: "みかんを三つ<ruby>食<rt>た</rt></ruby>べました。",
 target: "三つ",
 answer: "みっつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">三人</span>でカラオケに<ruby>行<rt>い</rt></ruby>きました。",
+sentence: "三人でカラオケに<ruby>行<rt>い</rt></ruby>きました。",
 target: "三人",
 answer: "さんにん",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">三月</span><ruby>三日<rt>みっか</rt></ruby>",
+sentence: "三月<ruby>三日<rt>みっか</rt></ruby>",
 target: "三月",
 answer: "さんがつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>三月<rt>さんがつ</rt></ruby><span class=\"target\">三日</span>",
+sentence: "<ruby>三月<rt>さんがつ</rt></ruby>三日",
 target: "三日",
 answer: "みっか",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "ケーキを<span class=\"target\">四つ</span>つください。",
+sentence: "ケーキを四つください。",
 target: "四つ",
 answer: "よっつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>授業<rt>じゅぎょう</rt></ruby>は<span class=\"target\">四時</span><ruby>四十五分<rt>よんじゅうごふん</rt></ruby>に<ruby>終<rt>お</rt></ruby>わります。",
+sentence: "<ruby>授業<rt>じゅぎょう</rt></ruby>は四時<ruby>四十五分<rt>よんじゅうごふん</rt></ruby>に<ruby>終<rt>お</rt></ruby>わります。",
 target: "四時",
 answer: "よじ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">四月</span><ruby>一日<rt>ついたち</rt></ruby>はエイプリールフールです。",
+sentence: "四月<ruby>一日<rt>ついたち</rt></ruby>はエイプリールフールです。",
 target: "四月",
 answer: "しがつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>熱<rt>ねつ</rt></ruby>が<ruby>出<rt>で</rt></ruby>て、<span class=\"target\">四日</span>間<ruby>学校<rt>がっこう</rt></ruby>を<ruby>休<rt>やす</rt></ruby>みました。",
+sentence: "<ruby>熱<rt>ねつ</rt></ruby>が<ruby>出<rt>で</rt></ruby>て、四日<ruby>間<rt>　　　　かん</rt></ruby><ruby>学校<rt>がっこう</rt></ruby>を<ruby>休<rt>やす</rt></ruby>みました。",
 target: "四日",
 answer: "よっか",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "えんぴつが<span class=\"target\">四本</span>あります。",
+sentence: "えんぴつが四本あります。",
 target: "四本",
 answer: "よんほん",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">五月</span><ruby>五日<rt>いつか</rt></ruby>はこどもの<ruby>日<rt>ひ</rt></ruby>です。",
+sentence: "五月<ruby>五日<rt>いつか</rt></ruby>はこどもの<ruby>日<rt>ひ</rt></ruby>です。",
 target: "五月",
 answer: "ごがつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>五月<rt>ごがつ</rt></ruby><span class=\"target\">五日</span>はこどもの日 です。",
+sentence: "<ruby>五月<rt>ごがつ</rt></ruby>五日はこどもの日 です。",
 target: "五日",
 answer: "いつか",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "ケーキを<span class=\"target\">五つ</span>つください。",
+sentence: "ケーキを五つください。",
 target: "五つ",
 answer: "いつつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "ケーキを<span class=\"target\">六つ</span>つください",
+sentence: "ケーキを六つください",
 target: "六つ",
 answer: "むっつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">六月</span><ruby>六日<rt>むいか</rt></ruby>",
+sentence: "六月<ruby>六日<rt>むいか</rt></ruby>",
 target: "六月",
 answer: "ろくがつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>六月<rt>ろくがつ</rt></ruby><span class=\"target\">六日</span>",
+sentence: "<ruby>六月<rt>ろくがつ</rt></ruby>六日",
 target: "六日",
 answer: "むいか",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "ケーキを<span class=\"target\">七つ</span>つください。",
+sentence: "ケーキを七つください。",
 target: "七つ",
 answer: "ななつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">七月</span><ruby>七日<rt>なのか</rt></ruby>は「たなばた」です。",
+sentence: "七月<ruby>七日<rt>なのか</rt></ruby>は「たなばた」です。",
 target: "七月",
 answer: "しちがつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>七月<rt>しちがつ</rt></ruby><span class=\"target\">七日</span>は「たなばた」です。",
+sentence: "<ruby>七月<rt>しちがつ</rt></ruby>七日は「たなばた」です。",
 target: "七日",
 answer: "なのか",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "ケーキを<span class=\"target\">八つ</span>つください。",
+sentence: "ケーキを八つください。",
 target: "八つ",
 answer: "やっつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">八月</span><ruby>八日<rt>ようか</rt></ruby>",
+sentence: "八月<ruby>八日<rt>ようか</rt></ruby>",
 target: "八月",
 answer: "はちがつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>八月<rt>はちがつ</rt></ruby><span class=\"target\">八日</span>",
+sentence: "<ruby>八月<rt>はちがつ</rt></ruby>八日",
 target: "八日",
 answer: "ようか",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "りんごを<span class=\"target\">九つ</span>つください。",
+sentence: "りんごを九つください。",
 target: "九つ",
 answer: "ここのつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">九人</span>でレストランに<ruby>行<rt>い</rt></ruby>きました。",
+sentence: "九人でレストランに<ruby>行<rt>い</rt></ruby>きました。",
 target: "九人",
 answer: "きゅうにん",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">九月</span><ruby>九日<rt>ここのか</rt></ruby>",
+sentence: "九月<ruby>九日<rt>ここのか</rt></ruby>",
 target: "九月",
 answer: "くがつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>九月<rt>くがつ</rt></ruby><span class=\"target\">九日</span>",
+sentence: "<ruby>九月<rt>くがつ</rt></ruby>九日",
 target: "九日",
 answer: "ここのか",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">十月</span><ruby>十日<rt>とおか</rt></ruby>",
+sentence: "十月<ruby>十日<rt>とおか</rt></ruby>",
 target: "十月",
 answer: "じゅうがつ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>十月<rt>じゅうがつ</rt></ruby><span class=\"target\">十日</span>",
+sentence: "<ruby>十月<rt>じゅうがつ</rt></ruby>十日",
 target: "十日",
 answer: "とおか",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>今<rt>いま</rt></ruby>、<ruby>五時<rt>ごじ</rt></ruby><span class=\"target\">三十分</span>です。",
+sentence: "<ruby>今<rt>いま</rt></ruby>、<ruby>五時<rt>ごじ</rt></ruby>三十分です。",
 target: "三十分",
 answer: "さんじゅっぷん",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">百円</span>ショップに<ruby>行<rt>い</rt></ruby>きました。",
+sentence: "百円ショップに<ruby>行<rt>い</rt></ruby>きました。",
 target: "百円",
 answer: "ひゃくえん",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "このペンは三<span class=\"target\">百</span>円です。",
+sentence: "このペンは三百<ruby>円<rt>さん　　えん</rt></ruby>です。",
 target: "百",
 answer: "びゃく",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "カレーライスは八<span class=\"target\">百</span>円です。",
+sentence: "カレーライスは八百<ruby>円<rt>はっ　　えん</rt></ruby>です。",
 target: "百",
 answer: "ぴゃく",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>漢字<rt>かんじ</rt></ruby>を<span class=\"target\">百個</span><ruby>書<rt>か</rt></ruby>きました。",
+sentence: "<ruby>漢字<rt>かんじ</rt></ruby>を百個<ruby>書<rt>か</rt></ruby>きました。",
 target: "百個",
 answer: "ひゃっこ",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "この<ruby>本<rt>ほん</rt></ruby>は<span class=\"target\">千</span>円です。",
+sentence: "この<ruby>本<rt>ほん</rt></ruby>は千<ruby>円<rt>　　えん</rt></ruby>です。",
 target: "千",
 answer: "せん",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "この<ruby>時計<rt>とけい</rt></ruby>は三<span class=\"target\">千</span>円です。",
+sentence: "この<ruby>時計<rt>とけい</rt></ruby>は三千<ruby>円<rt>さん　　えん</rt></ruby>です。",
 target: "千",
 answer: "ぜん",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>の<ruby>学校<rt>がっこう</rt></ruby>は<span class=\"target\">千葉</span>にあります。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>の<ruby>学校<rt>がっこう</rt></ruby>は千葉にあります。",
 target: "千葉",
 answer: "ちば",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "このカメラは一<span class=\"target\">万</span>円です。",
+sentence: "このカメラは一万<ruby>円<rt>いち　　えん</rt></ruby>です。",
 target: "万",
 answer: "まん",
-level: "N5",
-theme: ""
+lesson: "2"
 },
 {
-sentence: "<span class=\"target\">上</span>を<ruby>見<rt>み</rt></ruby>ます。",
+sentence: "上を<ruby>見<rt>み</rt></ruby>ます。",
 target: "上",
 answer: "うえ",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>寒<rt>さむ</rt></ruby>いので、<span class=\"target\">上着</span>を<ruby>着<rt>き</rt></ruby>ます。",
+sentence: "<ruby>寒<rt>さむ</rt></ruby>いので、上着を<ruby>着<rt>き</rt></ruby>ます。",
 target: "上着",
 answer: "うわぎ",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>階段<rt>かいだん</rt></ruby>を<span class=\"target\">上</span>がります。",
+sentence: "<ruby>階段<rt>かいだん</rt></ruby>を上がります。",
 target: "上",
 answer: "あ",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<span class=\"target\">上</span>り<ruby>電車<rt>でんしゃ</rt></ruby>で<ruby>東京<rt>とうきょう</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。",
+sentence: "上り<ruby>電車<rt>でんしゃ</rt></ruby>で<ruby>東京<rt>とうきょう</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。",
 target: "上",
 answer: "のぼ",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "アンナさんは<ruby>歌<rt>うた</rt></ruby>が<span class=\"target\">上手</span>です。",
+sentence: "アンナさんは<ruby>歌<rt>うた</rt></ruby>が上手です。",
 target: "上手",
 answer: "じょうず",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "かばんの<span class=\"target\">中</span>に<ruby>本<rt>ほん</rt></ruby>があります。",
+sentence: "かばんの中に<ruby>本<rt>ほん</rt></ruby>があります。",
 target: "中",
 answer: "なか",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>弟<rt>おとうと</rt></ruby>は<span class=\"target\">中</span>学生です。",
+sentence: "<ruby>弟<rt>おとうと</rt></ruby>は中<ruby>学生<rt>　　がくせい</rt></ruby>です。",
 target: "中",
 answer: "ちゅう",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>今日<rt>きょう</rt></ruby>は一日<span class=\"target\">中</span><ruby>勉強<rt>べんきょう</rt></ruby>します。",
+sentence: "<ruby>今日<rt>きょう</rt></ruby>は一日中<ruby>勉強<rt>べんきょう</rt></ruby>します。",
 target: "中",
 answer: "じゅう",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<span class=\"target\">下</span>を<ruby>見<rt>み</rt></ruby>ます。",
+sentence: "下を<ruby>見<rt>み</rt></ruby>ます。",
 target: "下",
 answer: "した",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>薬<rt>くすり</rt></ruby>を<ruby>飲<rt>の</rt></ruby>んだので、<ruby>熱<rt>ねつ</rt></ruby>が<span class=\"target\">下</span>がりました。",
+sentence: "<ruby>薬<rt>くすり</rt></ruby>を<ruby>飲<rt>の</rt></ruby>んだので、<ruby>熱<rt>ねつ</rt></ruby>が下がりました。",
 target: "下",
 answer: "さ",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<span class=\"target\">下</span>りの<ruby>電車<rt>でんしゃ</rt></ruby>で<ruby>千葉<rt>ちば</rt></ruby>に<ruby>帰<rt>かえ</rt></ruby>ります。",
+sentence: "下りの<ruby>電車<rt>でんしゃ</rt></ruby>で<ruby>千葉<rt>ちば</rt></ruby>に<ruby>帰<rt>かえ</rt></ruby>ります。",
 target: "下",
 answer: "くだ",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<span class=\"target\">地下鉄</span>に<ruby>乗<rt>の</rt></ruby>りました。",
+sentence: "地下鉄に<ruby>乗<rt>の</rt></ruby>りました。",
 target: "地下鉄",
 answer: "ちかてつ",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>のかばんは<span class=\"target\">大</span>きいです。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>のかばんは大きいです。",
 target: "大",
 answer: "おお",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>はチョコレートが<span class=\"target\">大</span>好きです。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>はチョコレートが大<ruby>好<rt>　　す</rt></ruby>きです。",
 target: "大",
 answer: "だい",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>水<rt>みず</rt></ruby>は<span class=\"target\">大切</span>に<ruby>使<rt>つか</rt></ruby>いましょう。",
+sentence: "<ruby>水<rt>みず</rt></ruby>は大切に<ruby>使<rt>つか</rt></ruby>いましょう。",
 target: "大切",
 answer: "たいせつ",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<span class=\"target\">大人</span>になりました。",
+sentence: "大人になりました。",
 target: "大人",
 answer: "おとな",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>妹<rt>いもうと</rt></ruby>は<span class=\"target\">小</span>学生です。",
+sentence: "<ruby>妹<rt>いもうと</rt></ruby>は小<ruby>学生<rt>　　がくせい</rt></ruby>です。",
 target: "小",
 answer: "しょう",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>木<rt>き</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>に<span class=\"target\">小</span>鳥がいます。",
+sentence: "<ruby>木<rt>き</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>に小<ruby>鳥<rt>　とり</rt></ruby>がいます。",
 target: "小",
 answer: "こ",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>家<rt>いえ</rt></ruby>の<ruby>近<rt>ちか</rt></ruby>くに<span class=\"target\">小川</span>があります。",
+sentence: "<ruby>家<rt>いえ</rt></ruby>の<ruby>近<rt>ちか</rt></ruby>くに小川があります。",
 target: "小川",
 answer: "おがわ",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "マリヤムさんは<ruby>口<rt>くち</rt></ruby>が<span class=\"target\">小</span>さいです。",
+sentence: "マリヤムさんは<ruby>口<rt>くち</rt></ruby>が小さいです。",
 target: "小",
 answer: "ちい",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>机<rt>つくえ</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>に<span class=\"target\">本</span>があります。",
+sentence: "<ruby>机<rt>つくえ</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>に本があります。",
 target: "本",
 answer: "ほん",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>傘<rt>かさ</rt></ruby>を<span class=\"target\">一本</span><ruby>買<rt>か</rt></ruby>いました。",
+sentence: "<ruby>傘<rt>かさ</rt></ruby>を一本<ruby>買<rt>か</rt></ruby>いました。",
 target: "一本",
 answer: "いっぽん",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "ボールペンを<span class=\"target\">二本</span><ruby>買<rt>か</rt></ruby>いました。",
+sentence: "ボールペンを二本<ruby>買<rt>か</rt></ruby>いました。",
 target: "二本",
 answer: "にほん",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "えんぴつを<span class=\"target\">三本</span><ruby>持<rt>も</rt></ruby>っています。",
+sentence: "えんぴつを三本<ruby>持<rt>も</rt></ruby>っています。",
 target: "三本",
 answer: "さんぼん",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<span class=\"target\">日本語</span>を<ruby>勉強<rt>べんきょう</rt></ruby>しています。",
+sentence: "日本語を<ruby>勉強<rt>べんきょう</rt></ruby>しています。",
 target: "日本語",
 answer: "にほんご",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>五時<rt>ごじ</rt></ruby><span class=\"target\">半</span>に<ruby>家<rt>いえ</rt></ruby>に<ruby>帰<rt>かえ</rt></ruby>ります。",
+sentence: "<ruby>五時<rt>ごじ</rt></ruby>半に<ruby>家<rt>いえ</rt></ruby>に<ruby>帰<rt>かえ</rt></ruby>ります。",
 target: "半",
 answer: "はん",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "ジュースを<span class=\"target\">半</span>分<ruby>飲<rt>の</rt></ruby>みました。",
+sentence: "ジュースを半<ruby>分<rt>はんぶん</rt></ruby><ruby>飲<rt>の</rt></ruby>みました。",
 target: "半",
 answer: "はん",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<ruby>山田<rt>やまだ</rt></ruby>さんは<span class=\"target\">力</span>が<ruby>強<rt>つよ</rt></ruby>いです。",
+sentence: "<ruby>山田<rt>やまだ</rt></ruby>さんは力が<ruby>強<rt>つよ</rt></ruby>いです。",
 target: "力",
 answer: "ちから",
-level: "N3",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "コンロの火<span class=\"target\">力</span>が<ruby>弱<rt>よわ</rt></ruby>いです。",
+sentence: "コンロの火力が<ruby>弱<rt>よわ</rt></ruby>いです。",
 target: "力",
 answer: "りょく",
-level: "N3",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "<span class=\"target\">子</span>どもが<ruby>三人<rt>さんにん</rt></ruby><ruby>遊<rt>あそ</rt></ruby>んでいます。",
+sentence: "子どもが<ruby>三人<rt>さんにん</rt></ruby><ruby>遊<rt>あそ</rt></ruby>んでいます。",
 target: "子",
 answer: "こ",
-level: "N5",
-theme: ""
+lesson: "3"
 },
 {
-sentence: "ここは<span class=\"target\">男子</span>トイレです。",
+sentence: "ここは男子トイレです。",
 target: "男子",
 answer: "だんし",
-level: "N5",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "<span class=\"target\">女子</span>トイレはあちらです。",
+sentence: "女子トイレはあちらです。",
 target: "女子",
 answer: "じょし",
-level: "N5",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "あの<span class=\"target\">女</span>の<ruby>人<rt>ひと</rt></ruby>はだれですか。",
+sentence: "あの女の<ruby>人<rt>ひと</rt></ruby>はだれですか。",
 target: "女",
 answer: "おんな",
-level: "N5",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "あの<span class=\"target\">男</span>の<ruby>人<rt>ひと</rt></ruby>は<ruby>私<rt>わたし</rt></ruby>の<ruby>先輩<rt>せんぱい</rt></ruby>です。",
+sentence: "あの男の<ruby>人<rt>ひと</rt></ruby>は<ruby>私<rt>わたし</rt></ruby>の<ruby>先輩<rt>せんぱい</rt></ruby>です。",
 target: "男",
 answer: "おとこ",
-level: "N5",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "<ruby>兄<rt>あに</rt></ruby>は<span class=\"target\">長男</span>です。",
+sentence: "<ruby>兄<rt>あに</rt></ruby>は長男です。",
 target: "長男",
 answer: "ちょうなん",
-level: "N5",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>は<span class=\"target\">次男</span>です。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>は次男です。",
 target: "次男",
 answer: "じなん",
-level: "N5",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "うさぎは<span class=\"target\">耳</span>が<ruby>長<rt>なが</rt></ruby>いです。",
+sentence: "うさぎは耳が<ruby>長<rt>なが</rt></ruby>いです。",
 target: "耳",
 answer: "みみ",
-level: "N5",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "<span class=\"target\">耳</span>鼻科へ<ruby>行<rt>い</rt></ruby>きました。",
+sentence: "耳<ruby>鼻科<rt>　　びか</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きました。",
 target: "耳",
 answer: "じ",
-level: "N5",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "<ruby>父<rt>ちち</rt></ruby>は<span class=\"target\">手</span>が<ruby>大<rt>おお</rt></ruby>きいです。",
+sentence: "<ruby>父<rt>ちち</rt></ruby>は手が<ruby>大<rt>おお</rt></ruby>きいです。",
 target: "手",
 answer: "て",
-level: "N2",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "<ruby>家族<rt>かぞく</rt></ruby>に<span class=\"target\">手紙</span>を<ruby>書<rt>か</rt></ruby>きます。",
+sentence: "<ruby>家族<rt>かぞく</rt></ruby>に手紙を<ruby>書<rt>か</rt></ruby>きます。",
 target: "手紙",
 answer: "てがみ",
-level: "N2",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "<span class=\"target\">切手</span>を<ruby>買<rt>か</rt></ruby>います。",
+sentence: "切手を<ruby>買<rt>か</rt></ruby>います。",
 target: "切手",
 answer: "きって",
-level: "N2",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "バスの運転<span class=\"target\">手</span>になりたいです。",
+sentence: "バスの運転手になりたいです。",
 target: "手",
 answer: "しゅ",
-level: "N2",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "アンナさんは<span class=\"target\">足</span>が<ruby>長<rt>なが</rt></ruby>いです。",
+sentence: "アンナさんは足が<ruby>長<rt>なが</rt></ruby>いです。",
 target: "足",
 answer: "あし",
-level: "N3",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "<span class=\"target\">足</span>し<ruby>算<rt>ざん</rt></ruby>が<ruby>得意<rt>とくい</rt></ruby>です。",
+sentence: "足し<ruby>算<rt>ざん</rt></ruby>が<ruby>得意<rt>とくい</rt></ruby>です。",
 target: "足",
 answer: "た",
-level: "N3",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "くつを<span class=\"target\">二足</span><ruby>買<rt>か</rt></ruby>いました。",
+sentence: "くつを二足<ruby>買<rt>か</rt></ruby>いました。",
 target: "二足",
 answer: "にそく",
-level: "N3",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "<span class=\"target\">心</span>から<ruby>感謝<rt>かんしゃ</rt></ruby>します。",
+sentence: "心から<ruby>感謝<rt>かんしゃ</rt></ruby>します。",
 target: "心",
 answer: "こころ",
-level: "N3",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "<ruby>母<rt>はは</rt></ruby>は<ruby>弟<rt>おとうと</rt></ruby>を<span class=\"target\">心配</span>しています。",
+sentence: "<ruby>母<rt>はは</rt></ruby>は<ruby>弟<rt>おとうと</rt></ruby>を心配しています。",
 target: "心配",
 answer: "しんぱい",
-level: "N3",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "<ruby>母<rt>はは</rt></ruby>が<ruby>元気<rt>げんき</rt></ruby>で<span class=\"target\">安心</span>しました。",
+sentence: "<ruby>母<rt>はは</rt></ruby>が<ruby>元気<rt>げんき</rt></ruby>で安心しました。",
 target: "安心",
 answer: "あんしん",
-level: "N3",
-theme: ""
+lesson: "4"
 },
 {
-sentence: "<span class=\"target\">石</span>につまづきました。",
+sentence: "石につまづきました。",
 target: "石",
 answer: "いし",
-level: "N3",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "宝<span class=\"target\">石</span>のついた<ruby>指輪<rt>ゆびわ</rt></ruby>が<ruby>欲<rt>ほ</rt></ruby>しいです。",
+sentence: "宝石のついた<ruby>指輪<rt>ゆびわ</rt></ruby>が<ruby>欲<rt>ほ</rt></ruby>しいです。",
 target: "石",
 answer: "せき",
-level: "N3",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "<span class=\"target\">石</span>けんで<ruby>手<rt>て</rt></ruby>を<ruby>洗<rt>あら</rt></ruby>います。",
+sentence: "石けんで<ruby>手<rt>て</rt></ruby>を<ruby>洗<rt>あら</rt></ruby>います。",
 target: "石",
 answer: "せっ",
-level: "N3",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "<ruby>明日<rt>あした</rt></ruby>は大<span class=\"target\">雨</span>です。",
+sentence: "<ruby>明日<rt>あした</rt></ruby>は大雨です。",
 target: "雨",
 answer: "あめ",
-level: "N5",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "<ruby>今日<rt>きょう</rt></ruby>は風<span class=\"target\">雨</span>が<ruby>強<rt>つよ</rt></ruby>いです。",
+sentence: "<ruby>今日<rt>きょう</rt></ruby>は風雨が<ruby>強<rt>つよ</rt></ruby>いです。",
 target: "雨",
 answer: "う",
-level: "N5",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "パンダは<span class=\"target\">竹</span>の<ruby>葉<rt>は</rt></ruby>を<ruby>食<rt>た</rt></ruby>べます。",
+sentence: "パンダは竹の<ruby>葉<rt>は</rt></ruby>を<ruby>食<rt>た</rt></ruby>べます。",
 target: "竹",
 answer: "たけ",
-level: "N4",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "<ruby>日本人<rt>にほんじん</rt></ruby>は<span class=\"target\">米</span>を<ruby>食<rt>た</rt></ruby>べます。",
+sentence: "<ruby>日本人<rt>にほんじん</rt></ruby>は米を<ruby>食<rt>た</rt></ruby>べます。",
 target: "米",
 answer: "こめ",
-level: "N5",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "アメリカのことを<span class=\"target\">米</span>国といいます。",
+sentence: "アメリカのことを米<ruby>国<rt>べいこく</rt></ruby>といいます。",
 target: "米",
 answer: "べい",
-level: "N5",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "<ruby>海<rt>うみ</rt></ruby>で<span class=\"target\">貝</span>がらをひろいました。",
+sentence: "<ruby>海<rt>うみ</rt></ruby>で貝がらをひろいました。",
 target: "貝",
 answer: "かい",
-level: "N4",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>は巻<span class=\"target\">貝</span>が<ruby>好<rt>す</rt></ruby>きです。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>は巻貝が<ruby>好<rt>す</rt></ruby>きです。",
 target: "貝",
 answer: "がい",
-level: "N4",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "毛<span class=\"target\">糸</span>のセーターを<ruby>買<rt>か</rt></ruby>いました。",
+sentence: "毛糸のセーターを<ruby>買<rt>か</rt></ruby>いました。",
 target: "糸",
 answer: "いと",
-level: "N2",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "<span class=\"target\">車</span>で<ruby>旅行<rt>りょこう</rt></ruby>に<ruby>行<rt>い</rt></ruby>きました。",
+sentence: "車で<ruby>旅行<rt>りょこう</rt></ruby>に<ruby>行<rt>い</rt></ruby>きました。",
 target: "車",
 answer: "くるま",
-level: "N5",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "電<span class=\"target\">車</span>で<ruby>東京<rt>とうきょう</rt></ruby>に<ruby>行<rt>い</rt></ruby>きます。",
+sentence: "電車で<ruby>東京<rt>とうきょう</rt></ruby>に<ruby>行<rt>い</rt></ruby>きます。",
 target: "車",
 answer: "しゃ",
-level: "N5",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "自転<span class=\"target\">車</span>で<ruby>学校<rt>がっこう</rt></ruby>に<ruby>行<rt>い</rt></ruby>きます。",
+sentence: "自転車で<ruby>学校<rt>がっこう</rt></ruby>に<ruby>行<rt>い</rt></ruby>きます。",
 target: "車",
 answer: "しゃ",
-level: "N5",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "<span class=\"target\">門</span>を<ruby>閉<rt>し</rt></ruby>めます。",
+sentence: "門を<ruby>閉<rt>し</rt></ruby>めます。",
 target: "門",
 answer: "もん",
-level: "N5",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>の専<span class=\"target\">門</span>はコンピューターです。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>の専門はコンピューターです。",
 target: "門",
 answer: "もん",
-level: "N3",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "カトマンズにはお<span class=\"target\">寺</span>がたくさんあります。",
+sentence: "カトマンズにはお寺がたくさんあります。",
 target: "寺",
 answer: "てら",
-level: "N3",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "<ruby>京都<rt>きょうと</rt></ruby>の清水<span class=\"target\">寺</span>に<ruby>行<rt>い</rt></ruby>きました。",
+sentence: "<ruby>京都<rt>きょうと</rt></ruby>の清水寺に<ruby>行<rt>い</rt></ruby>きました。",
 target: "寺",
 answer: "でら",
-level: "N3",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "<ruby>奈良<rt>なら</rt></ruby>の法隆<span class=\"target\">寺</span>に<ruby>行<rt>い</rt></ruby>きました。",
+sentence: "<ruby>奈良<rt>なら</rt></ruby>の法隆寺に<ruby>行<rt>い</rt></ruby>きました。",
 target: "寺",
 answer: "じ",
-level: "N3",
-theme: ""
+lesson: "5"
 },
 {
-sentence: "<ruby>教室<rt>きょうしつ</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に<span class=\"target\">立</span>って<ruby>発表<rt>はっぴょう</rt></ruby>します。",
+sentence: "<ruby>教室<rt>きょうしつ</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に立って<ruby>発表<rt>はっぴょう</rt></ruby>します。",
 target: "立",
 answer: "た",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<ruby>東京<rt>とうきょう</rt></ruby><ruby>大学<rt>だいがく</rt></ruby>は国<span class=\"target\">立</span><ruby>大学<rt>だいがく</rt></ruby>です。",
+sentence: "<ruby>東京<rt>とうきょう</rt></ruby><ruby>大学<rt>だいがく</rt></ruby>は国立<ruby>大学<rt>だいがく</rt></ruby>です。",
 target: "立",
 answer: "りつ",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<ruby>毎日<rt>まいにち</rt></ruby>、お<ruby>風呂<rt>ふろ</rt></ruby>に<span class=\"target\">入</span>ります。",
+sentence: "<ruby>毎日<rt>まいにち</rt></ruby>、お<ruby>風呂<rt>ふろ</rt></ruby>に入ります。",
 target: "入",
 answer: "はい",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "かばんに<ruby>本<rt>ほん</rt></ruby>を<span class=\"target\">入</span>れます。",
+sentence: "かばんに<ruby>本<rt>ほん</rt></ruby>を入れます。",
 target: "入",
 answer: "い",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<span class=\"target\">入</span>り<ruby>口<rt>ぐち</rt></ruby>はここです。",
+sentence: "入り<ruby>口<rt>ぐち</rt></ruby>はここです。",
 target: "入",
 answer: "い",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<span class=\"target\">入</span>国<ruby>審査<rt>しんさ</rt></ruby>",
+sentence: "入<ruby>国<rt>　　　こく</rt></ruby><ruby>審査<rt>しんさ</rt></ruby>",
 target: "入",
 answer: "にゅう",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "８<ruby>時<rt>じ</rt></ruby>にうちを<span class=\"target\">出</span>ます。",
+sentence: "８<ruby>時<rt>じ</rt></ruby>にうちを出ます。",
 target: "出",
 answer: "で",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "かばんからペンを<span class=\"target\">出</span>します。",
+sentence: "かばんからペンを出します。",
 target: "出",
 answer: "だ",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<span class=\"target\">出口</span>はどこですか。",
+sentence: "出口はどこですか。",
 target: "出口",
 answer: "でぐち",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<span class=\"target\">出国</span><ruby>前<rt>まえ</rt></ruby>にご<ruby>飯<rt>はん</rt></ruby>を<ruby>食<rt>た</rt></ruby>べました。",
+sentence: "出国<ruby>前<rt>まえ</rt></ruby>にご<ruby>飯<rt>はん</rt></ruby>を<ruby>食<rt>た</rt></ruby>べました。",
 target: "出国",
 answer: "しゅっこく",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<ruby>毎日<rt>まいにち</rt></ruby><ruby>学校<rt>がっこう</rt></ruby>へ<span class=\"target\">行</span>きます。",
+sentence: "<ruby>毎日<rt>まいにち</rt></ruby><ruby>学校<rt>がっこう</rt></ruby>へ行きます。",
 target: "行",
 answer: "い",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "しゅみは<span class=\"target\">旅行</span>です。",
+sentence: "しゅみは旅行です。",
 target: "旅行",
 answer: "りょこう",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "銀<span class=\"target\">行</span>でお<ruby>金<rt>かね</rt></ruby>をおろします。",
+sentence: "銀行でお<ruby>金<rt>かね</rt></ruby>をおろします。",
 target: "行",
 answer: "こう",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<span class=\"target\">一行</span>目を<ruby>読<rt>よ</rt></ruby>みました。",
+sentence: "一行<ruby>目<rt>　　　　め</rt></ruby>を<ruby>読<rt>よ</rt></ruby>みました。",
 target: "一行",
 answer: "いちぎょう",
-level: "N3",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<ruby>明日<rt>あした</rt></ruby>、<ruby>友<rt>とも</rt></ruby>だちが<ruby>日本<rt>にほん</rt></ruby>へ<span class=\"target\">来</span>ます。",
+sentence: "<ruby>明日<rt>あした</rt></ruby>、<ruby>友<rt>とも</rt></ruby>だちが<ruby>日本<rt>にほん</rt></ruby>へ来ます。",
 target: "来",
 answer: "き",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "うちに<span class=\"target\">来</span>る<ruby>前<rt>まえ</rt></ruby>に<ruby>電話<rt>でんわ</rt></ruby>してください。",
+sentence: "うちに来る<ruby>前<rt>まえ</rt></ruby>に<ruby>電話<rt>でんわ</rt></ruby>してください。",
 target: "来",
 answer: "く",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<ruby>学校<rt>がっこう</rt></ruby>に<span class=\"target\">来</span>ないときは<ruby>電話<rt>でんわ</rt></ruby>してください。",
+sentence: "<ruby>学校<rt>がっこう</rt></ruby>に来ないときは<ruby>電話<rt>でんわ</rt></ruby>してください。",
 target: "来",
 answer: "こ",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<span class=\"target\">来</span>月、テストがあります。",
+sentence: "来<ruby>月<rt>　　げつ</rt></ruby>、テストがあります。",
 target: "来",
 answer: "らい",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<ruby>毎朝<rt>まいあさ</rt></ruby>、パンを<span class=\"target\">食</span>べます。",
+sentence: "<ruby>毎朝<rt>まいあさ</rt></ruby>、パンを食べます。",
 target: "食",
 answer: "た",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "レストランで<span class=\"target\">食</span>事しました。",
+sentence: "レストランで食<ruby>事<rt>　　じ</rt></ruby>しました。",
 target: "食",
 answer: "しょく",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "朝<span class=\"target\">食</span>にパンを<ruby>食<rt>た</rt></ruby>べました。",
+sentence: "朝食にパンを<ruby>食<rt>た</rt></ruby>べました。",
 target: "食",
 answer: "しょく",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "Youtubeを<span class=\"target\">見</span>ます。",
+sentence: "Youtubeを見ます。",
 target: "見",
 answer: "み",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "ビール<ruby>工場<rt>こうじょう</rt></ruby>を<span class=\"target\">見</span>学しました。",
+sentence: "ビール<ruby>工場<rt>こうじょう</rt></ruby>を見<ruby>学<rt>　　がく</rt></ruby>しました。",
 target: "見",
 answer: "けん",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<ruby>音楽<rt>おんがく</rt></ruby>を<span class=\"target\">聞</span>きます。",
+sentence: "<ruby>音楽<rt>おんがく</rt></ruby>を聞きます。",
 target: "聞",
 answer: "き",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<ruby>鳥<rt>とり</rt></ruby>の<ruby>声<rt>こえ</rt></ruby>が<span class=\"target\">聞</span>こえます。",
+sentence: "<ruby>鳥<rt>とり</rt></ruby>の<ruby>声<rt>こえ</rt></ruby>が聞こえます。",
 target: "聞",
 answer: "き",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<span class=\"target\">新聞</span>を<ruby>読<rt>よ</rt></ruby>みます。",
+sentence: "新聞を<ruby>読<rt>よ</rt></ruby>みます。",
 target: "新聞",
 answer: "しんぶん",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<ruby>友<rt>とも</rt></ruby>だちに「おはよう」と<span class=\"target\">言</span>いました。",
+sentence: "<ruby>友<rt>とも</rt></ruby>だちに「おはよう」と言いました。",
 target: "言",
 answer: "い",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "この<span class=\"target\">言葉</span>の<ruby>意味<rt>いみ</rt></ruby>がわかりません",
+sentence: "この言葉の<ruby>意味<rt>いみ</rt></ruby>がわかりません",
 target: "言葉",
 answer: "ことば",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "「おおきに」は<ruby>大阪<rt>おおさか</rt></ruby>の方<span class=\"target\">言</span>です。",
+sentence: "「おおきに」は<ruby>大阪<rt>おおさか</rt></ruby>の方言です。",
 target: "言",
 answer: "げん",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "アンナさんに伝<span class=\"target\">言</span>をお<ruby>願<rt>ねが</rt></ruby>いします。",
+sentence: "アンナさんに伝言をお<ruby>願<rt>ねが</rt></ruby>いします。",
 target: "言",
 answer: "ごん",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<ruby>八百屋<rt>やおや</rt></ruby>は<ruby>野菜<rt>やさい</rt></ruby>を<span class=\"target\">売</span>っているお<ruby>店<rt>みせ</rt></ruby>です。",
+sentence: "<ruby>八百屋<rt>やおや</rt></ruby>は<ruby>野菜<rt>やさい</rt></ruby>を売っているお<ruby>店<rt>みせ</rt></ruby>です。",
 target: "売",
 answer: "う",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "おかし<span class=\"target\">売</span>り<ruby>場<rt>ば</rt></ruby>はどこですか。",
+sentence: "おかし売り<ruby>場<rt>ば</rt></ruby>はどこですか。",
 target: "売",
 answer: "う",
-level: "N5",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<ruby>駅<rt>えき</rt></ruby>の<span class=\"target\">売</span>店でコーヒーを<ruby>買<rt>か</rt></ruby>いました。",
+sentence: "<ruby>駅<rt>えき</rt></ruby>の売<ruby>店<rt>　　てん</rt></ruby>でコーヒーを<ruby>買<rt>か</rt></ruby>いました。",
 target: "売",
 answer: "ばい",
-level: "N4",
-theme: ""
+lesson: "6"
 },
 {
-sentence: "<span class=\"target\">左</span>手でフォークを<ruby>持<rt>も</rt></ruby>ちます。",
+sentence: "左<ruby>手<rt>ひだりて</rt></ruby>でフォークを<ruby>持<rt>も</rt></ruby>ちます。",
 target: "左",
 answer: "ひだり",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "あの<ruby>交差点<rt>こうさてん</rt></ruby>を<span class=\"target\">左</span>折してください。",
+sentence: "あの<ruby>交差点<rt>こうさてん</rt></ruby>を左<ruby>折<rt>　　せつ</rt></ruby>してください。",
 target: "左",
 answer: "さ",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<span class=\"target\">右</span>手でナイフを<ruby>持<rt>も</rt></ruby>ちます。",
+sentence: "右<ruby>手<rt>みぎて</rt></ruby>でナイフを<ruby>持<rt>も</rt></ruby>ちます。",
 target: "右",
 answer: "みぎ",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "あの<ruby>交差点<rt>こうさてん</rt></ruby>を<span class=\"target\">右</span>折してください。",
+sentence: "あの<ruby>交差点<rt>こうさてん</rt></ruby>を右<ruby>折<rt>　　せつ</rt></ruby>してください。",
 target: "右",
 answer: "う",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<span class=\"target\">左右</span>をよく<ruby>見<rt>み</rt></ruby>てください。",
+sentence: "左右をよく<ruby>見<rt>み</rt></ruby>てください。",
 target: "左右",
 answer: "さゆう",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<ruby>家<rt>いえ</rt></ruby>の<span class=\"target\">前</span>にスーパーがあります。",
+sentence: "<ruby>家<rt>いえ</rt></ruby>の前にスーパーがあります。",
 target: "前",
 answer: "まえ",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<span class=\"target\">名前</span>を<ruby>書<rt>か</rt></ruby>いてください。",
+sentence: "名前を<ruby>書<rt>か</rt></ruby>いてください。",
 target: "名前",
 answer: "なまえ",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<span class=\"target\">午前</span>10<ruby>時<rt>じ</rt></ruby>に<ruby>家<rt>いえ</rt></ruby>をでます。",
+sentence: "午前10<ruby>時<rt>じ</rt></ruby>に<ruby>家<rt>いえ</rt></ruby>をでます。",
 target: "午前",
 answer: "ごぜん",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<ruby>家<rt>いえ</rt></ruby>の<span class=\"target\">後</span>ろにコンビニがあります。",
+sentence: "<ruby>家<rt>いえ</rt></ruby>の後ろにコンビニがあります。",
 target: "後",
 answer: "うし",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<span class=\"target\">午後</span>1<ruby>時<rt>じ</rt></ruby>25<ruby>分<rt>ふん</rt></ruby>に<ruby>授業<rt>じゅぎょう</rt></ruby>が<ruby>始<rt>はじ</rt></ruby>まります。",
+sentence: "午後1<ruby>時<rt>じ</rt></ruby>25<ruby>分<rt>ふん</rt></ruby>に<ruby>授業<rt>じゅぎょう</rt></ruby>が<ruby>始<rt>はじ</rt></ruby>まります。",
 target: "午後",
 answer: "ごご",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<ruby>授業<rt>じゅぎょう</rt></ruby>の<span class=\"target\">前後</span>にあいさつをします。",
+sentence: "<ruby>授業<rt>じゅぎょう</rt></ruby>の前後にあいさつをします。",
 target: "前後",
 answer: "ぜんご",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "アルバイトの<span class=\"target\">後</span>でご<ruby>飯<rt>はん</rt></ruby>をたべます。",
+sentence: "アルバイトの後でご<ruby>飯<rt>はん</rt></ruby>をたべます。",
 target: "後",
 answer: "あと",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "７<ruby>月<rt>がつ</rt></ruby>から12<ruby>月<rt>がつ</rt></ruby>は<ruby>一年<rt>いちねん</rt></ruby>の<span class=\"target\">後</span>半です。",
+sentence: "７<ruby>月<rt>がつ</rt></ruby>から12<ruby>月<rt>がつ</rt></ruby>は<ruby>一年<rt>いちねん</rt></ruby>の後<ruby>半<rt>　　はん</rt></ruby>です。",
 target: "後",
 answer: "こう",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<ruby>太陽<rt>たいよう</rt></ruby>は<span class=\"target\">東</span>から<ruby>出<rt>で</rt></ruby>ます。",
+sentence: "<ruby>太陽<rt>たいよう</rt></ruby>は東から<ruby>出<rt>で</rt></ruby>ます。",
 target: "東",
 answer: "ひがし",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<span class=\"target\">東京</span>は<ruby>人<rt>ひと</rt></ruby>が<ruby>多<rt>おお</rt></ruby>いです。",
+sentence: "東京は<ruby>人<rt>ひと</rt></ruby>が<ruby>多<rt>おお</rt></ruby>いです。",
 target: "東京",
 answer: "とうきょう",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<ruby>新宿駅<rt>しんじゅくえき</rt></ruby>の<span class=\"target\">西</span>口はにぎやかです。",
+sentence: "<ruby>新宿駅<rt>しんじゅくえき</rt></ruby>の西<ruby>口<rt>にしぐち</rt></ruby>はにぎやかです。",
 target: "西",
 answer: "にし",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<ruby>大阪<rt>おおさか</rt></ruby>は関<span class=\"target\">西</span>にあります。",
+sentence: "<ruby>大阪<rt>おおさか</rt></ruby>は関西にあります。",
 target: "西",
 answer: "さい",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "ヨハネスブルグは<span class=\"target\">南</span>アフリカの<ruby>首都<rt>しゅと</rt></ruby>です。",
+sentence: "ヨハネスブルグは南アフリカの<ruby>首都<rt>しゅと</rt></ruby>です。",
 target: "南",
 answer: "みなみ",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "ハワイは<span class=\"target\">南</span>国です。",
+sentence: "ハワイは南<ruby>国<rt>　　ごく</rt></ruby>です。",
 target: "南",
 answer: "なん",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "カナダはアメリカの<span class=\"target\">北</span>にあります。",
+sentence: "カナダはアメリカの北にあります。",
 target: "北",
 answer: "きた",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<ruby>旅行<rt>りょこう</rt></ruby>で<span class=\"target\">北海道</span>に<ruby>行<rt>い</rt></ruby>きました。",
+sentence: "<ruby>旅行<rt>りょこう</rt></ruby>で北海道に<ruby>行<rt>い</rt></ruby>きました。",
 target: "北海道",
 answer: "ほっかいどう",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<ruby>窓<rt>まど</rt></ruby>から<span class=\"target\">外</span>を<ruby>見<rt>み</rt></ruby>ます。",
+sentence: "<ruby>窓<rt>まど</rt></ruby>から外を<ruby>見<rt>み</rt></ruby>ます。",
 target: "外",
 answer: "そと",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<span class=\"target\">外国</span>に<ruby>行<rt>い</rt></ruby>くとき、パスポートが<ruby>必要<rt>ひつよう</rt></ruby>です。",
+sentence: "外国に<ruby>行<rt>い</rt></ruby>くとき、パスポートが<ruby>必要<rt>ひつよう</rt></ruby>です。",
 target: "外国",
 answer: "がいこく",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "けがをしたときは、<span class=\"target\">外</span>科に<ruby>行<rt>い</rt></ruby>きます。",
+sentence: "けがをしたときは、外<ruby>科<rt>　　か</rt></ruby>に<ruby>行<rt>い</rt></ruby>きます。",
 target: "外",
 answer: "げ",
-level: "N5",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "コートの<span class=\"target\">内</span>ポケットに<ruby>財布<rt>さいふ</rt></ruby>を<ruby>入<rt>い</rt></ruby>れます。",
+sentence: "コートの内ポケットに<ruby>財布<rt>さいふ</rt></ruby>を<ruby>入<rt>い</rt></ruby>れます。",
 target: "内",
 answer: "うち",
-level: "N3",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<ruby>海外<rt>かいがい</rt></ruby><ruby>旅行<rt>りょこう</rt></ruby>より国<span class=\"target\">内</span><ruby>旅行<rt>りょこう</rt></ruby>が<ruby>好<rt>す</rt></ruby>きです。",
+sentence: "<ruby>海外<rt>かいがい</rt></ruby><ruby>旅行<rt>りょこう</rt></ruby>より国内<ruby>旅行<rt>りょこう</rt></ruby>が<ruby>好<rt>す</rt></ruby>きです。",
 target: "内",
 answer: "ない",
-level: "N3",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<ruby>風邪<rt>かぜ</rt></ruby>をひいたときは、<span class=\"target\">内</span>科に<ruby>行<rt>い</rt></ruby>きます。",
+sentence: "<ruby>風邪<rt>かぜ</rt></ruby>をひいたときは、内<ruby>科<rt>　　か</rt></ruby>に<ruby>行<rt>い</rt></ruby>きます。",
 target: "内",
 answer: "ない",
-level: "N3",
-theme: ""
+lesson: "7"
 },
 {
-sentence: "<span class=\"target\">今</span>、<ruby>何時<rt>なんじ</rt></ruby>ですか。",
+sentence: "今、<ruby>何時<rt>なんじ</rt></ruby>ですか。",
 target: "今",
 answer: "いま",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<span class=\"target\">今</span>週、テストがあります。",
+sentence: "今<ruby>週<rt>こんしゅう</rt></ruby>、テストがあります。",
 target: "今",
 answer: "こん",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<span class=\"target\">今年</span>の４<ruby>月<rt>がつ</rt></ruby>に<ruby>日本<rt>にほん</rt></ruby>へ<ruby>来<rt>き</rt></ruby>ました。",
+sentence: "今年の４<ruby>月<rt>がつ</rt></ruby>に<ruby>日本<rt>にほん</rt></ruby>へ<ruby>来<rt>き</rt></ruby>ました。",
 target: "今年",
 answer: "ことし",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<span class=\"target\">今日</span>は<ruby>暑<rt>あつ</rt></ruby>いですね。",
+sentence: "今日は<ruby>暑<rt>あつ</rt></ruby>いですね。",
 target: "今日",
 answer: "きょう",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<span class=\"target\">今朝</span>は６<ruby>時<rt>じ</rt></ruby>に<ruby>起<rt>お</rt></ruby>きました。",
+sentence: "今朝は６<ruby>時<rt>じ</rt></ruby>に<ruby>起<rt>お</rt></ruby>きました。",
 target: "今朝",
 answer: "けさ",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "今、何<span class=\"target\">時</span>ですか。",
+sentence: "今、何時ですか。",
 target: "時",
 answer: "じ",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<ruby>忙<rt>いそが</rt></ruby>しくて<ruby>遊<rt>あそ</rt></ruby>ぶ<span class=\"target\">時間</span>がありません。",
+sentence: "<ruby>忙<rt>いそが</rt></ruby>しくて<ruby>遊<rt>あそ</rt></ruby>ぶ時間がありません。",
 target: "時間",
 answer: "じかん",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<ruby>父<rt>ちち</rt></ruby>から<span class=\"target\">時計</span>をもらいました。",
+sentence: "<ruby>父<rt>ちち</rt></ruby>から時計をもらいました。",
 target: "時計",
 answer: "とけい",
-level: "N4",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<ruby>子<rt>こ</rt></ruby>どもの<span class=\"target\">時</span>、<ruby>野菜<rt>やさい</rt></ruby>が<ruby>嫌<rt>きら</rt></ruby>いでした",
+sentence: "<ruby>子<rt>こ</rt></ruby>どもの時、<ruby>野菜<rt>やさい</rt></ruby>が<ruby>嫌<rt>きら</rt></ruby>いでした",
 target: "時",
 answer: "とき",
-level: "N4",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<ruby>学校<rt>がっこう</rt></ruby>は<ruby>本屋<rt>ほんや</rt></ruby>とコンビニの<span class=\"target\">間</span>にあります。",
+sentence: "<ruby>学校<rt>がっこう</rt></ruby>は<ruby>本屋<rt>ほんや</rt></ruby>とコンビニの間にあります。",
 target: "間",
 answer: "あいだ",
-level: "N4",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<ruby>一<rt>いち</rt></ruby>時<span class=\"target\">間</span>は60<ruby>分<rt>ふん</rt></ruby>です。",
+sentence: "<ruby>一<rt>いち</rt></ruby>時間は60<ruby>分<rt>ふん</rt></ruby>です。",
 target: "間",
 answer: "かん",
-level: "N4",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "一週<span class=\"target\">間</span>は<ruby>七日<rt>なのか</rt></ruby>です。",
+sentence: "一週間は<ruby>七日<rt>なのか</rt></ruby>です。",
 target: "間",
 answer: "かん",
-level: "N4",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>は<span class=\"target\">人間</span>です。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>は人間です。",
 target: "人間",
 answer: "にんげん",
-level: "N4",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<span class=\"target\">毎日</span>、お<ruby>風呂<rt>ふろ</rt></ruby>に入ります。",
+sentence: "毎日、お<ruby>風呂<rt>ふろ</rt></ruby>に入ります。",
 target: "毎日",
 answer: "まいにち",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "ケーキを４つに<span class=\"target\">分</span>けます。",
+sentence: "ケーキを４つに分けます。",
 target: "分",
 answer: "わ",
-level: "N3",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>の<ruby>気<rt>き</rt></ruby>もちが<span class=\"target\">分</span>かりますか。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>の<ruby>気<rt>き</rt></ruby>もちが分かりますか。",
 target: "分",
 answer: "わ",
-level: "N3",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<span class=\"target\">一分</span>は60<ruby>秒<rt>びょう</rt></ruby>です。",
+sentence: "一分は60<ruby>秒<rt>びょう</rt></ruby>です。",
 target: "一分",
 answer: "いっぷん",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "五<span class=\"target\">分</span>前に<ruby>教室<rt>きょうしつ</rt></ruby>に<ruby>着<rt>つ</rt></ruby>きました。",
+sentence: "五分<ruby>前<rt>ご　　まえ</rt></ruby>に<ruby>教室<rt>きょうしつ</rt></ruby>に<ruby>着<rt>つ</rt></ruby>きました。",
 target: "分",
 answer: "ふん",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<ruby>二<rt>に</rt></ruby><span class=\"target\">分</span>の<ruby>一<rt>いち</rt></ruby>（1/2）",
+sentence: "<ruby>二<rt>に</rt></ruby>分の<ruby>一<rt>いち</rt></ruby>（1/2）",
 target: "分",
 answer: "ぶん",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "あの<span class=\"target\">方</span>はどなたですか。",
+sentence: "あの方はどなたですか。",
 target: "方",
 answer: "かた",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "この<ruby>漢字<rt>かんじ</rt></ruby>の<ruby>読<rt>よ</rt></ruby>み<span class=\"target\">方</span>を<ruby>教<rt>おし</rt></ruby>えてください。",
+sentence: "この<ruby>漢字<rt>かんじ</rt></ruby>の<ruby>読<rt>よ</rt></ruby>み方を<ruby>教<rt>おし</rt></ruby>えてください。",
 target: "方",
 answer: "かた",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "ダイエットのいい<span class=\"target\">方法</span>がありますか。",
+sentence: "ダイエットのいい方法がありますか。",
 target: "方法",
 answer: "ほうほう",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<span class=\"target\">夕方</span>、<ruby>家<rt>いえ</rt></ruby>に<ruby>帰<rt>かえ</rt></ruby>ります。",
+sentence: "夕方、<ruby>家<rt>いえ</rt></ruby>に<ruby>帰<rt>かえ</rt></ruby>ります。",
 target: "夕方",
 answer: "ゆうがた",
-level: "N4",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<span class=\"target\">夕日</span>が<ruby>沈<rt>しず</rt></ruby>みます。",
+sentence: "夕日が<ruby>沈<rt>しず</rt></ruby>みます。",
 target: "夕日",
 answer: "ゆうひ",
-level: "N4",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<span class=\"target\">夕食</span>を<ruby>作<rt>つく</rt></ruby>ります。",
+sentence: "夕食を<ruby>作<rt>つく</rt></ruby>ります。",
 target: "夕食",
 answer: "ゆうしょく",
-level: "N4",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "お<span class=\"target\">年</span>寄りに<ruby>席<rt>せき</rt></ruby>をゆずります。",
+sentence: "お年<ruby>寄<rt>としよ</rt></ruby>りに<ruby>席<rt>せき</rt></ruby>をゆずります。",
 target: "年",
 answer: "とし",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<span class=\"target\">一年</span>は12カ<ruby>月<rt>げつ</rt></ruby>です。",
+sentence: "一年は12カ<ruby>月<rt>げつ</rt></ruby>です。",
 target: "一年",
 answer: "いちねん",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<span class=\"target\">来年</span>、<ruby>国<rt>くに</rt></ruby>へ<ruby>帰<rt>かえ</rt></ruby>ります。",
+sentence: "来年、<ruby>国<rt>くに</rt></ruby>へ<ruby>帰<rt>かえ</rt></ruby>ります。",
 target: "来年",
 answer: "らいねん",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<span class=\"target\">今年</span>は2026<ruby>年<rt>ねん</rt></ruby>です。",
+sentence: "今年は2026<ruby>年<rt>ねん</rt></ruby>です。",
 target: "今年",
 answer: "ことし",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "レバーを<span class=\"target\">回</span>すとおつりが<ruby>出<rt>で</rt></ruby>ます。",
+sentence: "レバーを回すとおつりが<ruby>出<rt>で</rt></ruby>ます。",
 target: "回",
 answer: "まわ",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "何<span class=\"target\">回</span>も<ruby>練習<rt>れんしゅう</rt></ruby>しました。",
+sentence: "何回も<ruby>練習<rt>れんしゅう</rt></ruby>しました。",
 target: "回",
 answer: "かい",
-level: "N5",
-theme: ""
+lesson: "8"
 },
 {
-sentence: "<ruby>風邪<rt>かぜ</rt></ruby>で<ruby>学校<rt>がっこう</rt></ruby>を<span class=\"target\">休</span>みました。",
+sentence: "午前７<ruby>時<rt>じ</rt></ruby>に<ruby>起<rt>お</rt></ruby>きます。",
+target: "午前",
+answer: "ごぜん",
+lesson: "8"
+},
+{
+sentence: "午後12<ruby>時<rt>じ</rt></ruby>に<ruby>寝<rt>ね</rt></ruby>ます。",
+target: "午後",
+answer: "ごご",
+lesson: "8"
+},
+{
+sentence: "<ruby>風邪<rt>かぜ</rt></ruby>で<ruby>学校<rt>がっこう</rt></ruby>を休みました。",
 target: "休",
 answer: "やす",
-level: "N5",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<span class=\"target\">休日</span>は<ruby>何<rt>なに</rt></ruby>をしますか。",
+sentence: "休日は<ruby>何<rt>なに</rt></ruby>をしますか。",
 target: "休日",
 answer: "きゅうじつ",
-level: "N5",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<ruby>家<rt>いえ</rt></ruby>の<ruby>近<rt>ちか</rt></ruby>くに<span class=\"target\">林</span>があります。",
+sentence: "<ruby>家<rt>いえ</rt></ruby>の<ruby>近<rt>ちか</rt></ruby>くに林があります。",
 target: "林",
 answer: "はやし",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<span class=\"target\">森</span>の<ruby>中<rt>なか</rt></ruby>を<ruby>散歩<rt>さんぽ</rt></ruby>しました。",
+sentence: "森の<ruby>中<rt>なか</rt></ruby>を<ruby>散歩<rt>さんぽ</rt></ruby>しました。",
 target: "森",
 answer: "もり",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<span class=\"target\">森林</span>",
+sentence: "森林",
 target: "森林",
 answer: "しんりん",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "この<ruby>店<rt>みせ</rt></ruby>は<span class=\"target\">品</span>物が<ruby>多<rt>おお</rt></ruby>いです。",
+sentence: "この<ruby>店<rt>みせ</rt></ruby>は品<ruby>物<rt>　　もの</rt></ruby>が<ruby>多<rt>おお</rt></ruby>いです。",
 target: "品",
 answer: "しな",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "パソコンの部<span class=\"target\">品</span>を<ruby>買<rt>か</rt></ruby>います。",
+sentence: "パソコンの部品を<ruby>買<rt>か</rt></ruby>います。",
 target: "品",
 answer: "ひん",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "あの<ruby>山<rt>やま</rt></ruby>は<span class=\"target\">岩</span>山です。",
+sentence: "あの<ruby>山<rt>やま</rt></ruby>は岩<ruby>山<rt>　　やま</rt></ruby>です。",
 target: "岩",
 answer: "いわ",
-level: "N3",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<ruby>大<rt>おお</rt></ruby>きい<span class=\"target\">音</span>が<ruby>聞<rt>き</rt></ruby>こえました。",
+sentence: "<ruby>大<rt>おお</rt></ruby>きい音が<ruby>聞<rt>き</rt></ruby>こえました。",
 target: "音",
 answer: "おと",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<span class=\"target\">音</span>楽を<ruby>聞<rt>き</rt></ruby>きます。",
+sentence: "音<ruby>楽<rt>　　がく</rt></ruby>を<ruby>聞<rt>き</rt></ruby>きます。",
 target: "音",
 answer: "おん",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<ruby>日本語<rt>にほんご</rt></ruby>の発<span class=\"target\">音</span>を<ruby>練習<rt>れんしゅう</rt></ruby>します。",
+sentence: "<ruby>日本語<rt>にほんご</rt></ruby>の発音を<ruby>練習<rt>れんしゅう</rt></ruby>します。",
 target: "音",
 answer: "おん",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "ピアノの<span class=\"target\">音</span>色が<ruby>聞<rt>き</rt></ruby>こえます。",
+sentence: "ピアノの音<ruby>色<rt>　　いろ</rt></ruby>が<ruby>聞<rt>き</rt></ruby>こえます。",
 target: "音",
 answer: "ね",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<ruby>家<rt>いえ</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に<span class=\"target\">畑</span>があります。",
+sentence: "<ruby>家<rt>いえ</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に畑があります。",
 target: "畑",
 answer: "はたけ",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<ruby>日本<rt>にほん</rt></ruby>は<span class=\"target\">田畑</span>が<ruby>多<rt>おお</rt></ruby>いです。",
+sentence: "<ruby>日本<rt>にほん</rt></ruby>は田畑が<ruby>多<rt>おお</rt></ruby>いです。",
 target: "田畑",
 answer: "たはた",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "キャベツ<span class=\"target\">畑</span>",
+sentence: "キャベツ畑",
 target: "畑",
 answer: "ばたけ",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "かばんを<span class=\"target\">持</span>ちます。",
+sentence: "かばんを持ちます。",
 target: "持",
 answer: "も",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "お<ruby>酒<rt>さけ</rt></ruby>を<ruby>飲<rt>の</rt></ruby>みすぎて、気<span class=\"target\">持</span>ちが<ruby>悪<rt>わる</rt></ruby>いです。",
+sentence: "お<ruby>酒<rt>さけ</rt></ruby>を<ruby>飲<rt>の</rt></ruby>みすぎて、気持ちが<ruby>悪<rt>わる</rt></ruby>いです。",
 target: "持",
 answer: "も",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "お<ruby>弁当<rt>べんとう</rt></ruby>を<span class=\"target\">持</span>参してください。",
+sentence: "お<ruby>弁当<rt>べんとう</rt></ruby>を持<ruby>参<rt>じさん</rt></ruby>してください。",
 target: "持",
 answer: "じ",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<span class=\"target\">好</span>きな<ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>はなんですか。",
+sentence: "好きな<ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>はなんですか。",
 target: "好",
 answer: "す",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>の大<span class=\"target\">好</span>物はリンゴです。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>の大好<ruby>物<rt>だい　　ぶつ</rt></ruby>はリンゴです。",
 target: "好",
 answer: "こう",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "この<ruby>部屋<rt>へや</rt></ruby>は<span class=\"target\">明</span>るいです。",
+sentence: "この<ruby>部屋<rt>へや</rt></ruby>は明るいです。",
 target: "明",
 answer: "あか",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<span class=\"target\">明日</span>は<ruby>日曜日<rt>にちようび</rt></ruby>です。",
+sentence: "明日は<ruby>日曜日<rt>にちようび</rt></ruby>です。",
 target: "明日",
 answer: "あした",
-level: "N4",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<ruby>映画館<rt>えいがかん</rt></ruby>の<ruby>中<rt>なか</rt></ruby>は<span class=\"target\">暗</span>いです。",
+sentence: "<ruby>映画館<rt>えいがかん</rt></ruby>の<ruby>中<rt>なか</rt></ruby>は暗いです。",
 target: "暗",
 answer: "くら",
-level: "N3",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "<ruby>教科書<rt>きょうかしょ</rt></ruby>の<ruby>会話<rt>かいわ</rt></ruby>を<span class=\"target\">暗記</span>します。",
+sentence: "<ruby>教科書<rt>きょうかしょ</rt></ruby>の<ruby>会話<rt>かいわ</rt></ruby>を暗記します。",
 target: "暗記",
 answer: "あんき",
-level: "N3",
-theme: ""
+lesson: "9"
 },
 {
-sentence: "このクラスは<ruby>女<rt>おんな</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>が<span class=\"target\">多</span>いです。",
+sentence: "このクラスは<ruby>女<rt>おんな</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>が多いです。",
 target: "多",
 answer: "おお",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "どこへ<ruby>行<rt>い</rt></ruby>くか、<span class=\"target\">多</span>数決で<ruby>決<rt>き</rt></ruby>めましょう。",
+sentence: "どこへ<ruby>行<rt>い</rt></ruby>くか、多<ruby>数決<rt>　　すうけつ</rt></ruby>で<ruby>決<rt>き</rt></ruby>めましょう。",
 target: "多",
 answer: "た",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "この<ruby>町<rt>まち</rt></ruby>はみどりが<span class=\"target\">少</span>ないです。",
+sentence: "この<ruby>町<rt>まち</rt></ruby>はみどりが少ないです。",
 target: "少",
 answer: "すく",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "もう<span class=\"target\">少</span>し、ゆっくり<ruby>話<rt>はな</rt></ruby>してください。",
+sentence: "もう少し、ゆっくり<ruby>話<rt>はな</rt></ruby>してください。",
 target: "少",
 answer: "すこ",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<span class=\"target\">少年</span><ruby>野球<rt>やきゅう</rt></ruby>",
+sentence: "少年<ruby>野球<rt>やきゅう</rt></ruby>",
 target: "少年",
 answer: "しょうねん",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>東京<rt>とうきょう</rt></ruby>は<span class=\"target\">高</span>いビルが<ruby>多<rt>おお</rt></ruby>いです。",
+sentence: "<ruby>東京<rt>とうきょう</rt></ruby>は高いビルが<ruby>多<rt>おお</rt></ruby>いです。",
 target: "高",
 answer: "たか",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>妹<rt>いもうと</rt></ruby>は<span class=\"target\">高</span>校生です。",
+sentence: "<ruby>妹<rt>いもうと</rt></ruby>は高<ruby>校生<rt>　　こうせい</rt></ruby>です。",
 target: "高",
 answer: "こう",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "あのスーパーは<span class=\"target\">安</span>いです。",
+sentence: "あのスーパーは安いです。",
 target: "安",
 answer: "やす",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>母<rt>はは</rt></ruby>が<ruby>元気<rt>げんき</rt></ruby>で<span class=\"target\">安心</span>しました。",
+sentence: "<ruby>母<rt>はは</rt></ruby>が<ruby>元気<rt>げんき</rt></ruby>で安心しました。",
 target: "安心",
 answer: "あんしん",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<span class=\"target\">安全</span><ruby>運転<rt>うんてん</rt></ruby>をしましょう。",
+sentence: "安全<ruby>運転<rt>うんてん</rt></ruby>をしましょう。",
 target: "安全",
 answer: "あんぜん",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "このビルは<span class=\"target\">低</span>いです。",
+sentence: "このビルは低いです。",
 target: "低",
 answer: "ひく",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>今日<rt>きょう</rt></ruby>の最<span class=\"target\">低</span><ruby>気温<rt>きおん</rt></ruby>は－５℃です。",
+sentence: "<ruby>今日<rt>きょう</rt></ruby>の最低<ruby>気温<rt>きおん</rt></ruby>は－５℃です。",
 target: "低",
 answer: "てい",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>朝<rt>あさ</rt></ruby>、<span class=\"target\">早</span>く<ruby>起<rt>お</rt></ruby>きました。",
+sentence: "<ruby>朝<rt>あさ</rt></ruby>、早く<ruby>起<rt>お</rt></ruby>きました。",
 target: "早",
 answer: "はや",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>森<rt>もり</rt></ruby>さんは<span class=\"target\">早口</span>です。",
+sentence: "<ruby>森<rt>もり</rt></ruby>さんは早口です。",
 target: "早口",
 answer: "はやくち",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<span class=\"target\">早朝</span>",
+sentence: "早朝",
 target: "早朝",
 answer: "そうちょう",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<span class=\"target\">広</span>い<ruby>部屋<rt>へや</rt></ruby>に<ruby>住<rt>す</rt></ruby>みたいです。",
+sentence: "広い<ruby>部屋<rt>へや</rt></ruby>に<ruby>住<rt>す</rt></ruby>みたいです。",
 target: "広",
 answer: "ひろ",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>駅<rt>えき</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に<span class=\"target\">広</span>場があります。",
+sentence: "<ruby>駅<rt>えき</rt></ruby>の<ruby>前<rt>まえ</rt></ruby>に広<ruby>場<rt>　　ば</rt></ruby>があります。",
 target: "広",
 answer: "ひろ",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "スーパーの<span class=\"target\">広</span>告を<ruby>見<rt>み</rt></ruby>ました。",
+sentence: "スーパーの広<ruby>告<rt>　　こく</rt></ruby>を<ruby>見<rt>み</rt></ruby>ました。",
 target: "広",
 answer: "こう",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<span class=\"target\">正</span>しい<ruby>答<rt>こた</rt></ruby>えは<ruby>何<rt>なん</rt></ruby>ですか。",
+sentence: "正しい<ruby>答<rt>こた</rt></ruby>えは<ruby>何<rt>なん</rt></ruby>ですか。",
 target: "正",
 answer: "ただ",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "この<ruby>時計<rt>とけい</rt></ruby>は<span class=\"target\">正</span>確です。",
+sentence: "この<ruby>時計<rt>とけい</rt></ruby>は正<ruby>確<rt>　　かく</rt></ruby>です。",
 target: "正",
 answer: "せい",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>日本人<rt>にほんじん</rt></ruby>は<span class=\"target\">正月</span>に<ruby>神社<rt>じんじゃ</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。",
+sentence: "<ruby>日本人<rt>にほんじん</rt></ruby>は正月に<ruby>神社<rt>じんじゃ</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。",
 target: "正月",
 answer: "しょうがつ",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "あの<ruby>人<rt>ひと</rt></ruby>は<span class=\"target\">元</span>サッカー<ruby>選手<rt>せんしゅ</rt></ruby>です。",
+sentence: "あの<ruby>人<rt>ひと</rt></ruby>は元サッカー<ruby>選手<rt>せんしゅ</rt></ruby>です。",
 target: "元",
 answer: "もと",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<span class=\"target\">元気</span>になりました。",
+sentence: "元気になりました。",
 target: "元気",
 answer: "げんき",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>一月<rt>いちがつ</rt></ruby><ruby>一日<rt>ついたち</rt></ruby>は<span class=\"target\">元日</span>です。",
+sentence: "<ruby>一月<rt>いちがつ</rt></ruby><ruby>一日<rt>ついたち</rt></ruby>は元日です。",
 target: "元日",
 answer: "がんじつ",
-level: "N4",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>温泉<rt>おんせん</rt></ruby>は<span class=\"target\">気</span>持ちがいいです。",
+sentence: "<ruby>温泉<rt>おんせん</rt></ruby>は気<ruby>持<rt>　　も</rt></ruby>ちがいいです。",
 target: "気",
 answer: "き",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>今日<rt>きょう</rt></ruby>はいい<span class=\"target\">天気</span>です。",
+sentence: "<ruby>今日<rt>きょう</rt></ruby>はいい天気です。",
 target: "天気",
 answer: "てんき",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<span class=\"target\">気分</span>がいいです。",
+sentence: "気分がいいです。",
 target: "気分",
 answer: "きぶん",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>風邪<rt>かぜ</rt></ruby>をひいて、寒<span class=\"target\">気</span>がします。",
+sentence: "<ruby>風邪<rt>かぜ</rt></ruby>をひいて、寒気がします。",
 target: "気",
 answer: "け",
-level: "N5",
-theme: ""
+lesson: "11"
 },
 {
-sentence: "<ruby>信号<rt>しんごう</rt></ruby>が<span class=\"target\">赤</span>です。",
+sentence: "<ruby>信号<rt>しんごう</rt></ruby>が赤です。",
 target: "赤",
 answer: "あか",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "リンゴは<span class=\"target\">赤</span>いです。",
+sentence: "リンゴは赤いです。",
 target: "赤",
 answer: "あか",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<span class=\"target\">赤</span>ちゃんはかわいいです。",
+sentence: "赤ちゃんはかわいいです。",
 target: "赤",
 answer: "あか",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>真<rt>ま</rt></ruby>っ<span class=\"target\">赤</span>なバラをもらいました。",
+sentence: "<ruby>真<rt>ま</rt></ruby>っ赤なバラをもらいました。",
 target: "赤",
 answer: "か",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<span class=\"target\">赤</span>道",
+sentence: "赤<ruby>道<rt>　　どう</rt></ruby>",
 target: "赤",
 answer: "せき",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<span class=\"target\">青</span>い<ruby>空<rt>そら</rt></ruby>",
+sentence: "青い<ruby>空<rt>そら</rt></ruby>",
 target: "青",
 answer: "あお",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>好<rt>す</rt></ruby>きな<ruby>色<rt>いろ</rt></ruby>は<span class=\"target\">青</span>です。",
+sentence: "<ruby>好<rt>す</rt></ruby>きな<ruby>色<rt>いろ</rt></ruby>は青です。",
 target: "青",
 answer: "あお",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>真<rt>ま</rt></ruby>っ<span class=\"target\">青</span>",
+sentence: "<ruby>真<rt>ま</rt></ruby>っ青",
 target: "青",
 answer: "さお",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>親切<rt>しんせつ</rt></ruby>な<span class=\"target\">青年</span>",
+sentence: "<ruby>親切<rt>しんせつ</rt></ruby>な青年",
 target: "青年",
 answer: "せいねん",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>好<rt>す</rt></ruby>きな<ruby>色<rt>いろ</rt></ruby>は<span class=\"target\">白</span>です。",
+sentence: "<ruby>好<rt>す</rt></ruby>きな<ruby>色<rt>いろ</rt></ruby>は白です。",
 target: "白",
 answer: "しろ",
-level: "N5",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<span class=\"target\">白</span>い<ruby>靴<rt>くつ</rt></ruby>",
+sentence: "白い<ruby>靴<rt>くつ</rt></ruby>",
 target: "白",
 answer: "しろ",
-level: "N5",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<span class=\"target\">白</span>鳥",
+sentence: "白<ruby>鳥<rt>　　ちょう</rt></ruby>",
 target: "白",
 answer: "はく",
-level: "N5",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<span class=\"target\">黒</span>いペン",
+sentence: "黒いペン",
 target: "黒",
 answer: "くろ",
-level: "N5",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>好<rt>す</rt></ruby>きな<ruby>色<rt>いろ</rt></ruby>は<span class=\"target\">黒</span>です。",
+sentence: "<ruby>好<rt>す</rt></ruby>きな<ruby>色<rt>いろ</rt></ruby>は黒です。",
 target: "黒",
 answer: "くろ",
-level: "N5",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>真<rt>ま</rt></ruby>っ<span class=\"target\">黒</span>",
+sentence: "<ruby>真<rt>ま</rt></ruby>っ黒",
 target: "黒",
 answer: "くろ",
-level: "N5",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<span class=\"target\">黒</span>板に<ruby>答<rt>こた</rt></ruby>えを<ruby>書<rt>か</rt></ruby>いてください。",
+sentence: "黒<ruby>板<rt>　　ばん</rt></ruby>に<ruby>答<rt>こた</rt></ruby>えを<ruby>書<rt>か</rt></ruby>いてください。",
 target: "黒",
 answer: "こく",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "何<span class=\"target\">色</span>が<ruby>好<rt>す</rt></ruby>きですか。",
+sentence: "何色が<ruby>好<rt>す</rt></ruby>きですか。",
 target: "色",
 answer: "いろ",
-level: "N5",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "四<span class=\"target\">色</span>ボールペン",
+sentence: "四色ボールペン",
 target: "色",
 answer: "しょく",
-level: "N5",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>丸<rt>まる</rt></ruby>い<span class=\"target\">形</span>",
+sentence: "<ruby>丸<rt>まる</rt></ruby>い形",
 target: "形",
 answer: "かたち",
-level: "N3",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>辞書<rt>じしょ</rt></ruby><span class=\"target\">形</span>",
+sentence: "<ruby>辞書<rt>じしょ</rt></ruby>形",
 target: "形",
 answer: "けい",
-level: "N3",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<span class=\"target\">丸</span>い<ruby>形<rt>かたち</rt></ruby>",
+sentence: "丸い<ruby>形<rt>かたち</rt></ruby>",
 target: "丸",
 answer: "まる",
-level: "N2",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<span class=\"target\">丸</span>顔",
+sentence: "丸<ruby>顔<rt>まるがお</rt></ruby>",
 target: "丸",
 answer: "まる",
-level: "N2",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>紙<rt>かみ</rt></ruby>を<span class=\"target\">丸</span>めてすてます。",
+sentence: "<ruby>紙<rt>かみ</rt></ruby>を丸めてすてます。",
 target: "丸",
 answer: "まる",
-level: "N2",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>象<rt>ぞう</rt></ruby>は<ruby>足<rt>あし</rt></ruby>が<span class=\"target\">太</span>いです。",
+sentence: "<ruby>象<rt>ぞう</rt></ruby>は<ruby>足<rt>あし</rt></ruby>が太いです。",
 target: "太",
 answer: "ふと",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<span class=\"target\">太</span>りました。",
+sentence: "太りました。",
 target: "太",
 answer: "ふと",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<span class=\"target\">太</span>陽",
+sentence: "太<ruby>陽<rt>　　よう</rt></ruby>",
 target: "太",
 answer: "たい",
-level: "N4",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "キリンは<ruby>足<rt>あし</rt></ruby>が<span class=\"target\">細</span>いです。",
+sentence: "キリンは<ruby>足<rt>あし</rt></ruby>が細いです。",
 target: "細",
 answer: "ほそ",
-level: "N5",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "タマネギを<span class=\"target\">細</span>かく<ruby>切<rt>き</rt></ruby>ります。",
+sentence: "タマネギを細かく<ruby>切<rt>き</rt></ruby>ります。",
 target: "細",
 answer: "こま",
-level: "N3",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>給料<rt>きゅうりょう</rt></ruby>の明<span class=\"target\">細</span>書",
+sentence: "<ruby>給料<rt>きゅうりょう</rt></ruby>の明細<ruby>書<rt>めい　　しょ</rt></ruby>",
 target: "細",
 answer: "さい",
-level: "N3",
-theme: ""
+lesson: "12"
 },
 {
-sentence: "<ruby>牛<rt>うし</rt></ruby>は<span class=\"target\">草</span>を<ruby>食<rt>た</rt></ruby>べます。",
+sentence: "<ruby>牛<rt>うし</rt></ruby>は草を<ruby>食<rt>た</rt></ruby>べます。",
 target: "草",
 answer: "くさ",
-level: "N3",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "海<span class=\"target\">草</span>",
+sentence: "海草",
 target: "草",
 answer: "そう",
-level: "N3",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "バラの<span class=\"target\">花</span>",
+sentence: "バラの花",
 target: "花",
 answer: "はな",
-level: "N5",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "草<span class=\"target\">花</span>",
+sentence: "草花",
 target: "花",
 answer: "ばな",
-level: "N5",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "<span class=\"target\">花</span>びん",
+sentence: "花びん",
 target: "花",
 answer: "か",
-level: "N5",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "漢<span class=\"target\">字</span>",
+sentence: "漢字",
 target: "字",
 answer: "じ",
-level: "N4",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "<ruby>今<rt>いま</rt></ruby>は自<span class=\"target\">宅</span>にいます。",
+sentence: "<ruby>今<rt>いま</rt></ruby>は自宅にいます。",
 target: "宅",
 answer: "たく",
-level: "N3",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "教<span class=\"target\">室</span>で<ruby>勉強<rt>べんきょう</rt></ruby>します。",
+sentence: "教室で<ruby>勉強<rt>べんきょう</rt></ruby>します。",
 target: "室",
 answer: "しつ",
-level: "N4",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "<ruby>毎朝<rt>まいあさ</rt></ruby>、８<ruby>時<rt>じ</rt></ruby>に<span class=\"target\">家</span>を<ruby>出<rt>で</rt></ruby>ます。",
+sentence: "<ruby>毎朝<rt>まいあさ</rt></ruby>、８<ruby>時<rt>じ</rt></ruby>に家を<ruby>出<rt>で</rt></ruby>ます。",
 target: "家",
 answer: "いえ",
-level: "N4",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "<span class=\"target\">大家</span>",
+sentence: "大家",
 target: "大家",
 answer: "おおや",
-level: "N4",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "作曲<span class=\"target\">家</span>",
+sentence: "作曲家",
 target: "家",
 answer: "か",
-level: "N4",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "<span class=\"target\">電話</span>",
+sentence: "電話",
 target: "電話",
 answer: "でんわ",
-level: "N5",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "<span class=\"target\">電車</span>",
+sentence: "電車",
 target: "電車",
 answer: "でんしゃ",
-level: "N5",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "<span class=\"target\">雪</span>がふりました。",
+sentence: "雪がふりました。",
 target: "雪",
 answer: "ゆき",
-level: "N3",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "<ruby>空<rt>から</rt></ruby>がきれいだと<span class=\"target\">思</span>いました。",
+sentence: "<ruby>空<rt>から</rt></ruby>がきれいだと思いました。",
 target: "思",
 answer: "おも",
-level: "N4",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "<span class=\"target\">思</span>い<ruby>出<rt>だ</rt></ruby>",
+sentence: "思い<ruby>出<rt>だ</rt></ruby>",
 target: "思",
 answer: "おも",
-level: "N4",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "この<ruby>言葉<rt>ことば</rt></ruby>の<span class=\"target\">意</span>味がわかりません。",
+sentence: "この<ruby>言葉<rt>ことば</rt></ruby>の意<ruby>味<rt>　　み</rt></ruby>がわかりません。",
 target: "意",
 answer: "い",
-level: "N4",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "あなたの<span class=\"target\">意見</span>を<ruby>言<rt>い</rt></ruby>ってください。",
+sentence: "あなたの意見を<ruby>言<rt>い</rt></ruby>ってください。",
 target: "意見",
 answer: "いけん",
-level: "N4",
-theme: ""
+lesson: "13"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>は<span class=\"target\">犬</span>が<ruby>好<rt>す</rt></ruby>きです。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>は犬が<ruby>好<rt>す</rt></ruby>きです。",
 target: "犬",
 answer: "いぬ",
-level: "N5",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "盲導<span class=\"target\">犬</span>",
+sentence: "盲導犬",
 target: "犬",
 answer: "けん",
-level: "N5",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">牛</span>は草を<ruby>食<rt>た</rt></ruby>べます。",
+sentence: "牛は草を<ruby>食<rt>た</rt></ruby>べます。",
 target: "牛",
 answer: "うし",
-level: "N5",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">牛</span>乳",
+sentence: "牛<ruby>乳<rt>　　にゅう</rt></ruby>",
 target: "牛",
 answer: "ぎゅう",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">馬</span>に<ruby>乗<rt>の</rt></ruby>りました。",
+sentence: "馬に<ruby>乗<rt>の</rt></ruby>りました。",
 target: "馬",
 answer: "うま",
-level: "N5",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "しゅみは乗<span class=\"target\">馬</span>です。",
+sentence: "しゅみは乗馬です。",
 target: "馬",
 answer: "ば",
-level: "N5",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">羊</span>の<ruby>毛<rt>け</rt></ruby>",
+sentence: "羊の<ruby>毛<rt>け</rt></ruby>",
 target: "羊",
 answer: "ひつじ",
-level: "N3",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">羊</span>毛",
+sentence: "羊<ruby>毛<rt>　　もう</rt></ruby>",
 target: "羊",
 answer: "よう",
-level: "N3",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">魚</span><ruby>釣<rt>つ</rt></ruby>り",
+sentence: "魚<ruby>釣<rt>つ</rt></ruby>り",
 target: "魚",
 answer: "さかな",
-level: "N5",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<ruby>黒<rt>くろ</rt></ruby>い<span class=\"target\">鳥</span>",
+sentence: "<ruby>黒<rt>くろ</rt></ruby>い鳥",
 target: "鳥",
 answer: "とり",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "白<span class=\"target\">鳥</span>",
+sentence: "白鳥",
 target: "鳥",
 answer: "ちょう",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">虫</span>がきらいです。",
+sentence: "虫がきらいです。",
 target: "虫",
 answer: "むし",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">虫</span>歯になりました。",
+sentence: "虫<ruby>歯<rt>　　ば</rt></ruby>になりました。",
 target: "虫",
 answer: "むし",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "ハチやトンボは昆<span class=\"target\">虫</span>です。",
+sentence: "ハチやトンボは昆虫です。",
 target: "虫",
 answer: "ちゅう",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<ruby>髪<rt>かみ</rt></ruby>の<span class=\"target\">毛</span>",
+sentence: "<ruby>髪<rt>かみ</rt></ruby>の毛",
 target: "毛",
 answer: "け",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">羽田</span><ruby>空港<rt>くうこう</rt></ruby>",
+sentence: "羽田<ruby>空港<rt>くうこう</rt></ruby>",
 target: "羽田",
 answer: "はねだ",
-level: "N2",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<ruby>虫<rt>むし</rt></ruby>の<span class=\"target\">羽</span>音",
+sentence: "<ruby>虫<rt>むし</rt></ruby>の羽<ruby>音<rt>　　おと</rt></ruby>",
 target: "羽",
 answer: "は",
-level: "N2",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">羽</span>毛の<ruby>布団<rt>ふとん</rt></ruby>",
+sentence: "羽<ruby>毛<rt>　　もう</rt></ruby>の<ruby>布団<rt>ふとん</rt></ruby>",
 target: "羽",
 answer: "う",
-level: "N2",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">動</span>く",
+sentence: "動く",
 target: "動",
 answer: "うご",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">動</span>物<ruby>園<rt>えん</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きました。",
+sentence: "動<ruby>物<rt>　　ぶつ</rt></ruby><ruby>園<rt>えん</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きました。",
 target: "動",
 answer: "どう",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "運<span class=\"target\">動</span>は<ruby>体<rt>からだ</rt></ruby>にいいです。",
+sentence: "運動は<ruby>体<rt>からだ</rt></ruby>にいいです。",
 target: "動",
 answer: "どう",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "スーバーで<ruby>買<rt>か</rt></ruby>い<span class=\"target\">物</span>をします。",
+sentence: "スーバーで<ruby>買<rt>か</rt></ruby>い物をします。",
 target: "物",
 answer: "もの",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<ruby>重<rt>おも</rt></ruby>い荷<span class=\"target\">物</span>",
+sentence: "<ruby>重<rt>おも</rt></ruby>い荷物",
 target: "物",
 answer: "もつ",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<span class=\"target\">物価</span>が<ruby>高<rt>たか</rt></ruby>い",
+sentence: "物価が<ruby>高<rt>たか</rt></ruby>い",
 target: "物価",
 answer: "ぶっか",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "動<span class=\"target\">物</span>園へ<ruby>行<rt>い</rt></ruby>きました。",
+sentence: "動物<ruby>園<rt>どう　　えん</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きました。",
 target: "物",
 answer: "ぶつ",
-level: "N4",
-theme: ""
+lesson: "14"
 },
 {
-sentence: "<ruby>公園<rt>こうえん</rt></ruby>の<span class=\"target\">池</span>に<ruby>亀<rt>かめ</rt></ruby>がいます。",
+sentence: "<ruby>公園<rt>こうえん</rt></ruby>の池に<ruby>亀<rt>かめ</rt></ruby>がいます。",
 target: "池",
 answer: "いけ",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "電<span class=\"target\">池</span>",
+sentence: "電池",
 target: "池",
 answer: "ち",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<span class=\"target\">海</span>で<ruby>泳<rt>およ</rt></ruby>ぎました。",
+sentence: "海で<ruby>泳<rt>およ</rt></ruby>ぎました。",
 target: "海",
 answer: "うみ",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>趣味<rt>しゅみ</rt></ruby>は<span class=\"target\">海</span>外<ruby>旅行<rt>りょこう</rt></ruby>です。",
+sentence: "<ruby>趣味<rt>しゅみ</rt></ruby>は海<ruby>外<rt>　　がい</rt></ruby><ruby>旅行<rt>りょこう</rt></ruby>です。",
 target: "海",
 answer: "かい",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<span class=\"target\">洋</span>服を<ruby>着<rt>き</rt></ruby>ます。",
+sentence: "洋<ruby>服<rt>　　ふく</rt></ruby>を<ruby>着<rt>き</rt></ruby>ます。",
 target: "洋",
 answer: "よう",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>大学<rt>だいがく</rt></ruby>で<span class=\"target\">化</span>学の<ruby>勉強<rt>べんきょう</rt></ruby>をしています。",
+sentence: "<ruby>大学<rt>だいがく</rt></ruby>で化<ruby>学<rt>　　がく</rt></ruby>の<ruby>勉強<rt>べんきょう</rt></ruby>をしています。",
 target: "化",
 answer: "か",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "お<span class=\"target\">化</span>粧をします。",
+sentence: "お化<ruby>粧<rt>　しょう</rt></ruby>をします。",
 target: "化",
 answer: "け",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>遊園地<rt>ゆうえんち</rt></ruby>でお<span class=\"target\">化</span>け<ruby>屋敷<rt>やしき</rt></ruby>にいきました。",
+sentence: "<ruby>遊園地<rt>ゆうえんち</rt></ruby>でお化け<ruby>屋敷<rt>やしき</rt></ruby>にいきました。",
 target: "化",
 answer: "ば",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<span class=\"target\">何</span>を<ruby>食<rt>た</rt></ruby>べますか",
+sentence: "何を<ruby>食<rt>た</rt></ruby>べますか",
 target: "何",
 answer: "なに",
-level: "N5",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "それは<span class=\"target\">何</span>ですか。",
+sentence: "それは何ですか。",
 target: "何",
 answer: "なん",
-level: "N5",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "日本<span class=\"target\">語</span>",
+sentence: "日本語",
 target: "語",
 answer: "ご",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>有名<rt>ゆうめい</rt></ruby>な<span class=\"target\">物語</span>",
+sentence: "<ruby>有名<rt>ゆうめい</rt></ruby>な物語",
 target: "物語",
 answer: "ものがたり",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>友<rt>とも</rt></ruby>だちと<ruby>朝<rt>あさ</rt></ruby>まで<span class=\"target\">語</span>りました。",
+sentence: "<ruby>友<rt>とも</rt></ruby>だちと<ruby>朝<rt>あさ</rt></ruby>まで語りました。",
 target: "語",
 answer: "かた",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>本<rt>ほん</rt></ruby>を<span class=\"target\">読</span>みます。",
+sentence: "<ruby>本<rt>ほん</rt></ruby>を読みます。",
 target: "読",
 answer: "よ",
-level: "N5",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "しゅみは<span class=\"target\">読</span>書です。",
+sentence: "しゅみは読<ruby>書<rt>　　しょ</rt></ruby>です。",
 target: "読",
 answer: "どく",
-level: "N5",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>昨日<rt>きのう</rt></ruby>、Aさんと<span class=\"target\">話</span>しました。",
+sentence: "<ruby>昨日<rt>きのう</rt></ruby>、Aさんと話しました。",
 target: "話",
 answer: "はな",
-level: "N5",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "昔<span class=\"target\">話</span>",
+sentence: "昔話",
 target: "話",
 answer: "ばなし",
-level: "N5",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "会<span class=\"target\">話</span>の<ruby>練習<rt>れんしゅう</rt></ruby>をします。",
+sentence: "会話の<ruby>練習<rt>れんしゅう</rt></ruby>をします。",
 target: "話",
 answer: "わ",
-level: "N5",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>携帯<rt>けいたい</rt></ruby>電<span class=\"target\">話</span>",
+sentence: "<ruby>携帯<rt>けいたい</rt></ruby>電話",
 target: "話",
 answer: "わ",
-level: "N5",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>教室<rt>きょうしつ</rt></ruby>のドアを<span class=\"target\">開</span>けます。",
+sentence: "<ruby>教室<rt>きょうしつ</rt></ruby>のドアを開けます。",
 target: "開",
 answer: "あ",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>教科書<rt>きょうかしょ</rt></ruby>の10ページを<span class=\"target\">開</span>いてください。",
+sentence: "<ruby>教科書<rt>きょうかしょ</rt></ruby>の10ページを開いてください。",
 target: "開",
 answer: "ひら",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>新<rt>あたら</rt></ruby>しいパン<ruby>屋<rt>や</rt></ruby>が<span class=\"target\">開</span>店しました。",
+sentence: "<ruby>新<rt>あたら</rt></ruby>しいパン<ruby>屋<rt>や</rt></ruby>が開<ruby>店<rt>　　てん</rt></ruby>しました。",
 target: "開",
 answer: "かい",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>教室<rt>きょうしつ</rt></ruby>のドアを<span class=\"target\">閉</span>めます。",
+sentence: "<ruby>教室<rt>きょうしつ</rt></ruby>のドアを閉めます。",
 target: "閉",
 answer: "し",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "<ruby>教科書<rt>きょうかしょ</rt></ruby>を<span class=\"target\">閉</span>じてください。",
+sentence: "<ruby>教科書<rt>きょうかしょ</rt></ruby>を閉じてください。",
 target: "閉",
 answer: "と",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "あの<ruby>店<rt>みせ</rt></ruby>は<ruby>午後<rt>ごご</rt></ruby>８<ruby>時<rt>じ</rt></ruby>に<span class=\"target\">閉</span>店します。",
+sentence: "あの<ruby>店<rt>みせ</rt></ruby>は<ruby>午後<rt>ごご</rt></ruby>８<ruby>時<rt>じ</rt></ruby>に閉<ruby>店<rt>　　てん</rt></ruby>します。",
 target: "閉",
 answer: "へい",
-level: "N4",
-theme: ""
+lesson: "15"
 },
 {
-sentence: "ネパールには<span class=\"target\">王</span>様がいます。",
+sentence: "ネパールには王<ruby>様<rt>　　さま</rt></ruby>がいます。",
 target: "王",
 answer: "おう",
-level: "N3",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "十円<span class=\"target\">玉</span>",
+sentence: "十円玉",
 target: "玉",
 answer: "だま",
-level: "N2",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "お<span class=\"target\">国</span>はどちらですか。",
+sentence: "お国はどちらですか。",
 target: "国",
 answer: "くに",
-level: "N5",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "あれは外<span class=\"target\">国</span>の<ruby>車<rt>くるま</rt></ruby>です。",
+sentence: "あれは外国の<ruby>車<rt>くるま</rt></ruby>です。",
 target: "国",
 answer: "こく",
-level: "N5",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "中<span class=\"target\">国</span><ruby>人<rt>じん</rt></ruby>の<ruby>友<rt>とも</rt></ruby>だちがいます。",
+sentence: "中国<ruby>人<rt>じん</rt></ruby>の<ruby>友<rt>とも</rt></ruby>だちがいます。",
 target: "国",
 answer: "ごく",
-level: "N5",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "さむらいは<span class=\"target\">刀</span>を<ruby>持<rt>も</rt></ruby>っていました。",
+sentence: "さむらいは刀を<ruby>持<rt>も</rt></ruby>っていました。",
 target: "刀",
 answer: "かたな",
-level: "N1",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "木<span class=\"target\">刀</span>",
+sentence: "木刀",
 target: "刀",
 answer: "とう",
-level: "N1",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "ここに<span class=\"target\">弓</span>があります。",
+sentence: "ここに弓があります。",
 target: "弓",
 answer: "ゆみ",
-level: "N1",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "<span class=\"target\">弓</span>道は<ruby>日本<rt>にほん</rt></ruby>の<ruby>武道<rt>ぶどう</rt></ruby>です。",
+sentence: "弓<ruby>道<rt>　　　どう</rt></ruby>は<ruby>日本<rt>にほん</rt></ruby>の<ruby>武道<rt>ぶどう</rt></ruby>です。",
 target: "弓",
 answer: "きゅう",
-level: "N1",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "<span class=\"target\">矢</span>印の<ruby>方<rt>ほう</rt></ruby>に<ruby>歩<rt>ある</rt></ruby>いてください。",
+sentence: "矢<ruby>印<rt>　じるし</rt></ruby>の<ruby>方<rt>ほう</rt></ruby>に<ruby>歩<rt>ある</rt></ruby>いてください。",
 target: "矢",
 answer: "や",
-level: "N1",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "スポーツが<ruby>好<rt>す</rt></ruby>きです。<span class=\"target\">特</span>にサッカーが<ruby>好<rt>す</rt></ruby>きです。",
+sentence: "スポーツが<ruby>好<rt>す</rt></ruby>きです。特にサッカーが<ruby>好<rt>す</rt></ruby>きです。",
 target: "特",
 answer: "とく",
-level: "N4",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "<ruby>今日<rt>きょう</rt></ruby>は<span class=\"target\">特別</span>な<ruby>日<rt>ひ</rt></ruby>です。",
+sentence: "<ruby>今日<rt>きょう</rt></ruby>は特別な<ruby>日<rt>ひ</rt></ruby>です。",
 target: "特別",
 answer: "とくべつ",
-level: "N4",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "<ruby>友<rt>とも</rt></ruby>だちと<ruby>駅<rt>えき</rt></ruby>で<span class=\"target\">別</span>れました。",
+sentence: "<ruby>友<rt>とも</rt></ruby>だちと<ruby>駅<rt>えき</rt></ruby>で別れました。",
 target: "別",
 answer: "わか",
-level: "N4",
-theme: ""
+lesson: "16"
 },
 {
-sentence: "<span class=\"target\">名</span>前を<ruby>書<rt>か</rt></ruby>いてください。",
+sentence: "名<ruby>前<rt>　　まえ</rt></ruby>を<ruby>書<rt>か</rt></ruby>いてください。",
 target: "名",
 answer: "な",
-level: "N5",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "ここに<ruby>住所<rt>じゅうしょ</rt></ruby>と氏<span class=\"target\">名</span>を<ruby>書<rt>か</rt></ruby>いてください。",
+sentence: "ここに<ruby>住所<rt>じゅうしょ</rt></ruby>と氏名を<ruby>書<rt>か</rt></ruby>いてください。",
 target: "名",
 answer: "めい",
-level: "N5",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "<span class=\"target\">名</span>字は<ruby>田中<rt>たなか</rt></ruby>です。",
+sentence: "名<ruby>字<rt>　　　じ</rt></ruby>は<ruby>田中<rt>たなか</rt></ruby>です。",
 target: "名",
 answer: "みょう",
-level: "N5",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "このトイレは<span class=\"target\">有</span>料です。",
+sentence: "このトイレは有<ruby>料<rt>　　りょう</rt></ruby>です。",
 target: "有",
 answer: "ゆう",
-level: "N4",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "<ruby>毎日<rt>まいにち</rt></ruby>、<ruby>電車<rt>でんしゃ</rt></ruby>を<span class=\"target\">利</span>用しています。",
+sentence: "<ruby>毎日<rt>まいにち</rt></ruby>、<ruby>電車<rt>でんしゃ</rt></ruby>を利<ruby>用<rt>　よう</rt></ruby>しています。",
 target: "利",
 answer: "り",
-level: "N4",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "コンビニは<span class=\"target\">便</span>利です。",
+sentence: "コンビニは便<ruby>利<rt>　　り</rt></ruby>です。",
 target: "便",
 answer: "べん",
-level: "N3",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "郵<span class=\"target\">便</span>局",
+sentence: "郵便<ruby>局<rt>ゆう　　きょく</rt></ruby>",
 target: "便",
 answer: "びん",
-level: "N3",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "アンナさんは<ruby>髪<rt>かみ</rt></ruby>が<span class=\"target\">長</span>いです。",
+sentence: "アンナさんは<ruby>髪<rt>かみ</rt></ruby>が長いです。",
 target: "長",
 answer: "なが",
-level: "N5",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "校<span class=\"target\">長</span><ruby>先生<rt>せんせい</rt></ruby>は<ruby>女<rt>おんな</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>です。",
+sentence: "校長<ruby>先生<rt>せんせい</rt></ruby>は<ruby>女<rt>おんな</rt></ruby>の<ruby>人<rt>ひと</rt></ruby>です。",
 target: "長",
 answer: "ちょう",
-level: "N5",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "パクさんは<ruby>髪<rt>かみ</rt></ruby>が<span class=\"target\">短</span>いです。",
+sentence: "パクさんは<ruby>髪<rt>かみ</rt></ruby>が短いです。",
 target: "短",
 answer: "みじか",
-level: "N4",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "<span class=\"target\">短</span>大で<ruby>二年間<rt>にねんかん</rt></ruby><ruby>勉強<rt>べんきょう</rt></ruby>します。",
+sentence: "短<ruby>大<rt>　　だい</rt></ruby>で<ruby>二年間<rt>にねんかん</rt></ruby><ruby>勉強<rt>べんきょう</rt></ruby>します。",
 target: "短",
 answer: "たん",
-level: "N4",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "<span class=\"target\">新</span>しいスマホを<ruby>買<rt>か</rt></ruby>いました。",
+sentence: "新しいスマホを<ruby>買<rt>か</rt></ruby>いました。",
 target: "新",
 answer: "あたら",
-level: "N5",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "<ruby>毎朝<rt>まいあさ</rt></ruby>、<span class=\"target\">新</span>聞を<ruby>読<rt>よ</rt></ruby>みます。",
+sentence: "<ruby>毎朝<rt>まいあさ</rt></ruby>、新<ruby>聞<rt>　　ぶん</rt></ruby>を<ruby>読<rt>よ</rt></ruby>みます。",
 target: "新",
 answer: "しん",
-level: "N5",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>のパソコンは<span class=\"target\">古</span>いです。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>のパソコンは古いです。",
 target: "古",
 answer: "ふる",
-level: "N5",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "<span class=\"target\">古</span>本屋で<ruby>本<rt>ほん</rt></ruby>を<ruby>買<rt>か</rt></ruby>いました。",
+sentence: "古<ruby>本屋<rt>　　ほんや</rt></ruby>で<ruby>本<rt>ほん</rt></ruby>を<ruby>買<rt>か</rt></ruby>いました。",
 target: "古",
 answer: "ふる",
-level: "N5",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "中<span class=\"target\">古</span>車を<ruby>買<rt>か</rt></ruby>いました。",
+sentence: "中古<ruby>車<rt>ちゅう　しゃ</rt></ruby>を<ruby>買<rt>か</rt></ruby>いました。",
 target: "古",
 answer: "こ",
-level: "N5",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "クラスで<ruby>一番<rt>いちばん</rt></ruby><span class=\"target\">若</span>いのは<ruby>誰<rt>だれ</rt></ruby>ですか。",
+sentence: "クラスで<ruby>一番<rt>いちばん</rt></ruby>若いのは<ruby>誰<rt>だれ</rt></ruby>ですか。",
 target: "若",
 answer: "わか",
-level: "N3",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "この<ruby>歌<rt>うた</rt></ruby>は<span class=\"target\">若</span>者に<ruby>人気<rt>にんき</rt></ruby>があります。",
+sentence: "この<ruby>歌<rt>うた</rt></ruby>は若<ruby>者<rt>　　もの</rt></ruby>に<ruby>人気<rt>にんき</rt></ruby>があります。",
 target: "若",
 answer: "わか",
-level: "N3",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "このかばんは<span class=\"target\">重</span>いです。",
+sentence: "このかばんは重いです。",
 target: "重",
 answer: "おも",
-level: "N4",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "<span class=\"target\">体重</span>をはかりました。",
+sentence: "体重をはかりました。",
 target: "体重",
 answer: "たいじゅう",
-level: "N4",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "貴<span class=\"target\">重</span>品をロッカーに<ruby>入<rt>い</rt></ruby>れました。",
+sentence: "貴重<ruby>品<rt>き　　ひん</rt></ruby>をロッカーに<ruby>入<rt>い</rt></ruby>れました。",
 target: "重",
 answer: "ちょう",
-level: "N4",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "このかばんは<span class=\"target\">軽</span>いです。",
+sentence: "このかばんは軽いです。",
 target: "軽",
 answer: "かる",
-level: "N4",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "気<span class=\"target\">軽</span>に<ruby>話<rt>はな</rt></ruby>してください。",
+sentence: "気軽に<ruby>話<rt>はな</rt></ruby>してください。",
 target: "軽",
 answer: "がる",
-level: "N4",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "メニューは<span class=\"target\">軽食</span>だけです。",
+sentence: "メニューは軽食だけです。",
 target: "軽食",
 answer: "けいしょく",
-level: "N4",
-theme: ""
+lesson: "17"
 },
 {
-sentence: "<ruby>家<rt>いえ</rt></ruby>から<ruby>学校<rt>がっこう</rt></ruby>まで<span class=\"target\">歩</span>きます。",
+sentence: "<ruby>家<rt>いえ</rt></ruby>から<ruby>学校<rt>がっこう</rt></ruby>まで歩きます。",
 target: "歩",
 answer: "ある",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<span class=\"target\">歩</span>道に<ruby>自転車<rt>じてんしゃ</rt></ruby>を<ruby>止<rt>と</rt></ruby>めないでください。",
+sentence: "歩<ruby>道<rt>　　どう</rt></ruby>に<ruby>自転車<rt>じてんしゃ</rt></ruby>を<ruby>止<rt>と</rt></ruby>めないでください。",
 target: "歩",
 answer: "ほ",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>公園<rt>こうえん</rt></ruby>を散<span class=\"target\">歩</span>します。",
+sentence: "<ruby>公園<rt>こうえん</rt></ruby>を散歩します。",
 target: "歩",
 answer: "ぽ",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>駅<rt>えき</rt></ruby>まで<span class=\"target\">走</span>りました。",
+sentence: "<ruby>駅<rt>えき</rt></ruby>まで走りました。",
 target: "走",
 answer: "はし",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>運動会<rt>うんどうかい</rt></ruby>でパン<ruby>食<rt>く</rt></ruby>い競<span class=\"target\">走</span>をしました。",
+sentence: "<ruby>運動会<rt>うんどうかい</rt></ruby>でパン<ruby>食<rt>く</rt></ruby>い競走をしました。",
 target: "走",
 answer: "そう",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "ここに<ruby>自転車<rt>じてんしゃ</rt></ruby>を<span class=\"target\">止</span>めないでください。",
+sentence: "ここに<ruby>自転車<rt>じてんしゃ</rt></ruby>を止めないでください。",
 target: "止",
 answer: "と",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>立入<rt>たちいり</rt></ruby>禁<span class=\"target\">止</span>",
+sentence: "<ruby>立入<rt>たちいり</rt></ruby>禁止",
 target: "止",
 answer: "し",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "このレバーを<span class=\"target\">引</span>いてください。",
+sentence: "このレバーを引いてください。",
 target: "引",
 answer: "ひ",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<span class=\"target\">引</span>き<ruby>出<rt>だ</rt></ruby>しにノートを<ruby>入<rt>い</rt></ruby>れます。",
+sentence: "引き<ruby>出<rt>だ</rt></ruby>しにノートを<ruby>入<rt>い</rt></ruby>れます。",
 target: "引",
 answer: "ひ",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>来月<rt>らいげつ</rt></ruby>、<span class=\"target\">引</span>っ<ruby>越<rt>こ</rt></ruby>しします。",
+sentence: "<ruby>来月<rt>らいげつ</rt></ruby>、引っ<ruby>越<rt>こ</rt></ruby>しします。",
 target: "引",
 answer: "ひ",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>国<rt>くに</rt></ruby>へ<ruby>荷物<rt>にもつ</rt></ruby>を<span class=\"target\">送</span>ります。",
+sentence: "<ruby>国<rt>くに</rt></ruby>へ<ruby>荷物<rt>にもつ</rt></ruby>を送ります。",
 target: "送",
 answer: "おく",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>荷物<rt>にもつ</rt></ruby>の<span class=\"target\">送</span>料はいくらですか。",
+sentence: "<ruby>荷物<rt>にもつ</rt></ruby>の送<ruby>料<rt>　　りょう</rt></ruby>はいくらですか。",
 target: "送",
 answer: "そう",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "はしを<span class=\"target\">使</span>うことができます。",
+sentence: "はしを使うことができます。",
 target: "使",
 answer: "つか",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "このパソコンは<span class=\"target\">使</span>用できません。",
+sentence: "このパソコンは使<ruby>用<rt>しよう</rt></ruby>できません。",
 target: "使",
 answer: "し",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>授業<rt>じゅぎょう</rt></ruby>は９<ruby>時<rt>じ</rt></ruby>に<span class=\"target\">始</span>まります。",
+sentence: "<ruby>授業<rt>じゅぎょう</rt></ruby>は９<ruby>時<rt>じ</rt></ruby>に始まります。",
 target: "始",
 answer: "はじ",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "テストを<span class=\"target\">開始</span>します。",
+sentence: "テストを開始します。",
 target: "開始",
 answer: "かいし",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "アルバイトは５<ruby>時<rt>じ</rt></ruby>に<span class=\"target\">終</span>わります。",
+sentence: "アルバイトは５<ruby>時<rt>じ</rt></ruby>に終わります。",
 target: "終",
 answer: "お",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みは<span class=\"target\">終</span>了しました。",
+sentence: "<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みは終<ruby>了<rt>　　りょう</rt></ruby>しました。",
 target: "終",
 answer: "しゅう",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "ナイフでパンを<span class=\"target\">切</span>ります。",
+sentence: "ナイフでパンを切ります。",
 target: "切",
 answer: "き",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>手紙<rt>てがみ</rt></ruby>に<span class=\"target\">切手</span>をはります。",
+sentence: "<ruby>手紙<rt>てがみ</rt></ruby>に切手をはります。",
 target: "切手",
 answer: "きって",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "ワンさんは親<span class=\"target\">切</span>な<ruby>人<rt>ひと</rt></ruby>です。",
+sentence: "ワンさんは親切な<ruby>人<rt>ひと</rt></ruby>です。",
 target: "切",
 answer: "せつ",
-level: "N4",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>私<rt>わたし</rt></ruby>は留<span class=\"target\">学</span>生です。",
+sentence: "<ruby>私<rt>わたし</rt></ruby>は留学<ruby>生<rt>りゅう　　せい</rt></ruby>です。",
 target: "学",
 answer: "がく",
-level: "N5",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>毎日<rt>まいにち</rt></ruby>、<span class=\"target\">学校</span>で<ruby>勉強<rt>べんきょう</rt></ruby>します。",
+sentence: "<ruby>毎日<rt>まいにち</rt></ruby>、学校で<ruby>勉強<rt>べんきょう</rt></ruby>します。",
 target: "学校",
 answer: "がっこう",
-level: "N5",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "アルバイトでいろいろなことを<span class=\"target\">学</span>びました。",
+sentence: "アルバイトでいろいろなことを学びました。",
 target: "学",
 answer: "まな",
-level: "N5",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>昨日<rt>きのう</rt></ruby>、<ruby>赤<rt>あか</rt></ruby>ちゃんが<span class=\"target\">生</span>まれました。",
+sentence: "<ruby>昨日<rt>きのう</rt></ruby>、<ruby>赤<rt>あか</rt></ruby>ちゃんが生まれました。",
 target: "生",
 answer: "う",
-level: "N5",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<ruby>彼<rt>かれ</rt></ruby>は100<ruby>才<rt>さい</rt></ruby>まで<span class=\"target\">生</span>きました。",
+sentence: "<ruby>彼<rt>かれ</rt></ruby>は100<ruby>才<rt>さい</rt></ruby>まで生きました。",
 target: "生",
 answer: "い",
-level: "N5",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "さしみは<span class=\"target\">生</span>ざかなです。",
+sentence: "さしみは生ざかなです。",
 target: "生",
 answer: "なま",
-level: "N5",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<span class=\"target\">生</span>年<ruby>月日<rt>がっぴ</rt></ruby>を<ruby>書<rt>か</rt></ruby>いてください。",
+sentence: "生<ruby>年<rt>　　ねん</rt></ruby><ruby>月日<rt>がっぴ</rt></ruby>を<ruby>書<rt>か</rt></ruby>いてください。",
 target: "生",
 answer: "せい",
-level: "N5",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "一<span class=\"target\">生</span><ruby>忘<rt>わす</rt></ruby>れません。",
+sentence: "一生<ruby>忘<rt>わす</rt></ruby>れません。",
 target: "生",
 answer: "しょう",
-level: "N5",
-theme: ""
+lesson: "18"
 },
 {
-sentence: "<span class=\"target\">去年</span>、<ruby>日本<rt>にほん</rt></ruby>に<ruby>来<rt>き</rt></ruby>ました。",
+sentence: "去年、<ruby>日本<rt>にほん</rt></ruby>に<ruby>来<rt>き</rt></ruby>ました。",
 target: "去年",
 answer: "きょねん",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<ruby>台風<rt>たいふう</rt></ruby>はもう<span class=\"target\">去</span>りましたか。",
+sentence: "<ruby>台風<rt>たいふう</rt></ruby>はもう去りましたか。",
 target: "去",
 answer: "さ",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "「<ruby>食<rt>た</rt></ruby>べる」の過<span class=\"target\">去</span>形は「<ruby>食<rt>た</rt></ruby>べました」です。",
+sentence: "「<ruby>食<rt>た</rt></ruby>べる」の過去<ruby>形<rt>か　けい</rt></ruby>は「<ruby>食<rt>た</rt></ruby>べました」です。",
 target: "去",
 answer: "こ",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<span class=\"target\">一週間</span>に<ruby>一回<rt>いっかい</rt></ruby>、<ruby>買<rt>か</rt></ruby>い<ruby>物<rt>もの</rt></ruby>に<ruby>行<rt>い</rt></ruby>きます。",
+sentence: "一週間に<ruby>一回<rt>いっかい</rt></ruby>、<ruby>買<rt>か</rt></ruby>い<ruby>物<rt>もの</rt></ruby>に<ruby>行<rt>い</rt></ruby>きます。",
 target: "一週間",
 answer: "いっしゅうかん",
-level: "N5",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<span class=\"target\">今週</span>は<ruby>学校<rt>がっこう</rt></ruby>が<ruby>休<rt>やす</rt></ruby>みです。",
+sentence: "今週は<ruby>学校<rt>がっこう</rt></ruby>が<ruby>休<rt>やす</rt></ruby>みです。",
 target: "今週",
 answer: "こんしゅう",
-level: "N5",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<span class=\"target\">土曜日</span>はアルバイトがあります。",
+sentence: "土曜日はアルバイトがあります。",
 target: "土曜日",
 answer: "どようび",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<ruby>用事<rt>ようじ</rt></ruby>があるから、<span class=\"target\">先</span>に<ruby>帰<rt>かえ</rt></ruby>ります。",
+sentence: "<ruby>用事<rt>ようじ</rt></ruby>があるから、先に<ruby>帰<rt>かえ</rt></ruby>ります。",
 target: "先",
 answer: "さき",
-level: "N5",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<span class=\"target\">先週</span>の<ruby>木曜日<rt>もくようび</rt></ruby>、<ruby>学校<rt>がっこう</rt></ruby>を<ruby>休<rt>やす</rt></ruby>みました。",
+sentence: "先週の<ruby>木曜日<rt>もくようび</rt></ruby>、<ruby>学校<rt>がっこう</rt></ruby>を<ruby>休<rt>やす</rt></ruby>みました。",
 target: "先週",
 answer: "せんしゅう",
-level: "N5",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<ruby>昨日<rt>きのう</rt></ruby>、<span class=\"target\">先生</span>と<ruby>話<rt>はな</rt></ruby>しました。",
+sentence: "<ruby>昨日<rt>きのう</rt></ruby>、先生と<ruby>話<rt>はな</rt></ruby>しました。",
 target: "先生",
 answer: "せんせい",
-level: "N5",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<ruby>明日<rt>あした</rt></ruby>の<span class=\"target\">朝</span>、６<ruby>時<rt>じ</rt></ruby>に<ruby>起<rt>お</rt></ruby>きます。",
+sentence: "<ruby>明日<rt>あした</rt></ruby>の朝、６<ruby>時<rt>じ</rt></ruby>に<ruby>起<rt>お</rt></ruby>きます。",
 target: "朝",
 answer: "あさ",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<ruby>午前<rt>ごぜん</rt></ruby>４<ruby>時<rt>じ</rt></ruby>は早<span class=\"target\">朝</span>ですか。",
+sentence: "<ruby>午前<rt>ごぜん</rt></ruby>４<ruby>時<rt>じ</rt></ruby>は早朝ですか。",
 target: "朝",
 answer: "ちょう",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<span class=\"target\">今朝</span>は８<ruby>時<rt>じ</rt></ruby>に<ruby>起<rt>お</rt></ruby>きました。",
+sentence: "今朝は８<ruby>時<rt>じ</rt></ruby>に<ruby>起<rt>お</rt></ruby>きました。",
 target: "今朝",
 answer: "けさ",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<span class=\"target\">昼</span>ご<ruby>飯<rt>はん</rt></ruby>にラーメンを<ruby>食<rt>た</rt></ruby>べました。",
+sentence: "昼ご<ruby>飯<rt>はん</rt></ruby>にラーメンを<ruby>食<rt>た</rt></ruby>べました。",
 target: "昼",
 answer: "ひる",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<span class=\"target\">昼食</span>にラーメンを<ruby>食<rt>た</rt></ruby>べました。",
+sentence: "昼食にラーメンを<ruby>食<rt>た</rt></ruby>べました。",
 target: "昼食",
 answer: "ちゅうしょく",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<span class=\"target\">夜</span>ごはんにカレーライスを<ruby>食<rt>た</rt></ruby>べました。",
+sentence: "夜ごはんにカレーライスを<ruby>食<rt>た</rt></ruby>べました。",
 target: "夜",
 answer: "よる",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<span class=\"target\">夜</span>明け<ruby>前<rt>まえ</rt></ruby>に<ruby>出発<rt>しゅっぱつ</rt></ruby>しましょう",
+sentence: "夜<ruby>明<rt>　あ</rt></ruby>け<ruby>前<rt>まえ</rt></ruby>に<ruby>出発<rt>しゅっぱつ</rt></ruby>しましょう",
 target: "夜",
 answer: "よ",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<span class=\"target\">今夜</span>、<ruby>友<rt>とも</rt></ruby>だちが<ruby>家<rt>いえ</rt></ruby>に<ruby>来<rt>き</rt></ruby>ます。",
+sentence: "今夜、<ruby>友<rt>とも</rt></ruby>だちが<ruby>家<rt>いえ</rt></ruby>に<ruby>来<rt>き</rt></ruby>ます。",
 target: "今夜",
 answer: "こんや",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<ruby>今日<rt>きょう</rt></ruby>の<span class=\"target\">晩</span>ご<ruby>飯<rt>はん</rt></ruby>は<ruby>何<rt>なに</rt></ruby>がいいですか。",
+sentence: "<ruby>今日<rt>きょう</rt></ruby>の晩ご<ruby>飯<rt>はん</rt></ruby>は<ruby>何<rt>なに</rt></ruby>がいいですか。",
 target: "晩",
 answer: "ばん",
-level: "N4",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<ruby>春<rt>はる</rt></ruby>・<ruby>夏<rt>なつ</rt></ruby>・<ruby>秋<rt>あき</rt></ruby>・<ruby>冬<rt>ふゆ</rt></ruby>を四<span class=\"target\">季</span>と<ruby>言<rt>い</rt></ruby>います。",
+sentence: "<ruby>春<rt>はる</rt></ruby>・<ruby>夏<rt>なつ</rt></ruby>・<ruby>秋<rt>あき</rt></ruby>・<ruby>冬<rt>ふゆ</rt></ruby>を四季と<ruby>言<rt>い</rt></ruby>います。",
 target: "季",
 answer: "き",
-level: "N2",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "どの<span class=\"target\">季節</span>が<ruby>好<rt>す</rt></ruby>きですか。",
+sentence: "どの季節が<ruby>好<rt>す</rt></ruby>きですか。",
 target: "季節",
 answer: "きせつ",
-level: "N2",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<span class=\"target\">節水</span>",
+sentence: "節水",
 target: "節水",
 answer: "せっすい",
-level: "N2",
-theme: ""
+lesson: "19"
 },
 {
-sentence: "<ruby>鏡<rt>かがみ</rt></ruby>に<ruby>顔<rt>かお</rt></ruby>を<span class=\"target\">映</span>します。",
+sentence: "<ruby>鏡<rt>かがみ</rt></ruby>に<ruby>顔<rt>かお</rt></ruby>を映します。",
 target: "映",
 answer: "うつ",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "ホラー<span class=\"target\">映画</span>が<ruby>好<rt>す</rt></ruby>きです。",
+sentence: "ホラー映画が<ruby>好<rt>す</rt></ruby>きです。",
 target: "映画",
 answer: "えいが",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<ruby>友<rt>とも</rt></ruby>だちのノートを<span class=\"target\">写</span>します。",
+sentence: "<ruby>友<rt>とも</rt></ruby>だちのノートを写します。",
 target: "写",
 answer: "うつ",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<ruby>京都<rt>きょうと</rt></ruby>できれいな<span class=\"target\">写真</span>をたくさんとりました。",
+sentence: "<ruby>京都<rt>きょうと</rt></ruby>できれいな写真をたくさんとりました。",
 target: "写真",
 answer: "しゃしん",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<ruby>教室<rt>きょうしつ</rt></ruby>の<span class=\"target\">真ん中</span>",
+sentence: "<ruby>教室<rt>きょうしつ</rt></ruby>の真ん中",
 target: "真ん中",
 answer: "まんなか",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<span class=\"target\">真っ赤</span>なバラの<ruby>花<rt>はな</rt></ruby>",
+sentence: "真っ赤なバラの<ruby>花<rt>はな</rt></ruby>",
 target: "真っ赤",
 answer: "まっか",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<span class=\"target\">一人旅</span>が<ruby>好<rt>す</rt></ruby>きです。",
+sentence: "一人旅が<ruby>好<rt>す</rt></ruby>きです。",
 target: "一人旅",
 answer: "ひとりたび",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<span class=\"target\">世界</span>で<ruby>一番<rt>いちばん</rt></ruby><ruby>高<rt>たか</rt></ruby>い<ruby>山<rt>やま</rt></ruby>はエベレストです。",
+sentence: "世界で<ruby>一番<rt>いちばん</rt></ruby><ruby>高<rt>たか</rt></ruby>い<ruby>山<rt>やま</rt></ruby>はエベレストです。",
 target: "世界",
 answer: "せかい",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<ruby>今<rt>いま</rt></ruby>は21<span class=\"target\">世</span>紀です。",
+sentence: "<ruby>今<rt>いま</rt></ruby>は21世<ruby>紀<rt>　　き</rt></ruby>です。",
 target: "世",
 answer: "せい",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<span class=\"target\">世</span>の<ruby>中<rt>なか</rt></ruby>",
+sentence: "世の<ruby>中<rt>なか</rt></ruby>",
 target: "世",
 answer: "よ",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<ruby>日本<rt>にほん</rt></ruby>の<span class=\"target\">歌</span>を<ruby>教<rt>おし</rt></ruby>えてください。",
+sentence: "<ruby>日本<rt>にほん</rt></ruby>の歌を<ruby>教<rt>おし</rt></ruby>えてください。",
 target: "歌",
 answer: "うた",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "カラオケで<span class=\"target\">歌</span>います。",
+sentence: "カラオケで歌います。",
 target: "歌",
 answer: "うた",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<ruby>好<rt>す</rt></ruby>きな<span class=\"target\">歌手</span>はいますか。",
+sentence: "<ruby>好<rt>す</rt></ruby>きな歌手はいますか。",
 target: "歌手",
 answer: "かしゅ",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<span class=\"target\">同</span>じクラス",
+sentence: "同じクラス",
 target: "同",
 answer: "おな",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<ruby>二人<rt>ふたり</rt></ruby>が<span class=\"target\">同時</span>に<ruby>手<rt>て</rt></ruby>をあげました。",
+sentence: "<ruby>二人<rt>ふたり</rt></ruby>が同時に<ruby>手<rt>て</rt></ruby>をあげました。",
 target: "同時",
 answer: "どうじ",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "２クラス合<span class=\"target\">同</span>で<ruby>授業<rt>じゅぎょう</rt></ruby>をします。",
+sentence: "２クラス合同で<ruby>授業<rt>じゅぎょう</rt></ruby>をします。",
 target: "同",
 answer: "どう",
-level: "N4",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<span class=\"target\">友</span>だちといっしょに<ruby>映画<rt>えいが</rt></ruby>を<ruby>見<rt>み</rt></ruby>ました。",
+sentence: "友だちといっしょに<ruby>映画<rt>えいが</rt></ruby>を<ruby>見<rt>み</rt></ruby>ました。",
 target: "友",
 answer: "とも",
-level: "N5",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "親<span class=\"target\">友</span>はいますか。",
+sentence: "親友はいますか。",
 target: "友",
 answer: "ゆう",
-level: "N5",
-theme: ""
+lesson: "20"
 },
 {
-sentence: "<ruby>昨日<rt>きのう</rt></ruby>、<ruby>私<rt>わたし</rt></ruby>の<span class=\"target\">父</span>が<ruby>日本<rt>にほん</rt></ruby>にきました。",
+sentence: "<ruby>昨日<rt>きのう</rt></ruby>、<ruby>私<rt>わたし</rt></ruby>の父が<ruby>日本<rt>にほん</rt></ruby>にきました。",
 target: "父",
 answer: "ちち",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "お<span class=\"target\">父</span>さん",
+sentence: "お父さん",
 target: "父",
 answer: "とう",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "祖<span class=\"target\">父</span>は80<ruby>才<rt>さい</rt></ruby>です。",
+sentence: "祖父は80<ruby>才<rt>さい</rt></ruby>です。",
 target: "父",
 answer: "ふ",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<span class=\"target\">母</span>は<ruby>料理<rt>りょうり</rt></ruby>が<ruby>上手<rt>じょうず</rt></ruby>です。",
+sentence: "母は<ruby>料理<rt>りょうり</rt></ruby>が<ruby>上手<rt>じょうず</rt></ruby>です。",
 target: "母",
 answer: "はは",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "お<span class=\"target\">母</span>さん",
+sentence: "お母さん",
 target: "母",
 answer: "かあ",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "祖<span class=\"target\">母</span>は90<ruby>才<rt>さい</rt></ruby>です。",
+sentence: "祖母は90<ruby>才<rt>さい</rt></ruby>です。",
 target: "母",
 answer: "ぼ",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<span class=\"target\">兄</span>は<ruby>大学生<rt>だいがくせい</rt></ruby>です。",
+sentence: "兄は<ruby>大学生<rt>だいがくせい</rt></ruby>です。",
 target: "兄",
 answer: "あに",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<ruby>友<rt>とも</rt></ruby>だちのお<span class=\"target\">兄</span>さん",
+sentence: "<ruby>友<rt>とも</rt></ruby>だちのお兄さん",
 target: "兄",
 answer: "にい",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<span class=\"target\">弟</span>は<ruby>中学生<rt>ちゅうがくせい</rt></ruby>です。",
+sentence: "弟は<ruby>中学生<rt>ちゅうがくせい</rt></ruby>です。",
 target: "弟",
 answer: "おとうと",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<span class=\"target\">兄弟</span>はいますか。",
+sentence: "兄弟はいますか。",
 target: "兄弟",
 answer: "きょうだい",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<span class=\"target\">姉</span>は<ruby>大学生<rt>だいがくせい</rt></ruby>です。",
+sentence: "姉は<ruby>大学生<rt>だいがくせい</rt></ruby>です。",
 target: "姉",
 answer: "あね",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<ruby>友<rt>とも</rt></ruby>だちのお<span class=\"target\">姉</span>さん",
+sentence: "<ruby>友<rt>とも</rt></ruby>だちのお姉さん",
 target: "姉",
 answer: "ねえ",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<span class=\"target\">妹</span>がいます。",
+sentence: "妹がいます。",
 target: "妹",
 answer: "いもうと",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<span class=\"target\">姉妹</span>",
+sentence: "姉妹",
 target: "姉妹",
 answer: "しまい",
-level: "N5",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "ご<span class=\"target\">主人</span>の<ruby>趣味<rt>しゅみ</rt></ruby>は<ruby>何<rt>なん</rt></ruby>ですか。",
+sentence: "ご主人の<ruby>趣味<rt>しゅみ</rt></ruby>は<ruby>何<rt>なん</rt></ruby>ですか。",
 target: "主人",
 answer: "しゅじん",
-level: "N4",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<ruby>財布<rt>さいふ</rt></ruby>の<ruby>持<rt>も</rt></ruby>ち<span class=\"target\">主</span>",
+sentence: "<ruby>財布<rt>さいふ</rt></ruby>の<ruby>持<rt>も</rt></ruby>ち主",
 target: "主",
 answer: "ぬし",
-level: "N4",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<span class=\"target\">家</span>族で<ruby>旅行<rt>りょこう</rt></ruby>に<ruby>行<rt>い</rt></ruby>きました。",
+sentence: "家<ruby>族<rt>　ぞく</rt></ruby>で<ruby>旅行<rt>りょこう</rt></ruby>に<ruby>行<rt>い</rt></ruby>きました。",
 target: "家",
 answer: "か",
-level: "N4",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<span class=\"target\">自分</span>",
+sentence: "自分",
 target: "自分",
 answer: "じぶん",
-level: "N4",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<span class=\"target\">私</span>は<ruby>留学生<rt>りゅうがくせい</rt></ruby>です。",
+sentence: "私は<ruby>留学生<rt>りゅうがくせい</rt></ruby>です。",
 target: "私",
 answer: "わたし",
-level: "N4",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<span class=\"target\">私</span>立<ruby>学校<rt>がっこう</rt></ruby>",
+sentence: "私<ruby>立<rt>　りつ</rt></ruby><ruby>学校<rt>がっこう</rt></ruby>",
 target: "私",
 answer: "し",
-level: "N4",
-theme: ""
+lesson: "21"
 },
 {
-sentence: "<span class=\"target\">空</span>は<ruby>青<rt>あお</rt></ruby>いです。",
+sentence: "空は<ruby>青<rt>あお</rt></ruby>いです。",
 target: "空",
 answer: "そら",
-level: "N5",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "この<ruby>箱<rt>はこ</rt></ruby>は<span class=\"target\">空</span>です。",
+sentence: "この<ruby>箱<rt>はこ</rt></ruby>は空です。",
 target: "空",
 answer: "から",
-level: "N5",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<ruby>席<rt>せき</rt></ruby>が<span class=\"target\">空</span>きました。",
+sentence: "<ruby>席<rt>せき</rt></ruby>が空きました。",
 target: "空",
 answer: "あ",
-level: "N5",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<ruby>成田<rt>なりた</rt></ruby><span class=\"target\">空</span>港",
+sentence: "<ruby>成田<rt>なりた</rt></ruby>空<ruby>港<rt>　　こう</rt></ruby>",
 target: "空",
 answer: "くう",
-level: "N5",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<ruby>太陽<rt>たいよう</rt></ruby>の<span class=\"target\">光</span>",
+sentence: "<ruby>太陽<rt>たいよう</rt></ruby>の光",
 target: "光",
 answer: "ひかり",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "ダイヤモンドが<span class=\"target\">光</span>っています。",
+sentence: "ダイヤモンドが光っています。",
 target: "光",
 answer: "ひか",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "観<span class=\"target\">光</span><ruby>旅行<rt>りょこう</rt></ruby>",
+sentence: "観光<ruby>旅行<rt>りょこう</rt></ruby>",
 target: "光",
 answer: "こう",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<span class=\"target\">星</span>を<ruby>見<rt>み</rt></ruby>るのが<ruby>好<rt>す</rt></ruby>きです。",
+sentence: "星を<ruby>見<rt>み</rt></ruby>るのが<ruby>好<rt>す</rt></ruby>きです。",
 target: "星",
 answer: "ほし",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "火<span class=\"target\">星</span>",
+sentence: "火星",
 target: "星",
 answer: "せい",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<ruby>今日<rt>きょう</rt></ruby>は<span class=\"target\">風</span>が<ruby>強<rt>つよ</rt></ruby>いです。",
+sentence: "<ruby>今日<rt>きょう</rt></ruby>は風が<ruby>強<rt>つよ</rt></ruby>いです。",
 target: "風",
 answer: "かぜ",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<span class=\"target\">風邪</span>をひきました。",
+sentence: "風邪をひきました。",
 target: "風邪",
 answer: "かぜ",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<span class=\"target\">台風</span>で<ruby>電車<rt>でんしゃ</rt></ruby>が<ruby>止<rt>と</rt></ruby>まりました。",
+sentence: "台風で<ruby>電車<rt>でんしゃ</rt></ruby>が<ruby>止<rt>と</rt></ruby>まりました。",
 target: "台風",
 answer: "たいふう",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<ruby>毎日<rt>まいにち</rt></ruby>お<span class=\"target\">風</span>呂に<ruby>入<rt>はい</rt></ruby>ります。",
+sentence: "<ruby>毎日<rt>まいにち</rt></ruby>お風<ruby>呂<rt>　ろ</rt></ruby>に<ruby>入<rt>はい</rt></ruby>ります。",
 target: "風",
 answer: "ふ",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<ruby>車<rt>くるま</rt></ruby>を２<span class=\"target\">台</span>、<ruby>持<rt>も</rt></ruby>っています。",
+sentence: "<ruby>車<rt>くるま</rt></ruby>を２台、<ruby>持<rt>も</rt></ruby>っています。",
 target: "台",
 answer: "だい",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<span class=\"target\">自然</span>を<ruby>大切<rt>たいせつ</rt></ruby>にしましょう",
+sentence: "自然を<ruby>大切<rt>たいせつ</rt></ruby>にしましょう",
 target: "自然",
 answer: "しぜん",
-level: "N2",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<span class=\"target\">天然</span>ガス",
+sentence: "天然ガス",
 target: "天然",
 answer: "てんねん",
-level: "N2",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "ふる<span class=\"target\">里</span>",
+sentence: "ふる里",
 target: "里",
 answer: "さと",
-level: "N2",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "テレビで<span class=\"target\">野球</span>を<ruby>見<rt>み</rt></ruby>ました。",
+sentence: "テレビで野球を<ruby>見<rt>み</rt></ruby>ました。",
 target: "野球",
 answer: "やきゅう",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<span class=\"target\">野山</span>で<ruby>虫<rt>むし</rt></ruby>を<ruby>取<rt>と</rt></ruby>ります。",
+sentence: "野山で<ruby>虫<rt>むし</rt></ruby>を<ruby>取<rt>と</rt></ruby>ります。",
 target: "野山",
 answer: "のやま",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<span class=\"target\">野原</span>にいろいろな<ruby>花<rt>はな</rt></ruby>がさいています。",
+sentence: "野原にいろいろな<ruby>花<rt>はな</rt></ruby>がさいています。",
 target: "野原",
 answer: "のはら",
-level: "N4",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<ruby>事故<rt>じこ</rt></ruby>の<span class=\"target\">原</span>因を<ruby>調<rt>しら</rt></ruby>べています。",
+sentence: "<ruby>事故<rt>じこ</rt></ruby>の原<ruby>因<rt>げん</rt></ruby>を<ruby>調<rt>しら</rt></ruby>べています。",
 target: "原",
 answer: "げん",
-level: "N3",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "<ruby>山<rt>やま</rt></ruby>と<ruby>山<rt>やま</rt></ruby>の<ruby>間<rt>あいだ</rt></ruby>に<span class=\"target\">谷</span>があります。",
+sentence: "<ruby>山<rt>やま</rt></ruby>と<ruby>山<rt>やま</rt></ruby>の<ruby>間<rt>あいだ</rt></ruby>に谷があります。",
 target: "谷",
 answer: "たに",
-level: "N2",
-theme: ""
+lesson: "22"
 },
 {
-sentence: "グランドキャニオンは<ruby>有名<rt>ゆうめい</rt></ruby>な渓<span class=\"target\">谷</span>です。",
+sentence: "グランドキャニオンは<ruby>有名<rt>ゆうめい</rt></ruby>な渓谷です。",
 target: "谷",
 answer: "こく",
-level: "N2",
-theme: ""
+lesson: "22"
+},
+{
+sentence: "サッカーの<ruby>練習<rt>れんしゅう</rt></ruby>ができる所を<ruby>教<rt>おし</rt></ruby>えてください。",
+target: "所",
+answer: "ところ",
+lesson: "23"
+},
+{
+sentence: "<ruby>母<rt>はは</rt></ruby>は台所にいます。",
+target: "所",
+answer: "どころ",
+lesson: "23"
+},
+{
+sentence: "市役所はどこにありますか。",
+target: "所",
+answer: "しょ",
+lesson: "23"
+},
+{
+sentence: "<ruby>学校<rt>がっこう</rt></ruby>の場所を<ruby>教<rt>おし</rt></ruby>えてください。",
+target: "所",
+answer: "しょ",
+lesson: "23"
+},
+{
+sentence: "近所にコンビニがあります。",
+target: "所",
+answer: "じょ",
+lesson: "23"
+},
+{
+sentence: "どこに住んでいますか。",
+target: "住",
+answer: "す",
+lesson: "23"
+},
+{
+sentence: "ここに住所と<ruby>名前<rt>なまえ</rt></ruby>を<ruby>書<rt>か</rt></ruby>いてください。",
+target: "住所",
+answer: "じゅうしょ",
+lesson: "23"
+},
+{
+sentence: "<ruby>昨日<rt>きのう</rt></ruby>、東京に<ruby>行<rt>い</rt></ruby>きました。",
+target: "京",
+answer: "きょう",
+lesson: "23"
+},
+{
+sentence: "<ruby>今度<rt>こんど</rt></ruby>の<ruby>休<rt>やす</rt></ruby>みに京都を<ruby>旅行<rt>りょこう</rt></ruby>します。",
+target: "京都",
+answer: "きょうと",
+lesson: "23"
+},
+{
+sentence: "京<ruby>成線<rt>　　せいせん</rt></ruby>で<ruby>成田<rt>なりた</rt></ruby><ruby>空港<rt>くうこう</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。",
+target: "京",
+answer: "けい",
+lesson: "23"
+},
+{
+sentence: "<ruby>日本<rt>にほん</rt></ruby>の首都は<ruby>東京<rt>とうきょう</rt></ruby>です。",
+target: "首都",
+answer: "しゅと",
+lesson: "23"
+},
+{
+sentence: "<ruby>東京<rt>とうきょう</rt></ruby>は<ruby>大<rt>おお</rt></ruby>きな都市です。",
+target: "都市",
+answer: "とし",
+lesson: "23"
+},
+{
+sentence: "東京都",
+target: "都",
+answer: "と",
+lesson: "23"
+},
+{
+sentence: "<ruby>私<rt>わたし</rt></ruby>は千葉県に<ruby>住<rt>す</rt></ruby>んでいます。",
+target: "県",
+answer: "けん",
+lesson: "23"
+},
+{
+sentence: "市<ruby>場<rt>　　ば</rt></ruby>で<ruby>新鮮<rt>しんせん</rt></ruby>な<ruby>野菜<rt>やさい</rt></ruby>を<ruby>買<rt>か</rt></ruby>いました。",
+target: "市",
+answer: "いち",
+lesson: "23"
+},
+{
+sentence: "区<ruby>役所<rt>　やくしょ</rt></ruby>はどこですか。",
+target: "区",
+answer: "く",
+lesson: "23"
+},
+{
+sentence: "<ruby>大<rt>おお</rt></ruby>きくてにぎやかな町",
+target: "町",
+answer: "まち",
+lesson: "23"
+},
+{
+sentence: "町長がスピーチをしました。",
+target: "町長",
+answer: "ちょうちょう",
+lesson: "23"
+},
+{
+sentence: "<ruby>山<rt>やま</rt></ruby>の<ruby>中<rt>なか</rt></ruby>の<ruby>小<rt>ちい</rt></ruby>さい村",
+target: "村",
+answer: "むら",
+lesson: "23"
+},
+{
+sentence: "村長はやさしくていい<ruby>人<rt>ひと</rt></ruby>です。",
+target: "村長",
+answer: "そんちょう",
+lesson: "23"
+},
+{
+sentence: "<ruby>勉強<rt>べんきょう</rt></ruby>の仕方がわかりません。",
+target: "仕方",
+answer: "しかた",
+lesson: "24"
+},
+{
+sentence: "ITの仕事がしたいです。",
+target: "仕事",
+answer: "しごと",
+lesson: "24"
+},
+{
+sentence: "<ruby>学校<rt>がっこう</rt></ruby>の行事",
+target: "行事",
+answer: "ぎょうじ",
+lesson: "24"
+},
+{
+sentence: "事<ruby>故<rt>　こ</rt></ruby>のニュースを<ruby>見<rt>み</rt></ruby>ました。",
+target: "事",
+answer: "じ",
+lesson: "24"
+},
+{
+sentence: "<ruby>明日<rt>あした</rt></ruby>、<ruby>友<rt>とも</rt></ruby>だちに会います。",
+target: "会",
+answer: "あ",
+lesson: "24"
+},
+{
+sentence: "<ruby>日本語<rt>にほんご</rt></ruby>の会話はむずかしいです。",
+target: "会話",
+answer: "かいわ",
+lesson: "24"
+},
+{
+sentence: "<ruby>昨日<rt>きのう</rt></ruby>、社長と<ruby>話<rt>はな</rt></ruby>しました。",
+target: "社長",
+answer: "しゃちょう",
+lesson: "24"
+},
+{
+sentence: "<ruby>正月<rt>しょうがつ</rt></ruby>に神社に<ruby>行<rt>い</rt></ruby>きました。",
+target: "社",
+answer: "じゃ",
+lesson: "24"
+},
+{
+sentence: "銀の<ruby>時計<rt>とけい</rt></ruby>",
+target: "銀",
+answer: "ぎん",
+lesson: "24"
+},
+{
+sentence: "<ruby>私<rt>わたし</rt></ruby>の<ruby>姉<rt>あね</rt></ruby>は銀行員です。",
+target: "銀行員",
+answer: "ぎんこういん",
+lesson: "24"
+},
+{
+sentence: "<ruby>兄<rt>あに</rt></ruby>は会社員です。",
+target: "会社員",
+answer: "かいしゃいん",
+lesson: "24"
+},
+{
+sentence: "<ruby>大学<rt>だいがく</rt></ruby>の医学<ruby>部<rt>ぶ</rt></ruby>",
+target: "医学",
+answer: "いがく",
+lesson: "24"
+},
+{
+sentence: "<ruby>将来<rt>しょうらい</rt></ruby>、医者になりたいです。",
+target: "医者",
+answer: "いしゃ",
+lesson: "24"
+},
+{
+sentence: "あの<ruby>先生<rt>せんせい</rt></ruby>は、患者の<ruby>話<rt>はなし</rt></ruby>をよく<ruby>聞<rt>き</rt></ruby>きます。",
+target: "者",
+answer: "じゃ",
+lesson: "24"
+},
+{
+sentence: "この<ruby>歌<rt>うた</rt></ruby>は若者に<ruby>人気<rt>にんき</rt></ruby>があります。",
+target: "若者",
+answer: "わかもの",
+lesson: "24"
+},
+{
+sentence: "<ruby>赤<rt>あか</rt></ruby>ちゃんが産まれました。",
+target: "産",
+answer: "う",
+lesson: "24"
+},
+{
+sentence: "出産のお<ruby>祝<rt>いわ</rt></ruby>い",
+target: "出産",
+answer: "しゅっさん",
+lesson: "24"
+},
+{
+sentence: "このお<ruby>茶<rt>ちゃ</rt></ruby>の産地はスリランカです。",
+target: "産地",
+answer: "さんち",
+lesson: "24"
+},
+{
+sentence: "トヨタは<ruby>日本<rt>にほん</rt></ruby>の<ruby>有名<rt>ゆうめい</rt></ruby>な企業です。",
+target: "業",
+answer: "ぎょう",
+lesson: "24"
+},
+{
+sentence: "テストで良い<ruby>点数<rt>てんすう</rt></ruby>をとりました。",
+target: "良",
+answer: "よ",
+lesson: "25"
+},
+{
+sentence: "あの<ruby>店<rt>みせ</rt></ruby>はあまり良くないです。",
+target: "良",
+answer: "よ",
+lesson: "25"
+},
+{
+sentence: "<ruby>今日<rt>きょう</rt></ruby>は<ruby>天気<rt>てんき</rt></ruby>が悪いです。",
+target: "悪",
+answer: "わる",
+lesson: "25"
+},
+{
+sentence: "<ruby>病気<rt>びょうき</rt></ruby>が悪化してしまいました。",
+target: "悪化",
+answer: "あっか",
+lesson: "25"
+},
+{
+sentence: "<ruby>私<rt>わたし</rt></ruby>の<ruby>家<rt>いえ</rt></ruby>は<ruby>学校<rt>がっこう</rt></ruby>から近いです。",
+target: "近",
+answer: "ちか",
+lesson: "25"
+},
+{
+sentence: "<ruby>家<rt>いえ</rt></ruby>の近所に<ruby>小学校<rt>しょうがっこう</rt></ruby>があります。",
+target: "近所",
+answer: "きんじょ",
+lesson: "25"
+},
+{
+sentence: "最近、あまり<ruby>運動<rt>うんどう</rt></ruby>をしていません。",
+target: "近",
+answer: "きん",
+lesson: "25"
+},
+{
+sentence: "<ruby>私<rt>わたし</rt></ruby>の<ruby>家<rt>いえ</rt></ruby>は<ruby>駅<rt>えき</rt></ruby>から遠いです。",
+target: "遠",
+answer: "とお",
+lesson: "25"
+},
+{
+sentence: "<ruby>動物園<rt>どうぶつえん</rt></ruby>へ遠足に<ruby>行<rt>い</rt></ruby>きます。",
+target: "遠足",
+answer: "えんそく",
+lesson: "25"
+},
+{
+sentence: "<ruby>今日<rt>きょう</rt></ruby>は風が強いです。",
+target: "強",
+answer: "つよ",
+lesson: "25"
+},
+{
+sentence: "<ruby>毎日<rt>まいにち</rt></ruby>、勉強します。",
+target: "強",
+answer: "きょう",
+lesson: "25"
+},
+{
+sentence: "<ruby>明日<rt>あす</rt></ruby>には<ruby>風<rt>かぜ</rt></ruby>が弱まるでしょう。",
+target: "弱",
+answer: "よわ",
+lesson: "25"
+},
+{
+sentence: "あのチームは弱点がありません。",
+target: "弱点",
+answer: "じゃくてん",
+lesson: "25"
+},
+{
+sentence: "強弱",
+target: "強弱",
+answer: "きょうじゃく",
+lesson: "25"
+},
+{
+sentence: "<ruby>昨日<rt>きのう</rt></ruby>のパーティは楽しかったです。",
+target: "楽",
+answer: "たの",
+lesson: "25"
+},
+{
+sentence: "音楽を<ruby>聞<rt>き</rt></ruby>くことが<ruby>好<rt>す</rt></ruby>きです。",
+target: "音楽",
+answer: "おんがく",
+lesson: "25"
+},
+{
+sentence: "ピアノやギターは楽器です。",
+target: "楽器",
+answer: "がっき",
+lesson: "25"
+},
+{
+sentence: "楽な<ruby>仕事<rt>しごと</rt></ruby>",
+target: "楽",
+answer: "らく",
+lesson: "25"
+},
+{
+sentence: "親しい<ruby>友人<rt>ゆうじん</rt></ruby>とお<ruby>酒<rt>さけ</rt></ruby>を<ruby>飲<rt>の</rt></ruby>みました。",
+target: "親",
+answer: "した",
+lesson: "25"
+},
+{
+sentence: "親友はいますか。",
+target: "親友",
+answer: "しんゆう",
+lesson: "25"
+},
+{
+sentence: "メアリーさんはとても親切です。",
+target: "親切",
+answer: "しんせつ",
+lesson: "25"
+},
+{
+sentence: "<ruby>私<rt>わたし</rt></ruby>の両親",
+target: "両親",
+answer: "りょうしん",
+lesson: "25"
+},
+{
+sentence: "<ruby>初<rt>はじ</rt></ruby>めて<ruby>日本<rt>にほん</rt></ruby>に<ruby>来<rt>き</rt></ruby>たとき、不安でした。",
+target: "不安",
+answer: "ふあん",
+lesson: "25"
+},
+{
+sentence: "<ruby>携帯<rt>けいたい</rt></ruby><ruby>電話<rt>でんわ</rt></ruby>がないと不<ruby>便<rt>　べん</rt></ruby>です。",
+target: "不",
+answer: "ふ",
+lesson: "25"
+},
+{
+sentence: "<ruby>電車<rt>でんしゃ</rt></ruby>の<ruby>中<rt>なか</rt></ruby>では静かにしましょう。",
+target: "静",
+answer: "しず",
+lesson: "25"
+},
+{
+sentence: "<ruby>病気<rt>びょうき</rt></ruby>の<ruby>時<rt>とき</rt></ruby>は、安静にしてください。",
+target: "安静",
+answer: "あんせい",
+lesson: "25"
+},
+{
+sentence: "<ruby>風邪<rt>かぜ</rt></ruby>で<ruby>熱<rt>ねつ</rt></ruby>が38度あります。",
+target: "度",
+answer: "ど",
+lesson: "26"
+},
+{
+sentence: "<ruby>毎日<rt>まいにち</rt></ruby>、２<ruby>時間<rt>じかん</rt></ruby>以上<ruby>勉強<rt>べんきょう</rt></ruby>しています。",
+target: "以上",
+answer: "いじょう",
+lesson: "26"
+},
+{
+sentence: "60<ruby>点<rt>てん</rt></ruby>以下の<ruby>人<rt>ひと</rt></ruby>は、もう<ruby>一度<rt>いちど</rt></ruby>テストします。",
+target: "以下",
+answer: "いか",
+lesson: "26"
+},
+{
+sentence: "春になると<ruby>桜<rt>さくら</rt></ruby>がさきます。",
+target: "春",
+answer: "はる",
+lesson: "26"
+},
+{
+sentence: "青春18きっぷで<ruby>旅行<rt>りょこう</rt></ruby>しました。",
+target: "青春",
+answer: "せいしゅん",
+lesson: "26"
+},
+{
+sentence: "<ruby>日本<rt>にほん</rt></ruby>の夏は<ruby>暑<rt>あつ</rt></ruby>いです。",
+target: "夏",
+answer: "なつ",
+lesson: "26"
+},
+{
+sentence: "<ruby>夏<rt>なつ</rt></ruby>が<ruby>終<rt>お</rt></ruby>わると秋になります。",
+target: "秋",
+answer: "あき",
+lesson: "26"
+},
+{
+sentence: "冬は<ruby>寒<rt>さむ</rt></ruby>いです。",
+target: "冬",
+answer: "ふゆ",
+lesson: "26"
+},
+{
+sentence: "春夏秋冬",
+target: "春夏秋冬",
+answer: "しゅんかしゅうとう",
+lesson: "26"
+},
+{
+sentence: "<ruby>今日<rt>きょう</rt></ruby>はいい天気ですね。",
+target: "天気",
+answer: "てんき",
+lesson: "26"
+},
+{
+sentence: "暑いとき、エアコンをつけます。",
+target: "暑",
+answer: "あつ",
+lesson: "26"
+},
+{
+sentence: "<ruby>最高<rt>さいこう</rt></ruby><ruby>気温<rt>きおん</rt></ruby>が35℃<ruby>以上<rt>いじょう</rt></ruby>の<ruby>日<rt>ひ</rt></ruby>を猛暑<ruby>日<rt>もう　　び</rt></ruby>といいます。",
+target: "暑",
+answer: "しょ",
+lesson: "26"
+},
+{
+sentence: "ペンギンは寒さに<ruby>強<rt>つよ</rt></ruby>いです。",
+target: "寒",
+answer: "さむ",
+lesson: "26"
+},
+{
+sentence: "寒いとき、ストーブをつけます。",
+target: "寒",
+answer: "さむ",
+lesson: "26"
+},
+{
+sentence: "<ruby>電気<rt>でんき</rt></ruby>料金を<ruby>払<rt>はら</rt></ruby>います。",
+target: "料金",
+answer: "りょうきん",
+lesson: "27"
+},
+{
+sentence: "無料",
+target: "無料",
+answer: "無料",
+lesson: "27"
+},
+{
+sentence: "<ruby>趣味<rt>しゅみ</rt></ruby>は料理です。",
+target: "料理",
+answer: "りょうり",
+lesson: "27"
+},
+{
+sentence: "<ruby>学校<rt>がっこう</rt></ruby>を<ruby>休<rt>やす</rt></ruby>んだ理<ruby>由<rt>　ゆう</rt></ruby>はなんですか。",
+target: "理",
+answer: "り",
+lesson: "27"
+},
+{
+sentence: "お茶を<ruby>飲<rt>の</rt></ruby>みます。",
+target: "茶",
+answer: "ちゃ",
+lesson: "27"
+},
+{
+sentence: "茶色",
+target: "茶色",
+answer: "ちゃいろ",
+lesson: "27"
+},
+{
+sentence: "<ruby>私<rt>わたし</rt></ruby>の<ruby>趣味<rt>しゅみ</rt></ruby>は茶道です。",
+target: "茶道",
+answer: "さどう",
+lesson: "27"
+},
+{
+sentence: "１<ruby>日<rt>にち</rt></ruby>に３<ruby>回<rt>かい</rt></ruby>、ご飯を<ruby>食<rt>た</rt></ruby>べます。",
+target: "飯",
+answer: "はん",
+lesson: "27"
+},
+{
+sentence: "<ruby>昼<rt>ひる</rt></ruby>ご飯にラーメンを<ruby>食<rt>た</rt></ruby>べました。",
+target: "飯",
+answer: "はん",
+lesson: "27"
+},
+{
+sentence: "スーパーで野菜を<ruby>買<rt>か</rt></ruby>いました。",
+target: "野菜",
+answer: "やさい",
+lesson: "27"
+},
+{
+sentence: "ビールの<ruby>原料<rt>げんりょう</rt></ruby>は麦です。",
+target: "麦",
+answer: "むぎ",
+lesson: "27"
+},
+{
+sentence: "小麦粉",
+target: "小麦粉",
+answer: "こむぎこ",
+lesson: "27"
+},
+{
+sentence: "とり肉",
+target: "肉",
+answer: "にく",
+lesson: "27"
+},
+{
+sentence: "<ruby>毎日<rt>まいにち</rt></ruby>、<ruby>料理<rt>りょうり</rt></ruby>を作ります。",
+target: "作",
+answer: "つく",
+lesson: "27"
+},
+{
+sentence: "<ruby>日本語<rt>にほんご</rt></ruby>で作文を<ruby>書<rt>か</rt></ruby>きました。",
+target: "作文",
+answer: "さくぶん",
+lesson: "27"
+},
+{
+sentence: "<ruby>好<rt>す</rt></ruby>きな作家はいますか。",
+target: "作家",
+answer: "さっか",
+lesson: "27"
+},
+{
+sentence: "<ruby>手<rt>て</rt></ruby>を洗います。",
+target: "洗",
+answer: "あら",
+lesson: "27"
+},
+{
+sentence: "<ruby>毎日<rt>まいにち</rt></ruby>、洗<ruby>濯<rt>　　たく</rt></ruby>します。",
+target: "洗",
+answer: "せん",
+lesson: "27"
+},
+{
+sentence: "あの<ruby>店<rt>みせ</rt></ruby>は味がいいですね。",
+target: "味",
+answer: "あじ",
+lesson: "27"
+},
+{
+sentence: "趣味は<ruby>何<rt>なん</rt></ruby>ですか。",
+target: "味",
+answer: "み",
+lesson: "27"
+},
+{
+sentence: "<ruby>旅行<rt>りょこう</rt></ruby>の代金を<ruby>払<rt>はら</rt></ruby>いました。",
+target: "代金",
+answer: "だいきん",
+lesson: "28"
+},
+{
+sentence: "お<ruby>酒<rt>さけ</rt></ruby>の代わりにお<ruby>茶<rt>ちゃ</rt></ruby>を<ruby>飲<rt>の</rt></ruby>みます。",
+target: "代",
+answer: "か",
+lesson: "28"
+},
+{
+sentence: "くつのサイズが合いません。",
+target: "合",
+answer: "あ",
+lesson: "28"
+},
+{
+sentence: "サッカーの試合を<ruby>見<rt>み</rt></ruby>に<ruby>行<rt>い</rt></ruby>きます。",
+target: "合",
+answer: "あい",
+lesson: "28"
+},
+{
+sentence: "JLPTのN3に合<ruby>格<rt>　　かく</rt></ruby>しました。",
+target: "合",
+answer: "ごう",
+lesson: "28"
+},
+{
+sentence: "<ruby>時間<rt>じかん</rt></ruby>を計ります。",
+target: "計",
+answer: "はか",
+lesson: "28"
+},
+{
+sentence: "体重計",
+target: "計",
+answer: "けい",
+lesson: "28"
+},
+{
+sentence: "<ruby>旅行<rt>りょこう</rt></ruby>の計<ruby>画<rt>　　かく</rt></ruby>を<ruby>立<rt>た</rt></ruby>てましょう。",
+target: "計",
+answer: "けい",
+lesson: "28"
+},
+{
+sentence: "中学生は制服を着ています。",
+target: "服",
+answer: "ふく",
+lesson: "28"
+},
+{
+sentence: "みんながそのニュースに注目しています。",
+target: "注目",
+answer: "ちゅうもく",
+lesson: "28"
+},
+{
+sentence: "ジュースをこぼさないよう注<ruby>意<rt>　　い</rt></ruby>してください。",
+target: "注",
+answer: "ちゅう",
+lesson: "28"
+},
+{
+sentence: "<ruby>理由<rt>りゆう</rt></ruby>を説明してください。",
+target: "説明",
+answer: "せつめい",
+lesson: "28"
+},
+{
+sentence: "用事があるので<ruby>帰<rt>かえ</rt></ruby>ります。",
+target: "用事",
+answer: "ようじ",
+lesson: "28"
+},
+{
+sentence: "このくつはこども用です。",
+target: "用",
+answer: "よう",
+lesson: "28"
+},
+{
+sentence: "この紙に<ruby>名前<rt>なまえ</rt></ruby>を<ruby>書<rt>か</rt></ruby>いてください。",
+target: "紙",
+answer: "かみ",
+lesson: "28"
+},
+{
+sentence: "<ruby>家族<rt>かぞく</rt></ruby>に手紙を<ruby>書<rt>か</rt></ruby>きました。",
+target: "手紙",
+answer: "てがみ",
+lesson: "28"
+},
+{
+sentence: "<ruby>事務<rt>じむ</rt></ruby><ruby>室<rt>しつ</rt></ruby>で<ruby>申込<rt>もうしこみ</rt></ruby>用紙をもらいます。",
+target: "用紙",
+answer: "ようし",
+lesson: "28"
+},
+{
+sentence: "部長は<ruby>大阪<rt>おおさか</rt></ruby>に<ruby>出張中<rt>しゅっちょうちゅう</rt></ruby>です。",
+target: "部長",
+answer: "ぶちょう",
+lesson: "28"
+},
+{
+sentence: "アンナさんの部屋は503<ruby>号室<rt>ごうしつ</rt></ruby>です。",
+target: "部屋",
+answer: "へや",
+lesson: "28"
+},
+{
+sentence: "体をきたえています。",
+target: "体",
+answer: "からだ",
+lesson: "29"
+},
+{
+sentence: "<ruby>私<rt>わたし</rt></ruby>は体力があります。",
+target: "体力",
+answer: "たいりょく",
+lesson: "29"
+},
+{
+sentence: "体<ruby>育館<rt>　　いくかん</rt></ruby>でバドミントンをします。",
+target: "体",
+answer: "たい",
+lesson: "29"
+},
+{
+sentence: "頭が<ruby>痛<rt>いた</rt></ruby>いので、<ruby>学校<rt>がっこう</rt></ruby>を<ruby>休<rt>やす</rt></ruby>みました。",
+target: "頭",
+answer: "あたま",
+lesson: "29"
+},
+{
+sentence: "<ruby>象<rt>ぞう</rt></ruby>が２頭います。",
+target: "頭",
+answer: "とう",
+lesson: "29"
+},
+{
+sentence: "<ruby>朝<rt>あさ</rt></ruby>、顔を<ruby>洗<rt>あら</rt></ruby>います。",
+target: "顔",
+answer: "かお",
+lesson: "29"
+},
+{
+sentence: "丸顔",
+target: "丸顔",
+answer: "まるがお",
+lesson: "29"
+},
+{
+sentence: "洗顔<ruby>後<rt>ご</rt></ruby>にこの<ruby>薬<rt>くすり</rt></ruby>をつけてください。",
+target: "顔",
+answer: "がん",
+lesson: "29"
+},
+{
+sentence: "キリンは首が<ruby>長<rt>なが</rt></ruby>いです。",
+target: "首",
+answer: "首",
+lesson: "29"
+},
+{
+sentence: "ネパールの首都はカトマンズです。",
+target: "首都",
+answer: "しゅと",
+lesson: "29"
+},
+{
+sentence: "病気",
+target: "病気",
+answer: "びょうき",
+lesson: "29"
+},
+{
+sentence: "病院へ<ruby>行<rt>い</rt></ruby>きました。",
+target: "病院",
+answer: "びょういん",
+lesson: "29"
+},
+{
+sentence: "<ruby>来年<rt>らいねん</rt></ruby>、大学院に<ruby>進学<rt>しんがく</rt></ruby>するつもりです。",
+target: "大学院",
+answer: "だいがくいん",
+lesson: "29"
+},
+{
+sentence: "<ruby>私<rt>わたし</rt></ruby>は<ruby>経済<rt>けいざい</rt></ruby>学科の<ruby>学生<rt>がくせい</rt></ruby>です。",
+target: "学科",
+answer: "がっか",
+lesson: "29"
+},
+{
+sentence: "内科",
+target: "内科",
+answer: "ないか",
+lesson: "29"
+},
+{
+sentence: "外科",
+target: "外科",
+answer: "げか",
+lesson: "29"
+},
+{
+sentence: "頭が<ruby>痛<rt>いた</rt></ruby>いので、薬を<ruby>飲<rt>の</rt></ruby>みます。",
+target: "薬",
+answer: "くすり",
+lesson: "29"
+},
+{
+sentence: "風邪薬を<ruby>飲<rt>の</rt></ruby>んで<ruby>寝<rt>ね</rt></ruby>ました。",
+target: "薬",
+answer: "ぐすり",
+lesson: "29"
+},
+{
+sentence: "胃腸薬",
+target: "薬",
+answer: "やく",
+lesson: "29"
+},
+{
+sentence: "<ruby>子供<rt>こども</rt></ruby>の声がします。",
+target: "声",
+answer: "こえ",
+lesson: "29"
+},
+{
+sentence: "ねこの<ruby>鳴<rt>な</rt></ruby>き声は「ニャー」です。",
+target: "声",
+answer: "ごえ",
+lesson: "29"
+},
+{
+sentence: "音声<ruby>読<rt>よ</rt></ruby>み<ruby>上<rt>あ</rt></ruby>げソフトを<ruby>使<rt>つか</rt></ruby>います。",
+target: "音声",
+answer: "おんせい",
+lesson: "29"
+},
+{
+sentence: "バス<ruby>停<rt>てい</rt></ruby>でバスを待ちます。",
+target: "待",
+answer: "ま",
+lesson: "29"
+},
+{
+sentence: "<ruby>結婚式<rt>けっこんしき</rt></ruby>に招待されました。",
+target: "待",
+answer: "たい",
+lesson: "29"
+},
+{
+sentence: "<ruby>私<rt>わたし</rt></ruby>の<ruby>妹<rt>いもうと</rt></ruby>は15才です。",
+target: "才",
+answer: "さい",
+lesson: "29"
+},
+{
+sentence: "<ruby>彼女<rt>かのじょ</rt></ruby>は天才です。",
+target: "天才",
+answer: "てんさい",
+lesson: "29"
+},
+{
+sentence: "この<ruby>漢字<rt>かんじ</rt></ruby>を<ruby>使<rt>つか</rt></ruby>って文を<ruby>作<rt>つく</rt></ruby>ってください。",
+target: "文",
+answer: "ぶん",
+lesson: "30"
+},
+{
+sentence: "<ruby>日本<rt>にほん</rt></ruby>の文化",
+target: "文化",
+answer: "ぶんか",
+lesson: "30"
+},
+{
+sentence: "<ruby>日本語<rt>にほんご</rt></ruby>で作文を<ruby>書<rt>か</rt></ruby>きました。",
+target: "作文",
+answer: "さくぶん",
+lesson: "30"
+},
+{
+sentence: "<ruby>喫茶店<rt>きっさてん</rt></ruby>でコーヒーを注文しました。",
+target: "注文",
+answer: "ちゅうもん",
+lesson: "30"
+},
+{
+sentence: "文字は<ruby>丁寧<rt>ていねい</rt></ruby>に<ruby>書<rt>か</rt></ruby>きましょう。",
+target: "文字",
+answer: "もじ",
+lesson: "30"
+},
+{
+sentence: "<ruby>家<rt>いえ</rt></ruby>の<ruby>近<rt>ちか</rt></ruby>くに小学校があります。",
+target: "小学校",
+answer: "しょうがっこう",
+lesson: "30"
+},
+{
+sentence: "<ruby>私<rt>わたし</rt></ruby>は英語を<ruby>話<rt>はな</rt></ruby>すことができます。",
+target: "英語",
+answer: "えいご",
+lesson: "30"
+},
+{
+sentence: "ドラえもんを知っていますか。",
+target: "知",
+answer: "し",
+lesson: "30"
+},
+{
+sentence: "<ruby>私<rt>わたし</rt></ruby>の知人を<ruby>紹介<rt>しょうかい</rt></ruby>します。",
+target: "知人",
+answer: "ちじん",
+lesson: "30"
+},
+{
+sentence: "<ruby>水<rt>みず</rt></ruby>は<ruby>油<rt>あぶら</rt></ruby>より<ruby>重<rt>おも</rt></ruby>い性質があります。",
+target: "質",
+answer: "しつ",
+lesson: "30"
+},
+{
+sentence: "<ruby>次<rt>つぎ</rt></ruby>の問いに<ruby>答<rt>こた</rt></ruby>えなさい。",
+target: "問",
+answer: "と",
+lesson: "30"
+},
+{
+sentence: "この問<ruby>題<rt>　　だい</rt></ruby>は<ruby>難<rt>むずか</rt></ruby>しいです。",
+target: "問",
+answer: "もん",
+lesson: "30"
+},
+{
+sentence: "<ruby>先生<rt>せんせい</rt></ruby>に質問しました。",
+target: "問",
+answer: "もん",
+lesson: "30"
+},
+{
+sentence: "<ruby>先生<rt>せんせい</rt></ruby>の<ruby>質問<rt>しつもん</rt></ruby>に答えます。",
+target: "答",
+answer: "こた",
+lesson: "30"
+},
+{
+sentence: "この<ruby>問題<rt>もんだい</rt></ruby>の答えはBですか。",
+target: "答",
+answer: "こた",
+lesson: "30"
+},
+{
+sentence: "解答<ruby>用紙<rt>ようし</rt></ruby>",
+target: "答",
+answer: "とう",
+lesson: "30"
+},
+{
+sentence: "アンケートに回答しました。",
+target: "答",
+answer: "とう",
+lesson: "30"
+},
+{
+sentence: "<ruby>電話<rt>でんわ</rt></ruby><ruby>番号<rt>ばんごう</rt></ruby>を教えてください。",
+target: "教",
+answer: "おし",
+lesson: "30"
+},
+{
+sentence: "<ruby>母<rt>はは</rt></ruby>は<ruby>高校<rt>こうこう</rt></ruby>の教<ruby>師<rt>　　し</rt></ruby>です。",
+target: "教",
+answer: "きょう",
+lesson: "30"
+},
+{
+sentence: "<ruby>日本語<rt>にほんご</rt></ruby>を勉強しています。",
+target: "勉強",
+answer: "べんきょう",
+lesson: "30"
+},
+{
+sentence: "よく考えてから<ruby>答<rt>こた</rt></ruby>えてください。",
+target: "考",
+answer: "かんが",
+lesson: "30"
+},
+{
+sentence: "思考<ruby>力<rt>し　　りょく</rt></ruby>",
+target: "考",
+answer: "こう",
+lesson: "30"
+},
+{
+sentence: "ピアノを習っています。",
+target: "習",
+answer: "なら",
+lesson: "31"
+},
+{
+sentence: "習<ruby>慣<rt>　　かん</rt></ruby>",
+target: "習",
+answer: "しゅう",
+lesson: "31"
+},
+{
+sentence: "スピーチの練習をします。",
+target: "練習",
+answer: "れんしゅう",
+lesson: "31"
+},
+{
+sentence: "<ruby>海<rt>うみ</rt></ruby>の<ruby>近<rt>ちか</rt></ruby>くの宿に<ruby>泊<rt>と</rt></ruby>まりました。",
+target: "宿",
+answer: "やど",
+lesson: "31"
+},
+{
+sentence: "ホテルに宿<ruby>泊<rt>　　はく</rt></ruby>します。",
+target: "宿",
+answer: "しゅく",
+lesson: "31"
+},
+{
+sentence: "新宿へ<ruby>行<rt>い</rt></ruby>きました。",
+target: "新宿",
+answer: "しんじゅく",
+lesson: "31"
+},
+{
+sentence: "<ruby>寝<rt>ね</rt></ruby>る<ruby>前<rt>まえ</rt></ruby>に宿題をします。",
+target: "宿題",
+answer: "しゅくだい",
+lesson: "31"
+},
+{
+sentence: "この<ruby>映画<rt>えいが</rt></ruby>の題名はなんですか。",
+target: "題名",
+answer: "だいめい",
+lesson: "31"
+},
+{
+sentence: "おいしいかどうか試しに<ruby>食<rt>た</rt></ruby>べてください。",
+target: "試",
+answer: "ため",
+lesson: "31"
+},
+{
+sentence: "<ruby>明日<rt>あした</rt></ruby>、サッカーの試合があります。",
+target: "試合",
+answer: "しあい",
+lesson: "31"
+},
+{
+sentence: "<ruby>来週<rt>らいしゅう</rt></ruby>、試験があります。",
+target: "試験",
+answer: "しけん",
+lesson: "31"
+},
+{
+sentence: "<ruby>理科<rt>りか</rt></ruby>の実験が<ruby>好<rt>す</rt></ruby>きです。",
+target: "実験",
+answer: "じっけん",
+lesson: "31"
+},
+{
+sentence: "<ruby>兄<rt>あに</rt></ruby>は<ruby>物理<rt>ぶつり</rt></ruby>の研究をしています。",
+target: "研究",
+answer: "けんきゅう",
+lesson: "31"
+},
+{
+sentence: "研究所",
+target: "研究所",
+answer: "けんきゅうじょ",
+lesson: "31"
+},
+{
+sentence: "世界史の<ruby>授業<rt>じゅぎょう</rt></ruby>はおもしろいです。",
+target: "世界史",
+answer: "せかいし",
+lesson: "31"
+},
+{
+sentence: "<ruby>日本<rt>にほん</rt></ruby>の歴史を<ruby>勉強<rt>べんきょう</rt></ruby>しています。",
+target: "歴史",
+answer: "れきし",
+lesson: "31"
+},
+{
+sentence: "<ruby>日本<rt>にほん</rt></ruby>と<ruby>中国<rt>ちゅうごく</rt></ruby>の漢字は<ruby>少<rt>すこ</rt></ruby>し<ruby>違<rt>ちが</rt></ruby>います。",
+target: "漢字",
+answer: "かんじ",
+lesson: "31"
+},
+{
+sentence: "あの<ruby>公園<rt>こうえん</rt></ruby>を通って<ruby>帰<rt>かえ</rt></ruby>りましょう。",
+target: "通",
+answer: "とお",
+lesson: "32"
+},
+{
+sentence: "<ruby>銀行<rt>ぎんこう</rt></ruby>は<ruby>駅前<rt>えきまえ</rt></ruby>の通りにあります。",
+target: "通",
+answer: "とお",
+lesson: "32"
+},
+{
+sentence: "<ruby>英会話<rt>えいかいわ</rt></ruby>スクールに通っています。",
+target: "通",
+answer: "かよ",
+lesson: "32"
+},
+{
+sentence: "この<ruby>道<rt>みち</rt></ruby>は一方通行です。",
+target: "一方通行",
+answer: "いっぽうつうこう",
+lesson: "32"
+},
+{
+sentence: "あの<ruby>公園<rt>こうえん</rt></ruby>を<ruby>通<rt>とお</rt></ruby>って帰ります。",
+target: "帰",
+answer: "かえ",
+lesson: "32"
+},
+{
+sentence: "<ruby>来月<rt>らいげつ</rt></ruby>、帰国します。",
+target: "帰国",
+answer: "きこく",
+lesson: "32"
+},
+{
+sentence: "sonyはwalkmanを発明しました。",
+target: "発明",
+answer: "はつめい",
+lesson: "32"
+},
+{
+sentence: "Christopher Columbusはアメリカ<ruby>大陸<rt>たいりく</rt></ruby>を発見しました。",
+target: "発見",
+answer: "はっけん",
+lesson: "32"
+},
+{
+sentence: "<ruby>今日<rt>きょう</rt></ruby>は<ruby>青<rt>あお</rt></ruby>いシャツを着ます。",
+target: "着",
+answer: "き",
+lesson: "32"
+},
+{
+sentence: "<ruby>日本<rt>にほん</rt></ruby>の着物",
+target: "着物",
+answer: "きもの",
+lesson: "32"
+},
+{
+sentence: "<ruby>暑<rt>あつ</rt></ruby>いので、上着を<ruby>脱<rt>ぬ</rt></ruby>ぎました。",
+target: "上着",
+answer: "うわぎ",
+lesson: "32"
+},
+{
+sentence: "もうすぐ<ruby>千葉駅<rt>ちばえき</rt></ruby>に着きます。",
+target: "着",
+answer: "つ",
+lesson: "32"
+},
+{
+sentence: "<ruby>飛行機<rt>ひこうき</rt></ruby>は10<ruby>時<rt>じ</rt></ruby>に<ruby>成田<rt>なりた</rt></ruby><ruby>空港<rt>くうこう</rt></ruby>に到着します。",
+target: "着",
+answer: "ちゃく",
+lesson: "32"
+},
+{
+sentence: "<ruby>前<rt>まえ</rt></ruby>へ進みます",
+target: "進",
+answer: "すす",
+lesson: "32"
+},
+{
+sentence: "<ruby>来年<rt>らいねん</rt></ruby>、<ruby>大学<rt>だいがく</rt></ruby>に進学します。",
+target: "進学",
+answer: "しんがく",
+lesson: "32"
+},
+{
+sentence: "プールで泳ぎます。",
+target: "泳",
+answer: "およ",
+lesson: "32"
+},
+{
+sentence: "水泳<ruby>教室<rt>きょうしつ</rt></ruby>",
+target: "水泳",
+answer: "すいえい",
+lesson: "32"
+},
+{
+sentence: "急いでください。",
+target: "急",
+answer: "いそ",
+lesson: "32"
+},
+{
+sentence: "急に<ruby>雨<rt>あめ</rt></ruby>が<ruby>降<rt>ふ</rt></ruby>ってきました。",
+target: "急",
+answer: "きゅう",
+lesson: "32"
+},
+{
+sentence: "特急<ruby>電車<rt>でんしゃ</rt></ruby>",
+target: "特急",
+answer: "とっきゅう",
+lesson: "32"
+},
+{
+sentence: "死ぬほど<ruby>痛<rt>いた</rt></ruby>かった。",
+target: "死",
+answer: "し",
+lesson: "32"
+},
+{
+sentence: "この<ruby>事故<rt>じこ</rt></ruby>の死者は０<ruby>人<rt>にん</rt></ruby>でした。",
+target: "死者",
+answer: "ししゃ",
+lesson: "32"
+},
+{
+sentence: "<ruby>毎朝<rt>まいあさ</rt></ruby>、コーヒーを飲みます。",
+target: "飲",
+answer: "の",
+lesson: "32"
+},
+{
+sentence: "<ruby>何<rt>なに</rt></ruby>か<ruby>冷<rt>つめ</rt></ruby>たい飲み物<ruby>が<rt>ほ</rt></ruby>欲しいです。",
+target: "飲み物",
+answer: "のみもの",
+lesson: "32"
+},
+{
+sentence: "飲酒<ruby>運転<rt>うんてん</rt></ruby>をしてはいけません。",
+target: "飲酒",
+answer: "いんしゅ",
+lesson: "32"
+},
+{
+sentence: "<ruby>宿題<rt>しゅくだい</rt></ruby>を集めます。",
+target: "集",
+answer: "あつ",
+lesson: "32"
+},
+{
+sentence: "９<ruby>時<rt>じ</rt></ruby>に<ruby>駅前<rt>えきまえ</rt></ruby>に集合です。",
+target: "集合",
+answer: "しゅうごう",
+lesson: "32"
+},
+{
+sentence: "集中して<ruby>勉強<rt>べんきょう</rt></ruby>しました。",
+target: "集中",
+answer: "しゅうちゅう",
+lesson: "32"
+},
+{
+sentence: "<ruby>新<rt>あたら</rt></ruby>しいスマホを買いました。",
+target: "買",
+answer: "か",
+lesson: "32"
+},
+{
+sentence: "<ruby>明日<rt>あした</rt></ruby>、<ruby>東京<rt>とうきょう</rt></ruby>へ買い物に<ruby>行<rt>い</rt></ruby>きます。",
+target: "買い物",
+answer: "かいもの",
+lesson: "32"
+},
+{
+sentence: "<ruby>駅前<rt>えきまえ</rt></ruby>に<ruby>新<rt>あたら</rt></ruby>しいビルが建ちました。",
+target: "建",
+answer: "た",
+lesson: "33"
+},
+{
+sentence: "<ruby>将来<rt>しょうらい</rt></ruby>、建<ruby>築<rt>　　ちく</rt></ruby>の<ruby>仕事<rt>しごと</rt></ruby>がしたいです。",
+target: "建",
+answer: "けん",
+lesson: "33"
+},
+{
+sentence: "地下鉄",
+target: "地下鉄",
+answer: "ちかてｔ",
+lesson: "33"
+},
+{
+sentence: "地<ruby>震<rt>　しん</rt></ruby>の<ruby>時<rt>とき</rt></ruby>、エレベーターに<ruby>乗<rt>の</rt></ruby>ってはいけません。",
+target: "地",
+answer: "じ",
+lesson: "33"
+},
+{
+sentence: "<ruby>旅行<rt>りょこう</rt></ruby>の<ruby>時<rt>とき</rt></ruby>は地図を<ruby>持<rt>も</rt></ruby>って<ruby>行<rt>い</rt></ruby>きます。",
+target: "地図",
+answer: "ちず",
+lesson: "33"
+},
+{
+sentence: "図書館で<ruby>勉強<rt>べんきょう</rt></ruby>します。",
+target: "館",
+answer: "かん",
+lesson: "33"
+},
+{
+sentence: "水族館へ<ruby>行<rt>い</rt></ruby>きました。",
+target: "館",
+answer: "かん",
+lesson: "33"
+},
+{
+sentence: "<ruby>図書館<rt>としょかん</rt></ruby>の場所を<ruby>教<rt>おし</rt></ruby>えてください。",
+target: "場所",
+answer: "ばしょ",
+lesson: "33"
+},
+{
+sentence: "パソコン売り場<ruby>は何<rt>なんかい</rt></ruby>階ですか。",
+target: "売り場",
+answer: "うりば",
+lesson: "33"
+},
+{
+sentence: "<ruby>入<rt>い</rt></ruby>り<ruby>口<rt>ぐち</rt></ruby>で入場料を<ruby>払<rt>はら</rt></ruby>います。",
+target: "入場料",
+answer: "にゅうじょうりょう",
+lesson: "33"
+},
+{
+sentence: "<ruby>自転車<rt>じてんしゃ</rt></ruby>は駐輪場に<ruby>止<rt>と</rt></ruby>めなければなりません。",
+target: "場",
+answer: "じょう",
+lesson: "33"
+},
+{
+sentence: "工場でアルバイトをしています。",
+target: "工場",
+answer: "こうじょう",
+lesson: "33"
+},
+{
+sentence: "<ruby>道路<rt>どうろ</rt></ruby>工事",
+target: "工事",
+answer: "こうじ",
+lesson: "33"
+},
+{
+sentence: "東京駅は<ruby>広<rt>ひろ</rt></ruby>くてにぎやかです。",
+target: "駅",
+answer: "えき",
+lesson: "33"
+},
+{
+sentence: "わからないときは駅員さんに<ruby>聞<rt>き</rt></ruby>いてください。",
+target: "駅員",
+answer: "えきいん",
+lesson: "33"
+},
+{
+sentence: "ここは<ruby>何<rt>なん</rt></ruby>の店ですか。",
+target: "店",
+answer: "みせ",
+lesson: "33"
+},
+{
+sentence: "店員さんが<ruby>注文<rt>ちゅうもん</rt></ruby>をとりに<ruby>来<rt>き</rt></ruby>ました。",
+target: "店員",
+answer: "てんいん",
+lesson: "33"
+},
+{
+sentence: "よく本屋に<ruby>行<rt>い</rt></ruby>きます。",
+target: "本屋",
+answer: "ほんや",
+lesson: "33"
+},
+{
+sentence: "屋<ruby>根<rt>　ね</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>でねこが<ruby>鳴<rt>な</rt></ruby>いています。",
+target: "屋",
+answer: "や",
+lesson: "33"
+},
+{
+sentence: "デパートの屋上から<ruby>富士山<rt>ふじさん</rt></ruby>が<ruby>見<rt>み</rt></ruby>えます。",
+target: "屋上",
+answer: "おくじょう",
+lesson: "33"
+},
+{
+sentence: "<ruby>駅<rt>えき</rt></ruby>までの道を<ruby>教<rt>おし</rt></ruby>えてください。",
+target: "道",
+answer: "みち",
+lesson: "33"
+},
+{
+sentence: "近道をしましょう。",
+target: "近道",
+answer: "ちかみち",
+lesson: "33"
+},
+{
+sentence: "<ruby>今度<rt>こんど</rt></ruby>、北海道を<ruby>旅行<rt>りょこう</rt></ruby>します。",
+target: "北海道",
+answer: "ほっかいどう",
+lesson: "33"
+},
+{
+sentence: "ひろった<ruby>財布<rt>さいふ</rt></ruby>を交<ruby>番<rt>　　ばん</rt></ruby>に<ruby>届<rt>とど</rt></ruby>けました。",
+target: "交",
+answer: "こう",
+lesson: "33"
+},
+{
+sentence: "あの交差点を<ruby>右<rt>みぎ</rt></ruby>に<ruby>曲<rt>ま</rt></ruby>がってください。",
+target: "交差点",
+answer: "こうさてん",
+lesson: "33"
+},
+{
+sentence: "テストで100点をとりました。",
+target: "点",
+answer: "てん",
+lesson: "33"
+},
+{
+sentence: "<ruby>母<rt>はは</rt></ruby>は<ruby>病院<rt>びょういん</rt></ruby>で働いています。",
+target: "働",
+answer: "はたら",
+lesson: "34"
+},
+{
+sentence: "労働<ruby>時間<rt>じかん</rt></ruby>",
+target: "働",
+answer: "どう",
+lesson: "34"
+},
+{
+sentence: "<ruby>傘<rt>かさ</rt></ruby>を貸してください。",
+target: "貸",
+answer: "か",
+lesson: "34"
+},
+{
+sentence: "<ruby>友<rt>とも</rt></ruby>だちに<ruby>消<rt>け</rt></ruby>しゴムを借りました。",
+target: "借",
+answer: "か",
+lesson: "34"
+},
+{
+sentence: "借金を<ruby>全部<rt>ぜんぶ</rt></ruby><ruby>返<rt>かえ</rt></ruby>しました。",
+target: "借金",
+answer: "しゃっきん",
+lesson: "34"
+},
+{
+sentence: "<ruby>借金<rt>しゃっきん</rt></ruby>を<ruby>全部<rt>ぜんぶ</rt></ruby>返しました。",
+target: "返",
+answer: "かえ",
+lesson: "34"
+},
+{
+sentence: "<ruby>手紙<rt>てがみ</rt></ruby>の返事を<ruby>書<rt>か</rt></ruby>きました。",
+target: "返事",
+answer: "へんじ",
+lesson: "34"
+},
+{
+sentence: "<ruby>千葉駅<rt>ちばえき</rt></ruby>で<ruby>電車<rt>でんしゃ</rt></ruby>に乗ります。",
+target: "乗",
+answer: "の",
+lesson: "34"
+},
+{
+sentence: "乗<ruby>客<rt>　　きゃく</rt></ruby>",
+target: "乗",
+answer: "じょう",
+lesson: "34"
+},
+{
+sentence: "<ruby>新宿駅<rt>しんじゅくえき</rt></ruby>で<ruby>電車<rt>でんしゃ</rt></ruby>を降ります。",
+target: "降",
+answer: "お",
+lesson: "34"
+},
+{
+sentence: "<ruby>今日<rt>きょう</rt></ruby>は<ruby>雨<rt>あめ</rt></ruby>が降っています。",
+target: "降",
+answer: "ふ",
+lesson: "34"
+},
+{
+sentence: "<ruby>明日<rt>あす</rt></ruby>の降水<ruby>確率<rt>かくりつ</rt></ruby>は60%です。",
+target: "降水",
+answer: "こうすい",
+lesson: "34"
+},
+{
+sentence: "<ruby>荷物<rt>にもつ</rt></ruby>を運びます。",
+target: "運",
+answer: "はこ",
+lesson: "34"
+},
+{
+sentence: "運動会が<ruby>楽<rt>たの</rt></ruby>しみです。",
+target: "運動会",
+answer: "うんどうかい",
+lesson: "34"
+},
+{
+sentence: "<ruby>私<rt>わたし</rt></ruby>は運がいい。",
+target: "運",
+answer: "うん",
+lesson: "34"
+},
+{
+sentence: "<ruby>車<rt>くるま</rt></ruby>を運転して<ruby>長野<rt>ながの</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きました。",
+target: "運転",
+answer: "うんてん",
+lesson: "34"
+},
+{
+sentence: "タクシーの運転手",
+target: "運転手",
+answer: "うんてんしゅ",
+lesson: "34"
+},
+{
+sentence: "<ruby>駅<rt>えき</rt></ruby>の<ruby>階段<rt>かいだん</rt></ruby>で転んでしまいました。",
+target: "転",
+answer: "ころ",
+lesson: "34"
+},
+{
+sentence: "<ruby>毎朝<rt>まいあさ</rt></ruby>、６<ruby>時<rt>じ</rt></ruby>に起きます。",
+target: "起",
+answer: "お",
+lesson: "34"
+},
+{
+sentence: "ここに<ruby>名前<rt>なまえ</rt></ruby>を書いてください。",
+target: "書",
+answer: "か",
+lesson: "34"
+},
+{
+sentence: "<ruby>趣味<rt>しゅみ</rt></ruby>は読書です。",
+target: "読書",
+answer: "どくしょ",
+lesson: "34"
+},
+{
+sentence: "万国<ruby>共通<rt>きょうつう</rt></ruby>",
+target: "万国",
+answer: "ばんこく",
+lesson: "35"
+},
+{
+sentence: "<ruby>宿題<rt>しゅくだい</rt></ruby>は自力でやりましょう。",
+target: "自力",
+answer: "じりき",
+lesson: "35"
+},
+{
+sentence: "ニューヨークで<ruby>自由<rt>じゆう</rt></ruby>の女神を<ruby>見<rt>み</rt></ruby>ました。",
+target: "女神",
+answer: "めがみ",
+lesson: "35"
+},
+{
+sentence: "チンさんは<ruby>歌<rt>うた</rt></ruby>が上手です。",
+target: "上手",
+answer: "じょうず",
+lesson: "35"
+},
+{
+sentence: "ヤンさんは<ruby>絵<rt>え</rt></ruby>が下手です。",
+target: "下手",
+answer: "へた",
+lesson: "35"
+},
+{
+sentence: "<ruby>今日<rt>きょう</rt></ruby>は<ruby>朝<rt>あさ</rt></ruby>から小雨が<ruby>降<rt>ふ</rt></ruby>っています。",
+target: "小雨",
+answer: "こさめ",
+lesson: "35"
+},
+{
+sentence: "<ruby>台風<rt>たいふう</rt></ruby>なので雨戸を<ruby>閉<rt>し</rt></ruby>めました。",
+target: "雨戸",
+answer: "あまど",
+lesson: "35"
+},
+{
+sentence: "パンダは竹林に<ruby>住<rt>す</rt></ruby>んでいます。",
+target: "竹林",
+answer: "りくりん",
+lesson: "35"
+},
+{
+sentence: "新米はおいしいです。",
+target: "新米",
+answer: "しんまい",
+lesson: "35"
+},
+{
+sentence: "お<ruby>正月<rt>しょうがつ</rt></ruby>に門<ruby>松<rt>　　まつ</rt></ruby>をかざります。",
+target: "門",
+answer: "かど",
+lesson: "35"
+},
+{
+sentence: "<ruby>来週<rt>らいしゅう</rt></ruby>テストを行う<ruby>予定<rt>よてい</rt></ruby>です。",
+target: "行",
+answer: "おこな",
+lesson: "35"
+},
+{
+sentence: "この<ruby>電車<rt>でんしゃ</rt></ruby>は<ruby>東京<rt>とうきょう</rt></ruby>行きです。",
+target: "行",
+answer: "ゆ",
+lesson: "35"
+},
+{
+sentence: "<ruby>今日<rt>きょう</rt></ruby>の<ruby>午後<rt>ごご</rt></ruby>、来<ruby>客<rt>　　きゃく</rt></ruby>があります。",
+target: "来",
+answer: "らい",
+lesson: "35"
+},
+{
+sentence: "<ruby>七<rt>しち</rt></ruby><ruby>月<rt>がつ</rt></ruby><ruby>七日<rt>なのか</rt></ruby>は七夕です。",
+target: "七夕",
+answer: "たなばた",
+lesson: "35"
+},
+{
+sentence: "<ruby>火山<rt>かざん</rt></ruby>から溶岩が<ruby>流<rt>なが</rt></ruby>れています。",
+target: "岩",
+answer: "がん",
+lesson: "35"
+},
+{
+sentence: "<ruby>日本語<rt>にほんご</rt></ruby>の子音",
+target: "子音",
+answer: "しいん",
+lesson: "35"
+},
+{
+sentence: "<ruby>日本語<rt>にほんご</rt></ruby>の母音は５つです。",
+target: "母音",
+answer: "ぼいん",
+lesson: "35"
+},
+{
+sentence: "100<ruby>年<rt>ねん</rt></ruby>くらい<ruby>前<rt>まえ</rt></ruby>の<ruby>日本<rt>にほん</rt></ruby>は明<ruby>治<rt>　　じ</rt></ruby><ruby>時代<rt>じだい</rt></ruby>でした。",
+target: "明",
+answer: "めい",
+lesson: "35"
+},
+{
+sentence: "ピストルに弾丸を<ruby>入<rt>い</rt></ruby>れます。",
+target: "丸",
+answer: "がん",
+lesson: "35"
+},
+{
+sentence: "家内は<ruby>買<rt>か</rt></ruby>い<ruby>物<rt>もの</rt></ruby>に<ruby>行<rt>い</rt></ruby>きました。",
+target: "家内",
+answer: "かない",
+lesson: "35"
+},
+{
+sentence: "<ruby>昨夜<rt>さくや</rt></ruby>の積雪は10ｃｍでした。",
+target: "積雪",
+answer: "せきせつ",
+lesson: "35"
+},
+{
+sentence: "アルバイト<ruby>経験<rt>けいけん</rt></ruby>の有無を<ruby>聞<rt>き</rt></ruby>きました。",
+target: "有無",
+answer: "うむ",
+lesson: "35"
 },
 ];
-
-let questions = [];
+let quizQuestions = [];
 let currentIndex = 0;
 let correctCount = 0;
-let incorrectCount = 0;
 let wrongQuestions = [];
-let answered = false;
-
+function escapeHTML(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+function normalizeAnswer(str) {
+  str = String(str).trim();
+  return str.replace(/[ァ-ヶ]/g, function(ch) {
+    return String.fromCharCode(ch.charCodeAt(0) - 0x60);
+  });
+}
+function makeSentence(q) {
+  let text = q.sentence;
+  const target = escapeHTML(q.target);
+  text = text.replace(target, '<span class="target">' + target + '</span>');
+  return text;
+}
 function shuffle(array) {
-  const arr = [...array];
+  const arr = array.slice();
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
 }
-
-function normalizeAnswer(text) {
-  text = text.trim();
-  return text.replace(/[ァ-ヶ]/g, function(ch) {
-    return String.fromCharCode(ch.charCodeAt(0) - 0x60);
-  });
-}
-
 function startQuiz() {
-  const selectedLevel = document.getElementById('levelSelect').value;
-  const selectedCount = document.getElementById('countSelect').value;
-  let filtered;
-  if (selectedLevel === 'random') {
-    filtered = [...allQuestions];
+  const selectedLesson = document.getElementById('lessonSelect').value;
+  const count = document.getElementById('questionCount').value;
+  if (selectedLesson === 'random') {
+    quizQuestions = questions.slice();
   } else {
-    filtered = allQuestions.filter(q => q.level === selectedLevel);
+    quizQuestions = questions.filter(function(q) {
+      return q.lesson === selectedLesson;
+    });
   }
-  questions = shuffle(filtered);
-  if (selectedCount !== 'all') {
-    questions = questions.slice(0, Number(selectedCount));
+  quizQuestions = shuffle(quizQuestions);
+  if (count !== 'all') {
+    const n = parseInt(count, 10);
+    quizQuestions = quizQuestions.slice(0, n);
   }
-  if (questions.length === 0) {
-    alert('このレベルの問題がありません。');
+  if (quizQuestions.length === 0) {
+    alert('選択した課の問題がありません。');
     return;
   }
   currentIndex = 0;
   correctCount = 0;
-  incorrectCount = 0;
   wrongQuestions = [];
-  document.getElementById('setupScreen').classList.add('hidden');
+  document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('resultScreen').classList.add('hidden');
   document.getElementById('quizScreen').classList.remove('hidden');
   showQuestion();
 }
-
 function showQuestion() {
-  answered = false;
-  const q = questions[currentIndex];
-  document.getElementById('questionNumber').textContent = '問題 ' + (currentIndex + 1) +  ' / ' + questions.length;
-  document.getElementById('sentence').innerHTML = q.sentence;
+  const q = quizQuestions[currentIndex];
+  document.getElementById('questionNumber').textContent =
+    (currentIndex + 1) + ' / ' + quizQuestions.length;
+  document.getElementById('sentence').innerHTML = makeSentence(q);
   const input = document.getElementById('answerInput');
   input.value = '';
   input.disabled = false;
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
-  document.getElementById('correctAnswer').textContent = '';
   document.getElementById('checkButton').classList.remove('hidden');
   document.getElementById('nextButton').classList.add('hidden');
-  input.focus();
+  setTimeout(function() {
+    input.focus();
+  }, 100);
 }
-
 function checkAnswer() {
-  if (answered) return;
-  const q = questions[currentIndex];
+  const q = quizQuestions[currentIndex];
   const input = document.getElementById('answerInput');
   const userAnswer = normalizeAnswer(input.value);
   const correctAnswer = normalizeAnswer(q.answer);
-  answered = true;
-  input.disabled = true;
+  const feedback = document.getElementById('feedback');
   if (userAnswer === correctAnswer) {
     correctCount++;
-    document.getElementById('feedback').textContent = '○ 正解！';
-    document.getElementById('feedback').className = 'feedback correct';
+    feedback.textContent = '○ 正解！';
+    feedback.className = 'feedback correct';
   } else {
-    incorrectCount++;
     wrongQuestions.push(q);
-    document.getElementById('feedback').textContent = '× 不正解';
-    document.getElementById('feedback').className = 'feedback incorrect';
-    document.getElementById('correctAnswer').textContent = '正解：' + q.answer;
+    feedback.innerHTML = '× 不正解<br>正解：' + escapeHTML(q.answer);
+    feedback.className = 'feedback incorrect';
   }
+  input.disabled = true;
   document.getElementById('checkButton').classList.add('hidden');
   document.getElementById('nextButton').classList.remove('hidden');
 }
-
 function nextQuestion() {
   currentIndex++;
-  if (currentIndex >= questions.length) {
+  if (currentIndex >= quizQuestions.length) {
     showResult();
   } else {
     showQuestion();
   }
 }
-
 function showResult() {
   document.getElementById('quizScreen').classList.add('hidden');
   document.getElementById('resultScreen').classList.remove('hidden');
-  document.getElementById('resultNumber').textContent = correctCount + ' / ' + questions.length;
-  document.getElementById('resultDetail').innerHTML = '○ 正解：' + correctCount + '問<br>' + '× 不正解：' + incorrectCount + '問';
-  const reviewButton = document.querySelector('.reviewButton');
-  if (wrongQuestions.length === 0) {
-    reviewButton.classList.add('hidden');
-  } else {
-    reviewButton.classList.remove('hidden');
-  }
+  document.getElementById('score').textContent =
+    correctCount + ' / ' + quizQuestions.length;
+  document.getElementById('resultDetail').innerHTML =
+    '正解：' + correctCount + '問　／　不正解：' +
+    (quizQuestions.length - correctCount) + '問';
 }
-
 function reviewWrong() {
-  if (wrongQuestions.length === 0) return;
-  questions = shuffle(wrongQuestions);
+  if (wrongQuestions.length === 0) {
+    alert('間違えた問題はありません。');
+    return;
+  }
+  quizQuestions = shuffle(wrongQuestions);
   currentIndex = 0;
   correctCount = 0;
-  incorrectCount = 0;
   wrongQuestions = [];
   document.getElementById('resultScreen').classList.add('hidden');
   document.getElementById('quizScreen').classList.remove('hidden');
   showQuestion();
 }
-
-function retryAll() {
-  questions = shuffle(questions);
+function repeatAll() {
+  quizQuestions = shuffle(quizQuestions);
   currentIndex = 0;
   correctCount = 0;
-  incorrectCount = 0;
   wrongQuestions = [];
   document.getElementById('resultScreen').classList.add('hidden');
   document.getElementById('quizScreen').classList.remove('hidden');
   showQuestion();
 }
-
-function backToSetup() {
-  document.getElementById('resultScreen').classList.add('hidden');
+function backToStart() {
   document.getElementById('quizScreen').classList.add('hidden');
-  document.getElementById('setupScreen').classList.remove('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('startScreen').classList.remove('hidden');
 }
+document.getElementById('answerInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    if (!document.getElementById('checkButton').classList.contains('hidden')) {
+      checkAnswer();
+    } else if (!document.getElementById('nextButton').classList.contains('hidden')) {
+      nextQuestion();
+    }
+  }
+});
 </script>
-</div>
 </body>
 </html>
